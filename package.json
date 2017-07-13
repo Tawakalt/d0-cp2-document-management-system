@@ -1,0 +1,25 @@
+{
+  "name": "d0-cp2-document-management-system",
+  "version": "1.0.0",
+  "description": "A Document management System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tawakalt/d0-cp2-document-management-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tawakalt/d0-cp2-document-management-system/issues"
+  },
+  "homepage": "https://github.com/Tawakalt/d0-cp2-document-management-system#readme",
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
