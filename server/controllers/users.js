@@ -1,3 +1,4 @@
+const validator = require('validator');
 const User = require('../models').User;
 const bcrypt = require('bcrypt');
 
@@ -5,6 +6,11 @@ const saltRounds = 10;
 
 module.exports = {
   create(req, res) {
+    if (validator.isEmail(req.body.email) === false) {
+      return res.status(404).send({
+        message: 'Invalid Email',
+      });
+    }
     return User
       .find({
         where: {

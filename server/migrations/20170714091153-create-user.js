@@ -8,6 +8,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       email: {
+        validate: {
+          isEmail: true
+        },
         allowNull: false,
         unique: true,
         type: Sequelize.STRING
