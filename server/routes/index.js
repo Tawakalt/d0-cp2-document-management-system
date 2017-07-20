@@ -13,4 +13,6 @@ module.exports = (app) => {
   // Endpoints for users
   app.post('/users/:roleId', usersController.create);
   app.post('/users', usersController.create);
+
+  app.get('/users', usersController.list);
 };
