@@ -47,15 +47,20 @@ export default class usersController {
   }
 
   static list(req, res) {
+    const property = {
+      include: [
+        { model: Role }
+      ],
+      order: [
+        ['id', 'DESC']
+      ]
+    };
+    if (req.query.limit && req.query.offset) {
+      property.limit = req.query.limit;
+      property.offset = req.query.offset;
+    }
     return User
-      .findAll({
-        include: [
-          { model: Role }
-        ],
-        order: [
-          ['id', 'DESC']
-        ]
-      })
+      .findAll(property)
       .then((user) => {
         res.status(200).send(user);
       });
