@@ -16,4 +16,6 @@ module.exports = (app) => {
 
   app.get('/users', usersController.list);
   app.get('/users/:userId', usersController.retrieve);
+
+  app.put('/users/:userId', usersController.update);
 };

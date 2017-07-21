@@ -78,4 +78,53 @@ export default class usersController {
       })
       .catch(error => res.status(400).send(error.toString()));
   }
+
+  static update(req, res) {
+    return User
+      .findById(req.params.userId, {
+        include: [{
+          model: Role,
+        }],
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'User Not Found',
+          });
+        }
+        if (req.body.roleId) {
+          return res.status(404).send({
+            message: 'Common stop it!!! You can\'t change your role',
+          });
+        }
+        if (validator.isEmail(req.body.email) === false) {
+          return res.status(404).send({
+            message: 'Invalid Email',
+          });
+        }
+        bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+          let message = '';
+          if (req.body.email === user.email) {
+            message += 'Email up to date. ';
+          } else {
+            message += 'Email successfully Updated. ';
+          }
+          bcrypt.compare(req.body.password, user.password, (err, resp) => {
+            if (resp === true) {
+              message += 'Password up to date. ';
+            } else {
+              message += 'Password successfully Updated. ';
+            }
+            return user
+              .update({
+                email: req.body.email || user.email,
+                password: hash || user.password,
+              })
+              .then(() => res.status(200).send({ message }))
+              .catch(error => res.status(400).send(error.toString()));
+          });
+        });
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
 }
