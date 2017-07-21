@@ -1,5 +1,6 @@
 const validator = require('validator');
 const User = require('../models').User;
+const Role = require('../models').Role;
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -45,21 +46,16 @@ module.exports = {
 
   list(req, res) {
     return User
-      .all()
-      .then((user) => {
-        let count = user.length - 1;
-        while (count >= 0) {
-          if (user[count].roleId === 1) {
-            user[count].roleId = 'Super Admin';
-          } else if (user[count].roleId === 2) {
-            user[count].roleId = 'Admin';
-          } else {
-            user[count].roleId = 'Regular';
-          }
-          count -= 1;
-        }
-        res.status(200).send(user);
+      .findAll({
+        include: [
+          { model: Role }
+        ],
+        order: [
+          ['id', 'DESC']
+        ]
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .then((user) => {
+        res.status(200).send(user);
+      });
   },
 };
