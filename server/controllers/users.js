@@ -127,4 +127,22 @@ export default class usersController {
       })
       .catch(error => res.status(400).send(error.toString()));
   }
+
+  static destroy(req, res) {
+    return User
+      .findById(req.params.userId)
+      .then((user) => {
+        if (!user) {
+          return res.status(400).send({
+            message: 'User Not Found',
+          });
+        }
+        return user
+          .destroy()
+          .then(() => res.status(400).send({
+            message: 'User successfully deleted' }))
+          .catch(error => res.status(400).send(error.toString()));
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
 }
