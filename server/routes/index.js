@@ -1,6 +1,3 @@
-// const rolesController = require('../controllers').roles;
-// const usersController = require('../controllers').users;
-
 import rolesController from '../controllers/roles';
 import usersController from '../controllers/users';
 
