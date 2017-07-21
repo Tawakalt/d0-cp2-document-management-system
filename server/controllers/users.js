@@ -60,4 +60,22 @@ export default class usersController {
         res.status(200).send(user);
       });
   }
+
+  static retrieve(req, res) {
+    return User
+      .findById(req.params.userId, {
+        include: [{
+          model: Role,
+        }],
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'User Not Found',
+          });
+        }
+        return res.status(200).send(user);
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
 }
