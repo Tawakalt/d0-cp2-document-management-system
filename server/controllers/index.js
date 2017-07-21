@@ -1,7 +1,7 @@
-const roles = require('./roles');
-const users = require('./users');
+import { roles } from './roles';
+import { users } from './users';
 
-module.exports = {
+export default {
   roles,
   users,
 };

@@ -1,12 +1,13 @@
-const validator = require('validator');
+import bcrypt from 'bcrypt';
+import validator from 'validator';
+
 const User = require('../models').User;
 const Role = require('../models').Role;
-const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-module.exports = {
-  create(req, res) {
+export default class usersController {
+  static create(req, res) {
     if (validator.isEmail(req.body.email) === false) {
       return res.status(404).send({
         message: 'Invalid Email',
@@ -24,6 +25,7 @@ module.exports = {
             message: 'Email already exists',
           });
         }
+        let roleId;
         if (req.params.roleId) {
           roleId = req.params.roleId;
         } else {
@@ -42,9 +44,9 @@ module.exports = {
         });
       })
       .catch(error => res.status(400).send(error.toString()));
-  },
+  }
 
-  list(req, res) {
+  static list(req, res) {
     return User
       .findAll({
         include: [
@@ -57,5 +59,5 @@ module.exports = {
       .then((user) => {
         res.status(200).send(user);
       });
-  },
-};
+  }
+}

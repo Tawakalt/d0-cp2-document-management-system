@@ -1,5 +1,8 @@
-const rolesController = require('../controllers').roles;
-const usersController = require('../controllers').users;
+// const rolesController = require('../controllers').roles;
+// const usersController = require('../controllers').users;
+
+import rolesController from '../controllers/roles';
+import usersController from '../controllers/users';
 
 module.exports = (app) => {
   app.get('/api', (req, res) => res.status(200).send({
@@ -7,8 +10,8 @@ module.exports = (app) => {
   }));
 
   // Endpoints for roles
-  app.post('/api/roles', rolesController.create);
-  app.get('/api/roles', rolesController.list);
+  app.post('/roles', rolesController.create);
+  app.get('/roles', rolesController.list);
 
   // Endpoints for users
   app.post('/users/:roleId', usersController.create);
