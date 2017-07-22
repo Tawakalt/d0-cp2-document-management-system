@@ -1,5 +1,10 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import ls from 'local-storage';
+import jwt from '../../jwt';
+
+require('dotenv').config();
+
 
 const User = require('../models').User;
 const Role = require('../models').Role;
@@ -147,6 +152,44 @@ export default class usersController {
           .then(() => res.status(400).send({
             message: 'User successfully deleted' }))
           .catch(error => res.status(400).send(error.toString()));
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
+
+  static login(req, res) {
+    if (validator.isEmail(req.body.email) === false) {
+      return res.status(404).send({
+        message: 'Invalid Email',
+      });
+    }
+    return User
+      .findAll({
+        where: {
+          email: req.body.email
+        }
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'Kindly signup first',
+          });
+        }
+        bcrypt.compare(
+          req.body.password, user[0].dataValues.password, (err, resp) => {
+            if (resp === false) {
+              return res.status(404).send({
+                message: 'Wrong Password',
+              });
+            }
+            const token = jwt.sign(
+              user[0].dataValues.id,
+              user[0].dataValues.email,
+              user[0].dataValues.roleId
+            );
+            ls.set('token', token);
+            return res.status(200).send({
+              message: 'login successful' });
+          });
       })
       .catch(error => res.status(400).send(error.toString()));
   }
