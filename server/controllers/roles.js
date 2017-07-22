@@ -1,18 +1,26 @@
 const Role = require('../models').Role;
+const User = require('../models').User;
 
-module.exports = {
-  create(req, res) {
+export default class rolesController {
+  static create(req, res) {
     return Role
       .create({
         role: req.body.role,
       })
-      .then(role => res.status(201).send(role))
+      .then(res.status(201).send({
+        message: 'Role successfully created' }))
       .catch(error => res.status(400).send(error));
-  },
-  list(req, res) {
+  }
+
+  static list(req, res) {
     return Role
-      .all()
+      .findAll({
+        include: [{
+          model: User,
+          as: 'users',
+        }],
+      })
       .then(role => res.status(200).send(role))
-      .catch(error => res.status(400).send(error));
-  },
-};
+      .catch(error => res.status(400).send(error.toString()));
+  }
+}
