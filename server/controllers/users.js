@@ -13,6 +13,16 @@ const saltRounds = 10;
 
 export default class usersController {
   static create(req, res) {
+    if (validator.isEmpty(req.body.email) === true) {
+      return res.status(404).send({
+        message: 'Email is Required',
+      });
+    }
+    if (validator.isEmpty(req.body.password) === true) {
+      return res.status(404).send({
+        message: 'Password is Required',
+      });
+    }
     if (validator.isEmail(req.body.email) === false) {
       return res.status(404).send({
         message: 'Invalid Email',
@@ -107,6 +117,16 @@ export default class usersController {
             message: 'Common stop it!!! You can\'t change your role',
           });
         }
+        if (validator.isEmpty(req.body.email) === true) {
+          return res.status(404).send({
+            message: 'Email is Required',
+          });
+        }
+        if (validator.isEmpty(req.body.password) === true) {
+          return res.status(404).send({
+            message: 'Password is Required',
+          });
+        }
         if (validator.isEmail(req.body.email) === false) {
           return res.status(404).send({
             message: 'Invalid Email',
@@ -157,6 +177,16 @@ export default class usersController {
   }
 
   static login(req, res) {
+    if (validator.isEmpty(req.body.email) === true) {
+      return res.status(404).send({
+        message: 'Email is Required',
+      });
+    }
+    if (validator.isEmpty(req.body.password) === true) {
+      return res.status(404).send({
+        message: 'Password is Required',
+      });
+    }
     if (validator.isEmail(req.body.email) === false) {
       return res.status(404).send({
         message: 'Invalid Email',
