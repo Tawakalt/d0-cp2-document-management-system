@@ -223,4 +223,16 @@ export default class usersController {
       })
       .catch(error => res.status(400).send(error.toString()));
   }
+
+  static logout(req, res) {
+    if (!ls.get('token')) {
+      return res.status(404).send({
+        message: 'You are not signed in',
+      });
+    }
+    ls.clear();
+    return res.status(404).send({
+      message: 'User sussefully logged out',
+    });
+  }
 }

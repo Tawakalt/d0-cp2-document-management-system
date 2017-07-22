@@ -15,6 +15,7 @@ module.exports = (app) => {
   app.post('/users/:roleId', usersController.create);
   app.post('/users', usersController.create);
 
+  app.get('/users/logout', usersController.logout);
   app.get('/users', usersController.list);
   app.get('/users/:userId', usersController.retrieve);
 
