@@ -11,7 +11,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require('./server/routes')(app);
 
 app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
+  message: 'INVALID ROUTE!!!.',
+}));
+app.post('*', (req, res) => res.status(200).send({
+  message: 'INVALID ROUTE!!!.',
+}));
+app.put('*', (req, res) => res.status(200).send({
+  message: 'INVALID ROUTE!!!.',
+}));
+app.delete('*', (req, res) => res.status(200).send({
+  message: 'INVALID ROUTE!!!.',
 }));
 
 export default app;
