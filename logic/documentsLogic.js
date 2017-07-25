@@ -38,4 +38,17 @@ export default class Utils {
     req.loggedInUser = loggedInUser.id;
     return false;
   }
+
+  static listQuery(limit, offset, property) {
+    if (limit && offset) {
+      property.limit = limit;
+      property.offset = offset;
+    }
+    const loggedInUser = jwt.verify(localStorage.get('token'),
+      process.env.JWT_SECRET);
+    if (loggedInUser.roleId === 3) {
+      property.where = { userId: loggedInUser.id };
+    }
+    return property;
+  }
 }

@@ -33,4 +33,7 @@ module.exports = (app) => {
   // Endpoints for documents
   app.post('/api/v1/documents',
     Utils.isLoggedIn, utils.isValid, documentsController.create);
+
+  app.get('/api/v1/documents',
+    Utils.isLoggedIn, documentsController.list);
 };

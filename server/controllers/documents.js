@@ -1,6 +1,7 @@
 import Utils from '../../logic/documentsLogic';
 
 const Document = require('../models').Document;
+const User = require('../models').User;
 
 export default class documentsController {
   static create(req, res) {
@@ -25,5 +26,26 @@ export default class documentsController {
         }
       })
       .catch(error => res.status(400).send(error.toString()));
+  }
+
+  static list(req, res) {
+    let property = {
+      include: [
+        { model: User }
+      ],
+      order: [
+        ['id', 'DESC']
+      ]
+    };
+    property = Utils.listQuery(req.query.limit, req.query.offset, property);
+    return Document
+      .findAll(property)
+      .then((doc) => {
+        if (doc.length === 0) {
+          res.status(201).send({ message: 'No Document has been created' });
+        } else {
+          res.status(200).send(doc);
+        }
+      });
   }
 }
