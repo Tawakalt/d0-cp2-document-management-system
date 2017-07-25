@@ -9,6 +9,7 @@ module.exports = {
       },
       title: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING
       },
       content: {
@@ -16,8 +17,8 @@ module.exports = {
         type: Sequelize.TEXT
       },
       access: {
-        type: Sequelize.ENUM('Public', 'Private', 'Role'),
-        defaultValue: 'Public'
+        type: Sequelize.ENUM,
+        values: ['Public', 'Private', 'Role']
       },
       userId: {
         type: Sequelize.INTEGER,
