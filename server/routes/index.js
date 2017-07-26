@@ -1,6 +1,7 @@
 import rolesController from '../controllers/roles';
 import usersController from '../controllers/users';
 import documentsController from '../controllers/documents';
+import searchController from '../controllers/search';
 import Utils from '../../utils';
 import utils from '../../logic/documentsLogic';
 
@@ -46,4 +47,11 @@ module.exports = (app) => {
 
   app.delete('/api/v1/documents/:docId',
     Utils.isLoggedIn, documentsController.destroy);
+
+  // Endpoints for Search
+  app.get('/api/v1/search/users',
+    Utils.isLoggedIn, Utils.isAdmin, searchController.userSearch);
+
+  app.get('/api/v1/search/documents',
+    Utils.isLoggedIn, searchController.docSearch);
 };

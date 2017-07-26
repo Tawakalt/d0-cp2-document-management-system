@@ -58,7 +58,7 @@ export default class Utils {
     next();
   }
 
-  static isUser(res, req, user) {
+  static isUser(req, res, user) {
     if (!user) {
       let message;
       if (req.url === '/api/v1/users/login') {
@@ -73,7 +73,7 @@ export default class Utils {
     return false;
   }
 
-  static doesEmailExist(res, req, user) {
+  static doesEmailExist(req, res, user) {
     if (user) {
       return res.status(404).send({
         message: 'Email already exists',
@@ -82,7 +82,7 @@ export default class Utils {
     return false;
   }
 
-  static isValidParams(res, req, email, password) {
+  static isValidParams(req, res, email, password) {
     if (email === '' || (email && validator.isEmpty(email) === true)) {
       return res.status(404).send({
         message: 'Email is Required!!!',
@@ -101,7 +101,7 @@ export default class Utils {
     return false;
   }
 
-  static allowUpdate(res, req, loggedInUser, userId, details) {
+  static allowUpdate(req, res, loggedInUser, userId, details) {
     if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(userId)) {
       return res.status(404).send({
         message: 'You cannot update someone else\'s details',
@@ -124,7 +124,7 @@ export default class Utils {
     return false;
   }
 
-  static isRoleValid(res, req, roleId) {
+  static isRoleValid(req, res, roleId) {
     if (roleId &&
       validator.isNumeric(roleId) === false) {
       return res.status(404).send({
@@ -134,7 +134,7 @@ export default class Utils {
     return false;
   }
 
-  static checkError(res, req, err) {
+  static checkError(req, res, err) {
     let SeqError = 'SequelizeForeignKeyConstraintError: ';
     SeqError += 'insert or update on table "Users" ';
     SeqError += 'violates foreign key constraint ';
