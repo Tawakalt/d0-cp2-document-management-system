@@ -97,4 +97,21 @@ export default class documentsController {
       })
       .catch(error => res.status(400).send(error.toString()));
   }
+
+  static destroy(req, res) {
+    return Document
+      .findById(req.params.docId)
+      .then((doc) => {
+        if (!Utils.isDoc(req, res, doc)) {
+          if (!Utils.allowDelete(req, res, doc.userId)) {
+            return doc
+              .destroy()
+              .then(() => res.status(400).send({
+                message: 'Document successfully deleted' }))
+              .catch(err => res.status(400).send(err.toString()));
+          }
+        }
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
 }

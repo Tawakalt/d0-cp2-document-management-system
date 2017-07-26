@@ -119,4 +119,15 @@ export default class Utils {
     }
     return false;
   }
+
+  static allowDelete(req, res, ownerId) {
+    const loggedInUser = jwt.verify(localStorage.get('token'),
+      process.env.JWT_SECRET);
+    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
+      return res.status(404).send({
+        message: 'You cannot delete someone else\'s document',
+      });
+    }
+    return false;
+  }
 }

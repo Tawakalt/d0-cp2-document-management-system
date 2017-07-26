@@ -41,4 +41,7 @@ module.exports = (app) => {
 
   app.put('/api/v1/documents/:docId',
     Utils.isLoggedIn, documentsController.update);
+
+  app.delete('/api/v1/documents/:docId',
+    Utils.isLoggedIn, documentsController.destroy);
 };
