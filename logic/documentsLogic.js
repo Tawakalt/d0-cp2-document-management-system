@@ -27,7 +27,7 @@ export default class Utils {
     next();
   }
 
-  static doesTitleExist(res, req, doc) {
+  static doesTitleExist(req, res, doc) {
     if (doc) {
       return res.status(404).send({
         message: 'Title already exists',
@@ -52,7 +52,7 @@ export default class Utils {
     return property;
   }
 
-  static isDoc(res, req, doc) {
+  static isDoc(req, res, doc) {
     if (!doc) {
       return res.status(400).send({
         message: 'Document Not Found'
@@ -61,7 +61,7 @@ export default class Utils {
     return false;
   }
 
-  static isAllowed(res, req, doc) {
+  static isAllowed(req, res, doc) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     const allowed = [doc.User.roleId, 1, 2];
@@ -70,6 +70,51 @@ export default class Utils {
     === false)) {
       return res.status(400).send({
         message: 'You are not authorized to view this document'
+      });
+    }
+    return false;
+  }
+
+  static allowUpdate(req, res, ownerId) {
+    const loggedInUser = jwt.verify(localStorage.get('token'),
+      process.env.JWT_SECRET);
+    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
+      return res.status(404).send({
+        message: 'You cannot update someone else\'s document',
+      });
+    }
+    return false;
+  }
+
+  static isValidParams(req, res) {
+    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
+      return res.status(404).send({
+        message: 'Title is Required',
+      });
+    }
+    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
+      return res.status(404).send({
+        message: 'Content is Required',
+      });
+    }
+    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
+      return res.status(404).send({
+        message: 'Access is Required',
+      });
+    }
+    if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
+      return res.status(404).send({
+        message: 'Invalid Access Type',
+      });
+    }
+    return false;
+  }
+
+  static checkError(req, res, err) {
+    if (err.toString() ===
+      'SequelizeUniqueConstraintError: Validation error') {
+      return res.status(404).send({
+        message: 'Your Edited Title already exists!!!',
       });
     }
     return false;

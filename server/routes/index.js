@@ -38,4 +38,7 @@ module.exports = (app) => {
     Utils.isLoggedIn, documentsController.list);
   app.get('/api/v1/documents/:docId',
     Utils.isLoggedIn, documentsController.retrieve);
+
+  app.put('/api/v1/documents/:docId',
+    Utils.isLoggedIn, documentsController.update);
 };

@@ -12,7 +12,7 @@ export default class documentsController {
         },
       })
       .then((doc) => {
-        if (!Utils.doesTitleExist(res, req, doc)) {
+        if (!Utils.doesTitleExist(req, res, doc)) {
           return Document
             .create({
               title: req.body.title,
@@ -57,9 +57,41 @@ export default class documentsController {
         }],
       })
       .then((doc) => {
-        if (!Utils.isDoc(res, req, doc)) {
-          if (!Utils.isAllowed(res, req, doc)) {
+        if (!Utils.isDoc(req, res, doc)) {
+          if (!Utils.isAllowed(req, res, doc)) {
             return res.status(200).send(doc);
+          }
+        }
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
+
+  static update(req, res) {
+    return Document
+      .findById(req.params.docId, {
+        include: [{
+          model: User,
+        }],
+      })
+      .then((doc) => {
+        if (!Utils.isDoc(req, res, doc)) {
+          if (!Utils.allowUpdate(req, res, doc.userId)) {
+            if (!Utils.isValidParams(req, res)) {
+              return doc
+                .update({
+                  title: req.body.title || doc.title,
+                  content: req.body.content || doc.content,
+                  access: req.body.access || doc.access,
+                })
+                .then(() => res.status(200).send({
+                  message: 'Update Successful',
+                }))
+                .catch((err) => {
+                  if (!Utils.checkError(req, res, err)) {
+                    res.status(400).send(err.toString());
+                  }
+                });
+            }
           }
         }
       })
