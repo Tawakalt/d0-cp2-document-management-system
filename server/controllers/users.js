@@ -22,7 +22,7 @@ export default class usersController {
         },
       })
       .then((user) => {
-        if (!Utils.doesEmailExist(res, req, user)) {
+        if (!Utils.doesEmailExist(req, res, user)) {
           bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
             return User
               .create({
@@ -67,7 +67,7 @@ export default class usersController {
         }],
       })
       .then((user) => {
-        if (!Utils.isUser(res, req, user)) {
+        if (!Utils.isUser(req, res, user)) {
           return res.status(200).send(user);
         }
       })
@@ -78,16 +78,16 @@ export default class usersController {
     return User
       .findById(req.params.userId)
       .then((user) => {
-        if (!Utils.isUser(res, req, user)) {
+        if (!Utils.isUser(req, res, user)) {
           jwt.verify(
             localStorage.get('token'),
             process.env.JWT_SECRET,
             (error, loggedInUser) => {
               if (!Utils.allowUpdate(
-                res, req, loggedInUser, parseInt(req.params.userId), req.body)
+                req, res, loggedInUser, parseInt(req.params.userId), req.body)
               ) {
                 if (!Utils.isValidParams(
-                  res, req, req.body.email, req.body.password)) {
+                  req, res, req.body.email, req.body.password)) {
                   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
                     let message = '';
                     if (req.body.email !== undefined) {
@@ -106,7 +106,7 @@ export default class usersController {
                             message += 'Password successfully Updated. ';
                           }
                         }
-                        if (!Utils.isRoleValid(res, req, req.body.roleId)) {
+                        if (!Utils.isRoleValid(req, res, req.body.roleId)) {
                           if (req.body.roleId) {
                             if (parseInt(req.body.roleId) === user.roleId) {
                               message += 'Role up to date. ';
@@ -122,7 +122,7 @@ export default class usersController {
                             })
                             .then(() => res.status(200).send({ message }))
                             .catch((err) => {
-                              if (!Utils.checkError(res, req, err)) {
+                              if (!Utils.checkError(req, res, err)) {
                                 res.status(400).send(err.toString());
                               }
                             });
@@ -141,7 +141,7 @@ export default class usersController {
     return User
       .findById(req.params.userId)
       .then((user) => {
-        if (!Utils.isUser(res, req, user)) {
+        if (!Utils.isUser(req, res, user)) {
           return user
             .destroy()
             .then(() => res.status(400).send({
@@ -160,7 +160,7 @@ export default class usersController {
         }
       })
       .then((user) => {
-        if (!Utils.isUser(res, req, user)) {
+        if (!Utils.isUser(req, res, user)) {
           bcrypt.compare(
             req.body.password, user.dataValues.password, (err, resp) => {
               if (resp === false) {
