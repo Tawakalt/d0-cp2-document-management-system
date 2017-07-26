@@ -3,14 +3,15 @@ export default (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     access: {
-      type: DataTypes.ENUM('Public', 'Private', 'Role'),
-      defaultValue: 'Public',
+      type: DataTypes.ENUM,
+      values: ['Public', 'Private', 'Role']
     },
     userId: {
       type: DataTypes.INTEGER,

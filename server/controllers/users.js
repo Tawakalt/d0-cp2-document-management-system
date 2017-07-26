@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const User = require('../models').User;
 const Role = require('../models').Role;
+const Document = require('../models').Document;
 
 const saltRounds = 10;
 
@@ -186,5 +187,23 @@ export default class usersController {
     return res.status(404).send({
       message: 'User sussefully logged out',
     });
+  }
+
+  static allUsersDoc(req, res) {
+    return Document
+      .findAll({
+        where: { userId: req.params.userId },
+        order: [
+          ['id', 'DESC']
+        ]
+      })
+      .then((doc) => {
+        if (doc.length === 0) {
+          res.status(201).send(
+            { message: 'This User has not created any Document' });
+        } else {
+          res.status(200).send(doc);
+        }
+      });
   }
 }
