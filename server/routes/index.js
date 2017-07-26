@@ -24,6 +24,8 @@ module.exports = (app) => {
     Utils.isLoggedIn, Utils.isAdmin, usersController.list);
   app.get('/api/v1/users/:userId',
     Utils.isLoggedIn, Utils.isAdmin, usersController.retrieve);
+  app.get('/api/v1/users/:userId/documents',
+    Utils.isLoggedIn, Utils.isAdmin, usersController.allUsersDoc);
 
   app.put('/api/v1/users/:userId', Utils.isLoggedIn, usersController.update);
 
