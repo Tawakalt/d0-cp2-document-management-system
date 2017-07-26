@@ -36,4 +36,6 @@ module.exports = (app) => {
 
   app.get('/api/v1/documents',
     Utils.isLoggedIn, documentsController.list);
+  app.get('/api/v1/documents/:docId',
+    Utils.isLoggedIn, documentsController.retrieve);
 };

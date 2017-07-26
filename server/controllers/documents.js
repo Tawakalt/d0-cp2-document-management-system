@@ -48,4 +48,21 @@ export default class documentsController {
         }
       });
   }
+
+  static retrieve(req, res) {
+    return Document
+      .findById(req.params.docId, {
+        include: [{
+          model: User,
+        }],
+      })
+      .then((doc) => {
+        if (!Utils.isDoc(res, req, doc)) {
+          if (!Utils.isAllowed(res, req, doc)) {
+            return res.status(200).send(doc);
+          }
+        }
+      })
+      .catch(error => res.status(400).send(error.toString()));
+  }
 }

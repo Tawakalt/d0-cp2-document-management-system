@@ -51,4 +51,27 @@ export default class Utils {
     }
     return property;
   }
+
+  static isDoc(res, req, doc) {
+    if (!doc) {
+      return res.status(400).send({
+        message: 'Document Not Found'
+      });
+    }
+    return false;
+  }
+
+  static isAllowed(res, req, doc) {
+    const loggedInUser = jwt.verify(localStorage.get('token'),
+      process.env.JWT_SECRET);
+    const allowed = [doc.User.roleId, 1, 2];
+    if ((doc.access === 'Private' && doc.userId !== loggedInUser.id) ||
+    (doc.access === 'Role' && allowed.includes(loggedInUser.roleId)
+    === false)) {
+      return res.status(400).send({
+        message: 'You are not authorized to view this document'
+      });
+    }
+    return false;
+  }
 }
