@@ -49,6 +49,9 @@ module.exports = (app) => {
     Utils.isLoggedIn, documentsController.destroy);
 
   // Endpoints for Search
-  app.get('/api/v1/search/users/',
+  app.get('/api/v1/search/users',
     Utils.isLoggedIn, Utils.isAdmin, searchController.userSearch);
+
+  app.get('/api/v1/search/documents',
+    Utils.isLoggedIn, searchController.docSearch);
 };
