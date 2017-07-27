@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import localStorage from 'local-storage';
 import jwt from 'jsonwebtoken';
-import jwtoken from '../../jwt';
-import Utils from '../../utils';
+import jwtoken from '../helper/jwt';
+import Utils from '../helper/utils';
 
 require('dotenv').config();
 

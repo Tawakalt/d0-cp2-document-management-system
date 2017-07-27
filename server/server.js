@@ -1,6 +1,5 @@
-// This will be our application entry. We'll setup our server here.
 import http from 'http';
-import app from './app'; // The express app we just created
+import app from './route';
 
 const port = process.env.PORT || 8080;
 app.set('port', port);
