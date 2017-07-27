@@ -9,7 +9,7 @@ const Document = require('../models').Document;
 export default class searchController {
   static userSearch(req, res) {
     if (req.query.q && validator.isEmail(req.query.q) === false) {
-      return res.status(404).send({
+      return res.status(400).send({
         message: 'Invalid Email!!!',
       });
     }

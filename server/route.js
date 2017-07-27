@@ -10,16 +10,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require our routes into the application.
 require('./routes')(app);
 
-app.get('*', (req, res) => res.status(200).send({
+app.get('*', (req, res) => res.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.post('*', (req, res) => res.status(200).send({
+app.post('*', (req, res) => res.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.put('*', (req, res) => res.status(200).send({
+app.put('*', (req, res) => res.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.delete('*', (req, res) => res.status(200).send({
+app.delete('*', (req, res) => res.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
 

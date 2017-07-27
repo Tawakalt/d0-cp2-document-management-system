@@ -42,7 +42,7 @@ export default class documentsController {
       .findAll(property)
       .then((doc) => {
         if (doc.length === 0) {
-          res.status(201).send({ message: 'No Document has been created' });
+          res.status(200).send({ message: 'No Document has been created' });
         } else {
           res.status(200).send(doc);
         }
@@ -106,7 +106,7 @@ export default class documentsController {
           if (!Utils.allowDelete(req, res, doc.userId)) {
             return doc
               .destroy()
-              .then(() => res.status(400).send({
+              .then(() => res.status(200).send({
                 message: 'Document successfully deleted' }))
               .catch(err => res.status(400).send(err.toString()));
           }
