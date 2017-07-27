@@ -1,6 +1,6 @@
 import validator from 'validator';
-import Utils from '../../utils';
-import utils from '../../logic/documentsLogic';
+import Utils from '../utils';
+import utils from '../logic/documentsLogic';
 
 const User = require('../models').User;
 const Role = require('../models').Role;

@@ -2,8 +2,8 @@ import rolesController from '../controllers/roles';
 import usersController from '../controllers/users';
 import documentsController from '../controllers/documents';
 import searchController from '../controllers/search';
-import Utils from '../../utils';
-import utils from '../../logic/documentsLogic';
+import Utils from '../utils';
+import utils from '../logic/documentsLogic';
 
 module.exports = (app) => {
   app.get('/api/v1', (req, res) => res.status(200).send({

@@ -1,4 +1,4 @@
-import Utils from '../../logic/documentsLogic';
+import Utils from '../logic/documentsLogic';
 
 const Document = require('../models').Document;
 const User = require('../models').User;

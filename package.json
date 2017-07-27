@@ -4,8 +4,8 @@
   "description": "A Document management System",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./bin/www --exec babel-node",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./server.js --exec babel-node",
+    "test": "gulp coverage"
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,20 @@
   },
   "homepage": "https://github.com/Tawakalt/d0-cp2-document-management-system#readme",
   "devDependencies": {
+    "chai": "^4.1.0",
     "eslint": "^4.2.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.7.0",
-    "nodemon": "^1.11.0"
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-exit": "0.0.2",
+    "gulp-inject-modules": "^1.0.0",
+    "gulp-istanbul": "^1.1.2",
+    "gulp-jasmine-node": "^1.0.7",
+    "gulp-nodemon": "^2.2.1",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "babel-cli": "^6.24.1",
