@@ -144,7 +144,7 @@ export default class usersController {
         if (!Utils.isUser(req, res, user)) {
           return user
             .destroy()
-            .then(() => res.status(400).send({
+            .then(() => res.status(200).send({
               message: 'User successfully deleted' }))
             .catch(err => res.status(400).send(err.toString()));
         }
@@ -164,7 +164,7 @@ export default class usersController {
           bcrypt.compare(
             req.body.password, user.dataValues.password, (err, resp) => {
               if (resp === false) {
-                return res.status(404).send({
+                return res.status(400).send({
                   message: 'Wrong Password',
                 });
               }
@@ -174,7 +174,7 @@ export default class usersController {
                 user.dataValues.roleId
               );
               localStorage.set('token', token);
-              return res.status(200).send({
+              return res.status(201).send({
                 message: 'login successful' });
             });
         }
@@ -184,7 +184,7 @@ export default class usersController {
 
   static logout(req, res) {
     localStorage.clear();
-    return res.status(404).send({
+    return res.status(200).send({
       message: 'User sussefully logged out',
     });
   }
@@ -199,7 +199,7 @@ export default class usersController {
       })
       .then((doc) => {
         if (doc.length === 0) {
-          res.status(201).send(
+          res.status(200).send(
             { message: 'This User has not created any Document' });
         } else {
           res.status(200).send(doc);
