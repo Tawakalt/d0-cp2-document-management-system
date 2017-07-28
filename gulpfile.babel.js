@@ -30,18 +30,18 @@ gulp.task('dev', () => gulp.src('server/**/*.js')
   .pipe(gulp.dest('build')));
 
 gulp.task('test', () => {
-  gulp.src('./tests/**/*.js')
+  gulp.src('tests/controllers/*.js')
     .pipe(babel())
     .pipe(jasmineNode(jasmineNodeOpts))
     .pipe(exit());
 });
 
 gulp.task('coverage', (cb) => {
-  gulp.src('build/routes/*.js')
+  gulp.src('./build/controllers/*.js')
     .pipe(istanbul())
     .pipe(istanbul.hookRequire())
     .on('finish', () => {
-      gulp.src('./tests/**/*.js')
+      gulp.src('tests/controllers/*.js')
         .pipe(babel())
         .pipe(injectModules())
         .pipe(jasmineNode())
