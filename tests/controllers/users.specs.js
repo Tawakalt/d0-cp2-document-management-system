@@ -428,6 +428,17 @@ describe('User Endpoints', () => {
   });
 
   describe('Retrieve all docs of a user\'s Endpoint', () => {
+    beforeEach((done) => {
+      localStorage.clear();
+      User.create(
+        { email: process.env.EMAIL,
+          password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
+          roleId: 1
+        }
+      ).then(() => {
+        done();
+      });
+    });
     it('should return the appropriate message when no document is found for',
       (done) => {
         localStorage.clear();
