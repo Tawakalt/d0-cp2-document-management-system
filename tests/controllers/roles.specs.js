@@ -2,6 +2,7 @@ import request from 'supertest';
 import localStorage from 'local-storage';
 import { expect } from 'chai';
 import app from '../../build/server';
+import jwtoken from '../../server/helper/jwt';
 
 const dotenv = require('dotenv'),
   bcrypt = require('bcrypt');
@@ -12,6 +13,7 @@ const User = require('../../server/models').User;
 const Role = require('../../server/models').Role;
 
 const saltRounds = 10;
+const token = jwtoken.sign(1, process.env.EMAIL, 1);
 
 describe('Role Endpoints', () => {
   beforeEach((done) => {
@@ -73,7 +75,7 @@ describe('Role Endpoints', () => {
       });
     });
     it('should successfully create a new role', (done) => {
-      localStorage.set('token', process.env.TOKEN);
+      localStorage.set('token', token);
       request(app)
         .post('/api/v1/roles/')
         .send({
@@ -112,7 +114,7 @@ describe('Role Endpoints', () => {
       });
     });
     it('should successfully get all roles', (done) => {
-      localStorage.set('token', process.env.TOKEN);
+      localStorage.set('token', token);
       request(app)
         .get('/api/v1/roles/')
         .end((err, res) => {
