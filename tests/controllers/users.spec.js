@@ -41,10 +41,7 @@ describe('User Endpoints', () => {
                   { role: 'Super Admin' },
                   { role: 'Admin' },
                   { role: 'User' }
-                ]).then((err) => {
-                  if (!err) {
-                    // 
-                  }
+                ]).then(() => {
                   done();
                 });
               }
@@ -70,7 +67,6 @@ describe('User Endpoints', () => {
           done();
         });
     });
-
     it('it should not create a user with an invalid email', (done) => {
       request(app)
         .post('/api/v1/users/')
@@ -93,14 +89,6 @@ describe('User Endpoints', () => {
     beforeEach((done) => {
       localStorage.clear();
       done();
-      // User.create(
-      //   { email: process.env.EMAIL,
-      //     password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
-      //     roleId: 1
-      //   }
-      // ).then(() => {
-      //   done();
-      // });
     });
     it('should successfully get all roles with an authorized user', (done) => {
       localStorage.set('token', superToken);

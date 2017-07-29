@@ -38,10 +38,7 @@ describe('Role Endpoints', () => {
                   { role: 'Super Admin' },
                   { role: 'Admin' },
                   { role: 'User' }
-                ]).then((err) => {
-                  if (!err) {
-                    // 
-                  }
+                ]).then(() => {
                   done();
                 });
               }
