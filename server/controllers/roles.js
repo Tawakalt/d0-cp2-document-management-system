@@ -19,6 +19,9 @@ export default class rolesController {
           model: User,
           as: 'users',
         }],
+        order: [
+          ['id', 'ASC']
+        ]
       })
       .then(role => res.status(200).send(role))
       .catch(error => res.status(400).send(error.toString()));
