@@ -165,12 +165,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not authorize an authorized user', (done) => {
-      Document.create(
-        { title: 'SUPER',
-          content: 'super',
-          access: 'Private',
-          userId: 1
-        });
       localStorage.set('token', userToken);
       request(app)
         .get('/api/v1/documents/1')
@@ -185,12 +179,6 @@ describe('Documents Endpoints', () => {
     });
     it('should successfuly return for an authorized user', (done) => {
       localStorage.set('token', superToken);
-      Document.create(
-        { title: 'SUPER',
-          content: 'super',
-          access: 'Private',
-          userId: 1
-        });
       request(app)
         .get('/api/v1/documents/1')
         .end((err, res) => {
@@ -257,7 +245,8 @@ describe('Documents Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You cannot update someone else\'s document');
+            expect(res.body.message).to.equal(
+              'You cannot update someone else\'s document');
           }
           done();
         });
@@ -293,7 +282,8 @@ describe('Documents Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Your Edited Title already exists!!!');
+            expect(res.body.message).to.equal(
+              'Your Edited Title already exists!!!');
           }
           done();
         });
@@ -355,7 +345,8 @@ describe('Documents Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You cannot delete someone else\'s document');
+            expect(res.body.message).to.equal(
+              'You cannot delete someone else\'s document');
           }
           done();
         });
