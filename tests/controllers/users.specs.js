@@ -90,7 +90,7 @@ describe('User Endpoints', () => {
       localStorage.clear();
       done();
     });
-    it('should successfully get all roles with an authorized user', (done) => {
+    it('should successfully get all users', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/')
@@ -130,7 +130,6 @@ describe('User Endpoints', () => {
   describe('Retrieve User Endpoint', () => {
     beforeEach((done) => {
       localStorage.clear();
-      done();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -197,7 +196,6 @@ describe('User Endpoints', () => {
         });
     });
     it('should only allow a super admin to update other users role', (done) => {
-      localStorage.clear();
       localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/2')
@@ -441,7 +439,6 @@ describe('User Endpoints', () => {
     });
     it('should return the appropriate message when no document is found for',
       (done) => {
-        localStorage.clear();
         localStorage.set('token', superToken);
         request(app)
           .get('/api/v1/users/1/documents')
@@ -463,7 +460,6 @@ describe('User Endpoints', () => {
           userId: 1
         }
       );
-      localStorage.clear();
       localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/1/documents')
