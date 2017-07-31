@@ -4,7 +4,21 @@ import jwt from 'jsonwebtoken';
 
 require('dotenv').config();
 
+/**
+ * @description Contains Authentication middleware and User Related Logic
+ * @export
+ * @class Utils
+ */
 export default class Utils {
+  /**
+   * @description Checks if User is Loggedin
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {function} next Tell the next function to execute
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isLoggedIn(req, res, next) {
     if (!localStorage.get('token')) {
       return res.status(401).send({
@@ -14,6 +28,15 @@ export default class Utils {
     next();
   }
 
+  /**
+   * @description Checks if User is an Admin
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {function} next Tell the next function to execute
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isAdmin(req, res, next) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
@@ -25,6 +48,15 @@ export default class Utils {
     next();
   }
 
+  /**
+   * @description Checks if User is a Super Admin
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {function} next Tell the next function to execute
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isSuper(req, res, next) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
@@ -39,6 +71,15 @@ export default class Utils {
     next();
   }
 
+  /**
+   * @description Validates User parameters
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {function} next Tell the next function to execute
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isValid(req, res, next) {
     if (!req.body.email && validator.isEmpty(req.body.email) === true) {
       return res.status(400).send({
@@ -58,6 +99,15 @@ export default class Utils {
     next();
   }
 
+  /**
+   * @description Checks if User exists
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {object} user User details
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isUser(req, res, user) {
     if (!user) {
       if (req.url === '/api/v1/users/login') {
@@ -72,6 +122,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks if Email Exists
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {object} user user details
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static doesEmailExist(req, res, user) {
     if (user) {
       return res.status(400).send({
@@ -81,6 +140,16 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks if Parameters are Valid
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {string} email user's email
+   * @param {string} password user's password
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isValidParams(req, res, email, password) {
     if (email === '' || (email && validator.isEmpty(email) === true)) {
       return res.status(400).send({
@@ -100,6 +169,17 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks Authorization for Update
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {object} loggedInUser Details of the logged in user
+   * @param {integer} userId Id of the User whose details is to be updated
+   * @param {object} details Updated User details
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static allowUpdate(req, res, loggedInUser, userId, details) {
     if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(userId)) {
       return res.status(401).send({
@@ -123,6 +203,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Validates Role
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {integer} roleId Users roleId
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isRoleValid(req, res, roleId) {
     if (roleId &&
       validator.isNumeric(roleId) === false) {
@@ -133,6 +222,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks for Validation Error
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {string} err Server error
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static checkError(req, res, err) {
     let SeqError = 'SequelizeForeignKeyConstraintError: ';
     SeqError += 'insert or update on table "Users" ';

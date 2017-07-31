@@ -2,7 +2,21 @@ import jwt from 'jsonwebtoken';
 import localStorage from 'local-storage';
 import validator from 'validator';
 
+/**
+ * @description Contains all Document Related Logic
+ * @export
+ * @class Utils
+ */
 export default class Utils {
+  /**
+   * @description Checks the validity of the documents parameters
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {function} next Tell the next function to execute
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isValid(req, res, next) {
     if (!req.body.title && validator.isEmpty(req.body.title) === true) {
       return res.status(400).send({
@@ -27,6 +41,15 @@ export default class Utils {
     next();
   }
 
+  /**
+   * @description checks if Title exists
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {object} doc The returned document
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static doesTitleExist(req, res, doc) {
     if (doc) {
       return res.status(400).send({
@@ -39,6 +62,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description adds more properties to the query
+   * @static
+   * @param {integer} limit Number of rows to be returned
+   * @param {integer} offset Number of rows to be skipped
+   * @param {object} property query property
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static listQuery(limit, offset, property) {
     if (limit && offset) {
       property.limit = limit;
@@ -52,6 +84,15 @@ export default class Utils {
     return property;
   }
 
+  /**
+   * @description Checks if document exists
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {object} doc 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isDoc(req, res, doc) {
     if (!doc) {
       return res.status(404).send({
@@ -61,6 +102,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks Authorization for viewing
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {object} doc 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isAllowed(req, res, doc) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
@@ -75,6 +125,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks Authorization for updating
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {integer} ownerId 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static allowUpdate(req, res, ownerId) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
@@ -86,6 +145,14 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks Validity of parameters
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static isValidParams(req, res) {
     if (!req.body.title && validator.isEmpty(req.body.title) === true) {
       return res.status(400).send({
@@ -110,6 +177,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description checks validation error
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @param {object} err 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static checkError(req, res, err) {
     if (err.toString() ===
       'SequelizeUniqueConstraintError: Validation error') {
@@ -120,6 +196,15 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * @description Checks Authorization for deleting
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {integer} ownerId 
+   * @returns {object} response which includes status and and message 
+   * @memberof Utils
+   */
   static allowDelete(req, res, ownerId) {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
