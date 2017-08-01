@@ -18,10 +18,7 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": null,
-    "password": null,
-    "database": "",
-    "host": "127.0.0.1",
+    "use_env_variable": "PROD_DB",
     "dialect": "postgres"
   }
 }
