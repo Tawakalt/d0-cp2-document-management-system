@@ -10,11 +10,11 @@ const User = require('../models').User;
  */
 export default class documentsController {
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Create Documents
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof documentsController
    */
@@ -47,7 +47,7 @@ export default class documentsController {
    *              to View all Documents
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof documentsController
    */
@@ -85,11 +85,11 @@ export default class documentsController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
-   *              to Get a specific Document             
+   * @description Allows Authorized Registered and Loggedin Personnels
+   *              to Get a specific Document
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof documentsController
    */
@@ -111,11 +111,11 @@ export default class documentsController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Update a Document
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof documentsController
    */
@@ -152,11 +152,11 @@ export default class documentsController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Delete a Document
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof documentsController
    */

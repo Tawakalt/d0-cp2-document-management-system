@@ -13,7 +13,7 @@ const Document = require('../models').Document;
  */
 export default class searchController {
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Users
    * @static
    * @param {object} req Client's request
@@ -45,7 +45,7 @@ export default class searchController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Documents
    * @static
    * @param {object} req Client's request

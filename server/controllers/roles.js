@@ -31,7 +31,7 @@ export default class rolesController {
    *              to View all Documents
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof rolesController
    */

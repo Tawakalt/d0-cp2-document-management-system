@@ -14,9 +14,9 @@ export default class Utils {
    * @description Checks if User is Loggedin
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isLoggedIn(req, res, next) {
@@ -32,9 +32,9 @@ export default class Utils {
    * @description Checks if User is an Admin
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isAdmin(req, res, next) {
@@ -52,9 +52,9 @@ export default class Utils {
    * @description Checks if User is a Super Admin
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isSuper(req, res, next) {
@@ -75,9 +75,9 @@ export default class Utils {
    * @description Validates User parameters
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isValid(req, res, next) {
@@ -105,7 +105,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} user User details
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isUser(req, res, user) {
@@ -126,9 +126,9 @@ export default class Utils {
    * @description Checks if Email Exists
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {object} user user details
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static doesEmailExist(req, res, user) {
@@ -144,10 +144,10 @@ export default class Utils {
    * @description Checks if Parameters are Valid
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {string} email user's email
    * @param {string} password user's password
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isValidParams(req, res, email, password) {
@@ -173,11 +173,11 @@ export default class Utils {
    * @description Checks Authorization for Update
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {object} loggedInUser Details of the logged in user
    * @param {integer} userId Id of the User whose details is to be updated
    * @param {object} details Updated User details
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static allowUpdate(req, res, loggedInUser, userId, details) {
@@ -209,7 +209,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} roleId Users roleId
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isRoleValid(req, res, roleId) {
@@ -228,7 +228,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {string} err Server error
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static checkError(req, res, err) {
