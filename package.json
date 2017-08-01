@@ -4,7 +4,9 @@
   "description": "A Document management System",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server/server.js --exec babel-node",
+    "postinstall": "gulp dev",
+    "start": "node ./build/server.js",
+    "startDev": "nodemon ./server/server.js --exec babel-node",
     "test": "gulp dev && gulp coverage"
   },
   "repository": {
