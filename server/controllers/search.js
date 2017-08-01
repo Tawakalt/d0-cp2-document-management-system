@@ -23,7 +23,7 @@ export default class searchController {
         ],
       })
       .then((user) => {
-        if (!Utils.isUser(res, req, user)) {
+        if (!Utils.isUser(req, res, user)) {
           return res.status(200).send(user);
         }
       })

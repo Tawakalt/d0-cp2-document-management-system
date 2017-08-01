@@ -88,7 +88,8 @@ describe('Search Endpoints', () => {
         .get('/api/v1/search/users?q=a@y.com')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(400);
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('User Not Found');
           }
           done();
         });
