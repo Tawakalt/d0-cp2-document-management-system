@@ -3,6 +3,7 @@ import localStorage from 'local-storage';
 import jwt from 'jsonwebtoken';
 import jwtoken from '../helper/jwt';
 import Utils from '../helper/utils';
+import utils from '../helper/documentsLogic';
 
 require('dotenv').config();
 
@@ -48,15 +49,28 @@ export default class usersController {
         ['id', 'DESC']
       ]
     };
-    if (req.query.limit && req.query.offset) {
-      property.limit = req.query.limit;
-      property.offset = req.query.offset;
+    if (!utils.listQuery(res, req.query.limit, req.query.offset, property)) {
+      return User
+        .findAll(res.property)
+        .then((users) => {
+          const totalCount = users.length;
+          let pageCount = Math.round(totalCount / (req.query.limit || 10));
+          pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
+          const page = Math.round((req.query.offset || 0) /
+          (req.query.limit || 10)) + 1;
+          if (users.length === 0) {
+            res.status(200).send({ message: 'No User Found' });
+          }
+          res.status(200).send({ users,
+            metaData: {
+              page,
+              pageCount,
+              count: users.length,
+              totalCount,
+            }
+          });
+        });
     }
-    return User
-      .findAll(property)
-      .then((users) => {
-        res.status(200).send(users);
-      });
   }
 
   static retrieve(req, res) {
