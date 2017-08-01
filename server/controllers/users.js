@@ -7,14 +7,26 @@ import utils from '../helper/documentsLogic';
 
 require('dotenv').config();
 
-
 const User = require('../models').User;
 const Role = require('../models').Role;
 const Document = require('../models').Document;
 
 const saltRounds = 10;
 
+/**
+ * @description Contains all Users Related Functions
+ * @export
+ * @class usersController
+ */
 export default class usersController {
+  /**
+   * @description Allows Users to signup
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof usersController
+   */
   static create(req, res) {
     return User
       .findOne({
@@ -40,6 +52,15 @@ export default class usersController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels
+   *              to View all Users
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof usersController
+   */
   static list(req, res) {
     const property = {
       include: [
@@ -73,6 +94,15 @@ export default class usersController {
     }
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Get a specific User
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof usersController
+   */
   static retrieve(req, res) {
     return User
       .findById(req.params.userId, {
@@ -88,6 +118,15 @@ export default class usersController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Update a User
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof usersController
+   */
   static update(req, res) {
     return User
       .findById(req.params.userId)
@@ -151,6 +190,15 @@ export default class usersController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Delete a User
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof usersController
+   */
   static destroy(req, res) {
     return User
       .findById(req.params.userId)
@@ -166,6 +214,14 @@ export default class usersController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Registered Users to login
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message 
+   * @memberof usersController
+   */
   static login(req, res) {
     return User
       .find({
@@ -196,6 +252,14 @@ export default class usersController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Resgistered and Loggedin Users to Logout
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message 
+   * @memberof usersController
+   */
   static logout(req, res) {
     localStorage.clear();
     return res.status(200).send({
@@ -203,6 +267,15 @@ export default class usersController {
     });
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to View All Documents of a Registered User
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message 
+   * @memberof usersController
+   */
   static allUsersDoc(req, res) {
     return Document
       .findAll({

@@ -1,5 +1,12 @@
 import jwt from 'jsonwebtoken';
 
+/**
+ * @description jwt sign function
+ * @param {string} id User Id
+ * @param {string} email User Email
+ * @param {string} roleId User Role Id
+ * @returns {object} encoded token
+ */
 export default {
   sign: (id, email, roleId) =>
     jwt.sign(

@@ -6,7 +6,21 @@ const User = require('../models').User;
 const Role = require('../models').Role;
 const Document = require('../models').Document;
 
+/**
+ * @description Contains all Search Related Functions
+ * @export
+ * @class searchController
+ */
 export default class searchController {
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Search for Users
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
+   * @memberof searchController
+   */
   static userSearch(req, res) {
     if (req.query.q && validator.isEmail(req.query.q) === false) {
       return res.status(400).send({
@@ -30,6 +44,15 @@ export default class searchController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Search for Documents
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
+   * @memberof searchController
+   */
   static docSearch(req, res) {
     return Document
       .findOne({

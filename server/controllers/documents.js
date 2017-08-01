@@ -3,7 +3,21 @@ import Utils from '../helper/documentsLogic';
 const Document = require('../models').Document;
 const User = require('../models').User;
 
+/**
+ * @description Contains all Document Related Functions
+ * @export
+ * @class documentsController
+ */
 export default class documentsController {
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Create Documents
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof documentsController
+   */
   static create(req, res) {
     return Document
       .findOne({
@@ -28,6 +42,15 @@ export default class documentsController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels
+   *              to View all Documents
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof documentsController
+   */
   static list(req, res) {
     const property = {
       include: [
@@ -61,6 +84,15 @@ export default class documentsController {
     }
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Get a specific Document             
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof documentsController
+   */
   static retrieve(req, res) {
     return Document
       .findById(req.params.docId, {
@@ -78,6 +110,15 @@ export default class documentsController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Update a Document
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof documentsController
+   */
   static update(req, res) {
     return Document
       .findById(req.params.docId, {
@@ -110,6 +151,15 @@ export default class documentsController {
       .catch(error => res.status(400).send(error.toString()));
   }
 
+  /**
+   * @description Allows Authorized Registered and Loggedin Personnels 
+   *              to Delete a Document
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response 
+   * @returns {object} response which includes status and and message
+   * @memberof documentsController
+   */
   static destroy(req, res) {
     return Document
       .findById(req.params.docId)
