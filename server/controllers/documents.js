@@ -52,7 +52,7 @@ export default class documentsController {
    * @memberof documentsController
    */
   static list(req, res) {
-    let property = {
+    const property = {
       include: [
         { model: User }
       ],
@@ -60,16 +60,28 @@ export default class documentsController {
         ['id', 'DESC']
       ]
     };
-    property = Utils.listQuery(req.query.limit, req.query.offset, property);
-    return Document
-      .findAll(property)
-      .then((doc) => {
-        if (doc.length === 0) {
-          res.status(200).send({ message: 'No Document has been created' });
-        } else {
-          res.status(200).send(doc);
-        }
-      });
+    if (!Utils.listQuery(res, req.query.limit, req.query.offset, property)) {
+      return Document
+        .findAll(res.property)
+        .then((doc) => {
+          const totalCount = doc.length;
+          let pageCount = Math.round(totalCount / (req.query.limit || 10));
+          pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
+          const page = Math.round((req.query.offset || 0) /
+          (req.query.limit || 10)) + 1;
+          if (doc.length === 0) {
+            res.status(200).send({ message: 'No Document has been created' });
+          }
+          res.status(200).send({ doc,
+            metaData: {
+              page,
+              pageCount,
+              count: doc.length,
+              totalCount,
+            }
+          });
+        });
+    }
   }
 
   /**

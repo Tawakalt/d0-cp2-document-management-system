@@ -475,30 +475,42 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Sample JSON structured response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-  <span class="s2">"rows"</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span>
-      <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="s2">"username"</span><span class="p">:</span> <span class="s2">"admin"</span><span class="p">,</span>
-      <span class="s2">"fullName"</span><span class="p">:</span> <span class="s2">"Administrator"</span><span class="p">,</span>
-      <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@dms.com"</span><span class="p">,</span>
-      <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="s2">"about"</span><span class="p">:</span> <span class="s2">"I am the admin, better change my password and this about message."</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-      <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="s2">"username"</span><span class="p">:</span> <span class="s2">"montaro"</span><span class="p">,</span>
-      <span class="s2">"fullName"</span><span class="p">:</span> <span class="s2">"Tony Montaro"</span><span class="p">,</span>
-      <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"bossmontaro@gmail.com"</span><span class="p">,</span>
-      <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="s2">"about"</span><span class="p">:</span> <span class="s2">"I love playing chess."</span>
+    <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"my@y.com"</span><span class="p">,</span>
+            <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$L4WP7Q1zAwDqL1jAY.B2..UPqH1P9aznoCe0mW1Am1zWg6eGuZ1e."</span><span class="p">,</span>
+            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span><span class="p">,</span>
+            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span><span class="p">,</span>
+            <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"User"</span><span class="p">,</span>
+                <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-21T10:12:04.079Z"</span><span class="p">,</span>
+                <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-21T10:12:04.079Z"</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span><span class="p">,</span>
+            <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$YTuEjXkS60zLS9Ia03ogyeV6zzFa/JX3VegcbOSvspaH9WGHBcWMG"</span><span class="p">,</span>
+            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span><span class="p">,</span>
+            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span><span class="p">,</span>
+            <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Super Admin"</span><span class="p">,</span>
+                <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-21T10:11:23.334Z"</span><span class="p">,</span>
+                <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-21T10:11:23.334Z"</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">"metaData"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"page"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"pageCount"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"count"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"totalCount"</span><span class="p">:</span> <span class="mi">2</span>
     <span class="p">}</span>
-  <span class="p">],</span>
-  <span class="s2">"metaData"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">"page"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">"pageCount"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">"pageSize"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">"totalCount"</span><span class="p">:</span> <span class="mi">2</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-3'>Request</h3>
 <ul>
@@ -515,7 +527,7 @@ We have language bindings only in Javascript! You can view code examples in the 
 </thead><tbody>
 <tr>
 <td>limit</td>
-<td>20</td>
+<td>10</td>
 <td>Sets the limit.</td>
 </tr>
 <tr>
@@ -689,59 +701,50 @@ We have language bindings only in Javascript! You can view code examples in the 
 <blockquote>
 <p>Sample JSON structured response:</p>
 </blockquote>
-<pre class="highlight javascript tab-javascript"><code><span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Doc By Andela 3 Edited"</span><span class="p">,</span>
-        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This doc was created by Andela 3 Edited"</span><span class="p">,</span>
-        <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
-        <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T12:47:50.212Z"</span><span class="p">,</span>
-        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-26T14:03:19.183Z"</span><span class="p">,</span>
-        <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-            <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"andela@y.com"</span><span class="p">,</span>
-            <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$YTuEjXkS60zLS9Ia03ogyeV6zzFa/JX3VegcbOSvspaH9WGHBcWMG"</span><span class="p">,</span>
-            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span><span class="p">,</span>
-            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Doc By Andela 2"</span><span class="p">,</span>
-        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This doc was created by Andela"</span><span class="p">,</span>
-        <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Public"</span><span class="p">,</span>
-        <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T12:25:30.524Z"</span><span class="p">,</span>
-        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T12:25:30.524Z"</span><span class="p">,</span>
-        <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-            <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"andela@y.com"</span><span class="p">,</span>
-            <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$YTuEjXkS60zLS9Ia03ogyeV6zzFa/JX3VegcbOSvspaH9WGHBcWMG"</span><span class="p">,</span>
-            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span><span class="p">,</span>
-            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Doc By Andela"</span><span class="p">,</span>
-        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This doc was created by Andela"</span><span class="p">,</span>
-        <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Public"</span><span class="p">,</span>
-        <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T12:14:38.655Z"</span><span class="p">,</span>
-        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T12:14:38.655Z"</span><span class="p">,</span>
-        <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-            <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"andela@y.com"</span><span class="p">,</span>
-            <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$YTuEjXkS60zLS9Ia03ogyeV6zzFa/JX3VegcbOSvspaH9WGHBcWMG"</span><span class="p">,</span>
-            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span><span class="p">,</span>
-            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-07-25T10:15:12.908Z"</span>
-        <span class="p">}</span>
+<pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="s2">"doc"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY2"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"my"</span><span class="p">,</span>
+            <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
+            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:29:18.872Z"</span><span class="p">,</span>
+            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:29:18.872Z"</span><span class="p">,</span>
+            <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"my@y.com"</span><span class="p">,</span>
+                <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$L4WP7Q1zAwDqL1jAY.B2..UPqH1P9aznoCe0mW1Am1zWg6eGuZ1e."</span><span class="p">,</span>
+                <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span><span class="p">,</span>
+                <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"my"</span><span class="p">,</span>
+            <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Role"</span><span class="p">,</span>
+            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:29:02.234Z"</span><span class="p">,</span>
+            <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:29:02.234Z"</span><span class="p">,</span>
+            <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span><span class="p">,</span>
+                <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"$2a$10$L4WP7Q1zAwDqL1jAY.B2..UPqH1P9aznoCe0mW1Am1zWg6eGuZ1e."</span><span class="p">,</span>
+                <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span><span class="p">,</span>
+                <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-01T17:27:31.636Z"</span>
+            <span class="p">}</span>
+        <span class="p">},</span>  
+    <span class="p">],</span>
+    <span class="s2">"metaData"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"page"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"pageCount"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"count"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"totalCount"</span><span class="p">:</span> <span class="mi">2</span>
     <span class="p">}</span>
-<span class="p">]</span>
+<span class="p">}</span>
 </code></pre><h3 id='request-2'>Request</h3>
 <ul>
 <li>Endpoint: GET: <code>/api/v1/documents/</code></li>
@@ -757,7 +760,7 @@ We have language bindings only in Javascript! You can view code examples in the 
 </thead><tbody>
 <tr>
 <td>limit</td>
-<td>20</td>
+<td>10</td>
 <td>Sets the limit.</td>
 </tr>
 <tr>

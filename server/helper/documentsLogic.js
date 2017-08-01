@@ -65,23 +65,40 @@ export default class Utils {
   /**
    * @description adds more properties to the query
    * @static
+   * @param {object} res Server Response 
    * @param {integer} limit Number of rows to be returned
    * @param {integer} offset Number of rows to be skipped
    * @param {object} property query property
    * @returns {object} response which includes status and and message 
    * @memberof Utils
    */
-  static listQuery(limit, offset, property) {
-    if (limit && offset) {
-      property.limit = limit;
-      property.offset = offset;
+  static listQuery(res, limit, offset, property) {
+    if (((limit && validator.isNumeric(limit) === false)
+      && (offset && validator.isNumeric(offset) === false))
+      || ((limit && limit <= 0) && (offset && offset < 0))) {
+      return res.status(400).send({
+        message: 'Invalid Limit and Offset',
+      });
+    } else if ((limit && validator.isNumeric(limit) === false) ||
+    (limit && limit <= 0)) {
+      return res.status(400).send({
+        message: 'Invalid Limit',
+      });
+    } else if ((offset && validator.isNumeric(offset) === false) ||
+    (offset && offset < 0)) {
+      return res.status(400).send({
+        message: 'Invalid Offset',
+      });
     }
+    property.limit = limit || 10;
+    property.offset = offset || 0;
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.roleId === 3) {
       property.where = { userId: loggedInUser.id };
     }
-    return property;
+    res.property = property;
+    return false;
   }
 
   /**
