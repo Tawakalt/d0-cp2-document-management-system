@@ -12,9 +12,9 @@ export default class Utils {
    * @description Checks the validity of the documents parameters
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isValid(req, res, next) {
@@ -45,9 +45,9 @@ export default class Utils {
    * @description checks if Title exists
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {object} doc The returned document
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static doesTitleExist(req, res, doc) {
@@ -65,11 +65,11 @@ export default class Utils {
   /**
    * @description adds more properties to the query
    * @static
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @param {integer} limit Number of rows to be returned
    * @param {integer} offset Number of rows to be skipped
    * @param {object} property query property
-   * @returns {object} response which includes status and and message 
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static listQuery(res, limit, offset, property) {
@@ -106,8 +106,8 @@ export default class Utils {
    * @static
    * @param {object} req Client's request
    * @param {object} res Server Response
-   * @param {object} doc 
-   * @returns {object} response which includes status and and message 
+   * @param {object} doc the returned document
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isDoc(req, res, doc) {
@@ -123,9 +123,9 @@ export default class Utils {
    * @description Checks Authorization for viewing
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @param {object} doc 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @param {object} doc the returned document
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isAllowed(req, res, doc) {
@@ -146,9 +146,9 @@ export default class Utils {
    * @description Checks Authorization for updating
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @param {integer} ownerId 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @param {integer} ownerId id of the document owner
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static allowUpdate(req, res, ownerId) {
@@ -166,8 +166,8 @@ export default class Utils {
    * @description Checks Validity of parameters
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static isValidParams(req, res) {
@@ -198,9 +198,9 @@ export default class Utils {
    * @description checks validation error
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @param {object} err 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @param {object} err server error
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static checkError(req, res, err) {
@@ -218,8 +218,8 @@ export default class Utils {
    * @static
    * @param {object} req Client's request
    * @param {object} res Server Response
-   * @param {integer} ownerId 
-   * @returns {object} response which includes status and and message 
+   * @param {integer} ownerId id of the document owner
+   * @returns {object} response which includes status and and message
    * @memberof Utils
    */
   static allowDelete(req, res, ownerId) {

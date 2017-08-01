@@ -23,7 +23,7 @@ export default class usersController {
    * @description Allows Users to signup
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
@@ -57,7 +57,7 @@ export default class usersController {
    *              to View all Users
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
@@ -95,11 +95,11 @@ export default class usersController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Get a specific User
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
@@ -119,11 +119,11 @@ export default class usersController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Update a User
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
@@ -191,11 +191,11 @@ export default class usersController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to Delete a User
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
+   * @param {object} res Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
@@ -218,8 +218,8 @@ export default class usersController {
    * @description Allows Registered Users to login
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
    * @memberof usersController
    */
   static login(req, res) {
@@ -256,8 +256,8 @@ export default class usersController {
    * @description Allows Resgistered and Loggedin Users to Logout
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
    * @memberof usersController
    */
   static logout(req, res) {
@@ -268,12 +268,12 @@ export default class usersController {
   }
 
   /**
-   * @description Allows Authorized Registered and Loggedin Personnels 
+   * @description Allows Authorized Registered and Loggedin Personnels
    *              to View All Documents of a Registered User
    * @static
    * @param {object} req Client's request
-   * @param {object} res Server Response 
-   * @returns {object} response which includes status and and message 
+   * @param {object} res Server Response
+   * @returns {object} response which includes status and and message
    * @memberof usersController
    */
   static allUsersDoc(req, res) {
