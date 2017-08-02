@@ -214,11 +214,13 @@ export default class usersController {
       .findById(req.params.userId)
       .then((user) => {
         if (!Utils.isUser(req, res, user)) {
-          return user
-            .destroy()
-            .then(() => res.status(200).send({
-              message: 'User successfully deleted' }))
-            .catch(err => res.status(400).send(err.toString()));
+          if (!Utils.allowDelete(req, res, parseInt(req.params.userId))) {
+            return user
+              .destroy()
+              .then(() => res.status(200).send({
+                message: 'User successfully deleted' }))
+              .catch(err => res.status(400).send(err.toString()));
+          }
         }
       })
       .catch(error => res.status(400).send(error.toString()));

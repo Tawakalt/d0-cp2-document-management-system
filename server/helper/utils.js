@@ -204,6 +204,26 @@ export default class Utils {
   }
 
   /**
+   * @description Checks Authorization for Delete
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {integer} userId Id of the User to be deleted
+   * @returns {object} response which includes status and and message
+   * @memberof Utils
+   */
+  static allowDelete(req, res, userId) {
+    const loggedInUser = jwt.verify(localStorage.get('token'),
+      process.env.JWT_SECRET);
+    if (loggedInUser.id === parseInt(userId)) {
+      return res.status(401).send({
+        message: 'You cannot delete yourself!!!',
+      });
+    }
+    return false;
+  }
+
+  /**
    * @description Validates Role
    * @static
    * @param {object} req Client's request
