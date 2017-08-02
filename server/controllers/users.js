@@ -64,11 +64,17 @@ export default class usersController {
   static list(req, res) {
     const property = {
       include: [
-        { model: Role }
+        {
+          model: Role,
+          attributes: ['role']
+        }
       ],
       order: [
         ['id', 'DESC']
-      ]
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password']
+      },
     };
     if (!utils.listQuery(res, req.query.limit, req.query.offset, property)) {
       return User
@@ -108,7 +114,11 @@ export default class usersController {
       .findById(req.params.userId, {
         include: [{
           model: Role,
+          attributes: ['role']
         }],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'password']
+        },
       })
       .then((user) => {
         if (!Utils.isUser(req, res, user)) {
@@ -282,7 +292,10 @@ export default class usersController {
         where: { userId: req.params.userId },
         order: [
           ['id', 'DESC']
-        ]
+        ],
+        attributes: {
+          exclude: ['updatedAt']
+        }
       })
       .then((doc) => {
         if (doc.length === 0) {

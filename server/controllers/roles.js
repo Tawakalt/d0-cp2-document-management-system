@@ -41,10 +41,14 @@ export default class rolesController {
         include: [{
           model: User,
           as: 'users',
+          attributes: ['id', 'email'],
         }],
         order: [
           ['id', 'ASC']
-        ]
+        ],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
       })
       .then(role => res.status(200).send(role))
       .catch(error => res.status(400).send(error.toString()));

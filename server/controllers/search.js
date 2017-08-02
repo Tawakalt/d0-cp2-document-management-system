@@ -33,8 +33,13 @@ export default class searchController {
           email: req.query.q,
         },
         include: [
-          { model: Role }
+          { model: Role,
+            attributes: ['role']
+          }
         ],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'password']
+        },
       })
       .then((user) => {
         if (!Utils.isUser(req, res, user)) {
@@ -60,8 +65,13 @@ export default class searchController {
           title: req.query.q,
         },
         include: [
-          { model: User }
+          { model: User,
+            attributes: ['email']
+          }
         ],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
       })
       .then((doc) => {
         if (!utils.isDoc(req, res, doc)) {
