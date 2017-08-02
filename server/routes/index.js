@@ -6,10 +6,6 @@ import Utils from '../helper/utils';
 import utils from '../helper/documentsLogic';
 
 const Route = (app) => {
-  app.get('/api/v1', (req, res) => res.status(200).send({
-    message: 'Welcome to the Document management System\'s API!',
-  }));
-
   // Endpoints for roles
   app.post('/api/v1/roles',
     Utils.isLoggedIn, Utils.isSuper, rolesController.create);
