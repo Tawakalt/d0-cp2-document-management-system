@@ -5,7 +5,7 @@ import searchController from '../controllers/search';
 import Utils from '../helper/utils';
 import utils from '../helper/documentsLogic';
 
-module.exports = (app) => {
+const Route = (app) => {
   app.get('/api/v1', (req, res) => res.status(200).send({
     message: 'Welcome to the Document management System\'s API!',
   }));
@@ -55,3 +55,4 @@ module.exports = (app) => {
   app.get('/api/v1/search/documents',
     Utils.isLoggedIn, searchController.docSearch);
 };
+export default Route;
