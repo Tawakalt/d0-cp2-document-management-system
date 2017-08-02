@@ -11,7 +11,8 @@
   Create Roles, Users and Documents
   Update Users and Documents
   Delete Users and Documents
-  Search for Users and Documents
+  Search for Users and Documents  
+- The API Documentation can be found [here](https://d0-cp2-document-management-sys.herokuapp.com/).
   
 ​
 ## Project Dependencies
