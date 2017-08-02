@@ -71,7 +71,79 @@ describe('Documents Endpoints', () => {
         done();
       });
     });
-    it('it should successfully create a new document', (done) => {
+    it('should not create a document without title', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .post('/api/v1/documents/')
+        .send({
+          title: '',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Title is Required');
+          }
+          done();
+        });
+    });
+    it('should not create a document without content', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .post('/api/v1/documents/')
+        .send({
+          title: 'TITLE',
+          content: '',
+          access: 'Public',
+          userId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Content is Required');
+          }
+          done();
+        });
+    });
+    it('should not create a document without access type', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .post('/api/v1/documents/')
+        .send({
+          title: 'TITLE',
+          content: 'CONTENT',
+          access: '',
+          userId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Access is Required');
+          }
+          done();
+        });
+    });
+    it('should not create a document with an invalid access type', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .post('/api/v1/documents/')
+        .send({
+          title: 'TITLE',
+          content: 'CONTENT',
+          access: 'access',
+          userId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Access Type');
+          }
+          done();
+        });
+    });
+    it('should successfully create a new document', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
@@ -85,6 +157,31 @@ describe('Documents Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(201);
             expect(res.body.message).to.equal('Document successfully created');
+          }
+          done();
+        });
+    });
+    it('should not create a document with a title that exists', (done) => {
+      localStorage.set('token', superToken);
+      Document.create(
+        { title: 'SUPER',
+          content: 'content',
+          access: 'Public',
+          userId: 1
+        }
+      );
+      request(app)
+        .post('/api/v1/documents/')
+        .send({
+          title: 'SUPER',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Title already exists');
           }
           done();
         });
@@ -114,7 +211,7 @@ describe('Documents Endpoints', () => {
           done();
         });
     });
-    it('should successfully get all documents', (done) => {
+    it('should successfully get all documents for an admin', (done) => {
       localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
@@ -128,6 +225,81 @@ describe('Documents Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+          }
+          done();
+        });
+    });
+    it('should successfully get all documents for a user', (done) => {
+      localStorage.set('token', userToken);
+      Document.create(
+        { title: 'SUPER',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        }
+      );
+      request(app)
+        .get('/api/v1/documents/')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(200);
+          }
+          done();
+        });
+    });
+    it('should not allow limit and offset as alphabets', (done) => {
+      localStorage.set('token', superToken);
+      Document.create(
+        { title: 'SUPER',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        }
+      );
+      request(app)
+        .get('/api/v1/documents?limit=a&offset=b')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Limit and Offset');
+          }
+          done();
+        });
+    });
+    it('should not allow limit as an alphabet', (done) => {
+      localStorage.set('token', superToken);
+      Document.create(
+        { title: 'SUPER',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        }
+      );
+      request(app)
+        .get('/api/v1/documents?limit=a&offset=0')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Limit');
+          }
+          done();
+        });
+    });
+    it('should not allow offset as an alphabet', (done) => {
+      localStorage.set('token', superToken);
+      Document.create(
+        { title: 'SUPER',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        }
+      );
+      request(app)
+        .get('/api/v1/documents?limit=1&offset=a')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Offset');
           }
           done();
         });
@@ -251,7 +423,61 @@ describe('Documents Endpoints', () => {
           done();
         });
     });
-    it('should not allow invalid parameters', (done) => {
+    it('should not allow empty title', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .put('/api/v1/documents/1')
+        .send({
+          title: '',
+          content: 'test3',
+          access: 'Public',
+          userId: '1'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Title is Required');
+          }
+          done();
+        });
+    });
+    it('should not allow empty content', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .put('/api/v1/documents/1')
+        .send({
+          title: 'Title',
+          content: '',
+          access: 'Public',
+          userId: '1'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Content is Required');
+          }
+          done();
+        });
+    });
+    it('should not allow an invalid access type', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .put('/api/v1/documents/1')
+        .send({
+          title: 'Title',
+          content: 'Content',
+          access: 'access',
+          userId: '1'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Access Type');
+          }
+          done();
+        });
+    });
+    it('should not allow empty access type', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
