@@ -83,6 +83,60 @@ describe('User Endpoints', () => {
           done();
         });
     });
+    it('it should not create a user with an empty email', (done) => {
+      request(app)
+        .post('/api/v1/users/')
+        .send({
+          email: '',
+          password: 'you',
+          role: 3
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Email is Required');
+          }
+          done();
+        });
+    });
+    it('it should not create a user with an empty password', (done) => {
+      request(app)
+        .post('/api/v1/users/')
+        .send({
+          email: 'a@y.com',
+          password: '',
+          role: 3
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Password is Required');
+          }
+          done();
+        });
+    });
+    it('it should not create a user with an email that exists', (done) => {
+      User.create(
+        { email: process.env.EMAIL,
+          password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
+          roleId: 1
+        }
+      );
+      request(app)
+        .post('/api/v1/users/')
+        .send({
+          email: process.env.EMAIL,
+          password: 'ppp',
+          role: 3
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Email already exists');
+          }
+          done();
+        });
+    });
   });
 
   describe('Get Users Endpoint', () => {
@@ -214,7 +268,7 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('should not allow invalid parameters from users', (done) => {
+    it('should not allow invalid Email from users', (done) => {
       localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
@@ -226,6 +280,55 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(400);
             expect(res.body.message).to.equal('Invalid Email!!!');
+          }
+          done();
+        });
+    });
+    it('should not allow empty Email', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .put('/api/v1/users/2')
+        .send({
+          email: '',
+          password: 'kenny'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Email is Required!!!');
+          }
+          done();
+        });
+    });
+    it('should not allow empty Password', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .put('/api/v1/users/2')
+        .send({
+          email: 'a@y.com',
+          password: ''
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Password is Required!!!');
+          }
+          done();
+        });
+    });
+    it('should not allow an email that already exists', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .put('/api/v1/users/2')
+        .send({
+          email: process.env.EMAIL,
+          password: 'pass'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal(
+              'Your Edited Email already exists!!!');
           }
           done();
         });
@@ -261,6 +364,41 @@ describe('User Endpoints', () => {
           done();
         });
     });
+    it('should not allow a user to update someone else\'s details', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .put('/api/v1/users/1')
+        .send({
+          email: 'kenny2@y.com',
+          password: 'kenny2'
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(401);
+            expect(res.body.message).to.equal(
+              'You cannot update someone else\'s details');
+          }
+          done();
+        });
+    });
+    it('should not allow a user to change his/her own role', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .put('/api/v1/users/2')
+        .send({
+          email: 'kenny2@y.com',
+          password: 'kenny2',
+          roleId: 1
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(401);
+            expect(res.body.message).to.equal(
+              'Common stop it!!! You can\'t change your role');
+          }
+          done();
+        });
+    });
     it('should allow a super admin to update a users role with what was there',
       (done) => {
         localStorage.set('token', superToken);
@@ -290,6 +428,22 @@ describe('User Endpoints', () => {
           done();
         });
     });
+    it('should not allow a super admin to update a user with an invalid role',
+      (done) => {
+        localStorage.set('token', superToken);
+        request(app)
+          .put('/api/v1/users/2')
+          .send({
+            roleId: 'tty'
+          })
+          .end((err, res) => {
+            if (!err) {
+              expect(res.status).to.equal(400);
+              expect(res.body.message).to.equal('Invalid RoleId!!!');
+            }
+            done();
+          });
+      });
     it('should not allow a role that doesn\'t exist', (done) => {
       localStorage.set('token', superToken);
       request(app)
@@ -324,6 +478,19 @@ describe('User Endpoints', () => {
         done();
       });
     });
+    it('should not allow a non Super Admin to delete a user', (done) => {
+      localStorage.set('token', userToken);
+      request(app)
+        .delete('/api/v1/users/2')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(401);
+            expect(res.body.message).to.equal(
+              'You do not have access to this request!!!');
+          }
+          done();
+        });
+    });
     it('should return a 404 error if user not found', (done) => {
       localStorage.set('token', superToken);
       request(app)
@@ -332,6 +499,18 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(404);
             expect(res.body.message).to.equal('User Not Found');
+          }
+          done();
+        });
+    });
+    it('should not allow a super Admin to delete him/herself', (done) => {
+      localStorage.set('token', superToken);
+      request(app)
+        .delete('/api/v1/users/1')
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(401);
+            expect(res.body.message).to.equal('You cannot delete yourself!!!');
           }
           done();
         });

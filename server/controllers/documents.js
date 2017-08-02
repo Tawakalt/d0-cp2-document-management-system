@@ -54,11 +54,16 @@ export default class documentsController {
   static list(req, res) {
     const property = {
       include: [
-        { model: User }
+        { model: User,
+          attributes: ['email']
+        }
       ],
       order: [
         ['id', 'DESC']
-      ]
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
     };
     if (!Utils.listQuery(res, req.query.limit, req.query.offset, property)) {
       return Document
@@ -98,7 +103,11 @@ export default class documentsController {
       .findById(req.params.docId, {
         include: [{
           model: User,
+          attributes: ['email']
         }],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
       })
       .then((doc) => {
         if (!Utils.isDoc(req, res, doc)) {
