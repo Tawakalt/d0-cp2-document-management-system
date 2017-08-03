@@ -34,8 +34,8 @@ export default class documentsController {
               access: req.body.access,
               userId: req.loggedInUser
             })
-            .then(res.status(201).send({
-              message: 'Document successfully created' }))
+            .then(createdDocument => res.status(201).send({
+              message: 'Document successfully created', createdDocument }))
             .catch(error => res.status(400).send(error.toString()));
         }
       })
@@ -53,11 +53,6 @@ export default class documentsController {
    */
   static list(req, res) {
     const property = {
-      include: [
-        { model: User,
-          attributes: ['email']
-        }
-      ],
       order: [
         ['id', 'DESC']
       ],
@@ -68,20 +63,20 @@ export default class documentsController {
     if (!Utils.listQuery(res, req.query.limit, req.query.offset, property)) {
       return Document
         .findAll(res.property)
-        .then((doc) => {
-          const totalCount = doc.length;
+        .then((Documents) => {
+          const totalCount = Documents.length;
           let pageCount = Math.round(totalCount / (req.query.limit || 10));
           pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
           const page = Math.round((req.query.offset || 0) /
           (req.query.limit || 10)) + 1;
-          if (doc.length === 0) {
+          if (Documents.length === 0) {
             res.status(200).send({ message: 'No Document has been created' });
           }
-          res.status(200).send({ doc,
+          res.status(200).send({ Documents,
             metaData: {
               page,
               pageCount,
-              count: doc.length,
+              count: Documents.length,
               totalCount,
             }
           });
@@ -112,6 +107,7 @@ export default class documentsController {
       .then((doc) => {
         if (!Utils.isDoc(req, res, doc)) {
           if (!Utils.isAllowed(req, res, doc)) {
+            delete doc.dataValues.User;
             return res.status(200).send(doc);
           }
         }
@@ -145,9 +141,13 @@ export default class documentsController {
                   content: req.body.content || doc.content,
                   access: req.body.access || doc.access,
                 })
-                .then(() => res.status(200).send({
-                  message: 'Update Successful',
-                }))
+                .then((updatedDetails) => {
+                  // console.log(updatedDetails);
+                  delete updatedDetails.dataValues.User;
+                  res.status(200).send({
+                    message: 'Update Successful', updatedDetails
+                  });
+                })
                 .catch((err) => {
                   if (!Utils.checkError(req, res, err)) {
                     res.status(400).send(err.toString());
