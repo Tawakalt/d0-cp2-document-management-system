@@ -8,7 +8,6 @@ import utils from '../helper/documentsLogic';
 require('dotenv').config();
 
 const User = require('../models').User;
-const Role = require('../models').Role;
 const Document = require('../models').Document;
 
 const saltRounds = 10;
@@ -172,7 +171,8 @@ export default class usersController {
                               password: hash || user.password,
                               roleId: req.body.roleId || user.roleId
                             })
-                            .then(UpdatedDetails => res.status(200).send({ UpdatedDetails, message }))
+                            .then(updatedDetails => res.status(200).send(
+                              { updatedDetails, message }))
                             .catch((err) => {
                               if (!Utils.checkError(req, res, err)) {
                                 res.status(400).send(err.toString());
