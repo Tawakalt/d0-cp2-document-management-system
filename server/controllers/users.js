@@ -43,8 +43,7 @@ export default class usersController {
                 password: hash,
                 roleId: 3,
               })
-              .then(res.status(201).send({
-                message: 'User successfully created' }))
+              .then(createdUser => res.status(201).send(createdUser))
               .catch(error => res.status(400).send(error.toString()));
           });
         }
@@ -63,12 +62,6 @@ export default class usersController {
    */
   static list(req, res) {
     const property = {
-      include: [
-        {
-          model: Role,
-          attributes: ['role']
-        }
-      ],
       order: [
         ['id', 'DESC']
       ],
@@ -112,10 +105,6 @@ export default class usersController {
   static retrieve(req, res) {
     return User
       .findById(req.params.userId, {
-        include: [{
-          model: Role,
-          attributes: ['role']
-        }],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'password']
         },
@@ -183,7 +172,7 @@ export default class usersController {
                               password: hash || user.password,
                               roleId: req.body.roleId || user.roleId
                             })
-                            .then(() => res.status(200).send({ message }))
+                            .then(UpdatedDetails => res.status(200).send({ UpdatedDetails, message }))
                             .catch((err) => {
                               if (!Utils.checkError(req, res, err)) {
                                 res.status(400).send(err.toString());
@@ -239,7 +228,10 @@ export default class usersController {
       .find({
         where: {
           email: req.body.email
-        }
+        },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'password']
+        },
       })
       .then((user) => {
         if (!Utils.isUser(req, res, user)) {
@@ -257,7 +249,7 @@ export default class usersController {
               );
               localStorage.set('token', token);
               return res.status(201).send({
-                message: 'login successful' });
+                message: 'login successful', user, token });
             });
         }
       })
