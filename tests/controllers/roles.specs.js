@@ -71,6 +71,21 @@ describe('Role Endpoints', () => {
         done();
       });
     });
+    it('should not allow an invalid role', (done) => {
+      localStorage.set('token', token);
+      request(app)
+        .post('/api/v1/roles/')
+        .send({
+          role: ''
+        })
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Invalid Role');
+          }
+          done();
+        });
+    });
     it('should successfully create a new role', (done) => {
       localStorage.set('token', token);
       request(app)
@@ -82,6 +97,7 @@ describe('Role Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(201);
             expect(res.body.message).to.equal('Role successfully created');
+            expect(res.body.role.role).to.equal('Editor');
           }
           done();
         });
@@ -118,6 +134,8 @@ describe('Role Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body[0].role).to.equal('Super Admin');
+            expect(res.body[1].role).to.equal('Admin');
+            expect(res.body[2].role).to.equal('User');
           }
           done();
         });

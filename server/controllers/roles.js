@@ -1,5 +1,6 @@
+import validator from 'validator';
+
 const Role = require('../models').Role;
-const User = require('../models').User;
 
 /**
  * @description Contains all Roles Related Functions
@@ -17,12 +18,21 @@ export default class rolesController {
    * @memberof rolesController
    */
   static create(req, res) {
+    if (!req.body.role &&
+      (validator.isEmpty(req.body.role) ||
+      validator.isNumeric(req.body.role))) {
+      return res.status(400).send({
+        message: 'Invalid Role',
+      });
+    }
     return Role
       .create({
         role: req.body.role,
       })
-      .then(res.status(201).send({
-        message: 'Role successfully created' }))
+      .then((role) => {
+        res.status(201).send({
+          message: 'Role successfully created', role });
+      })
       .catch(error => res.status(400).send(error));
   }
 
@@ -38,11 +48,6 @@ export default class rolesController {
   static list(req, res) {
     return Role
       .findAll({
-        include: [{
-          model: User,
-          as: 'users',
-          attributes: ['id', 'email'],
-        }],
         order: [
           ['id', 'ASC']
         ],
