@@ -51,28 +51,31 @@ describe('User Endpoints', () => {
   });
 
   describe('Create User Endpoint', () => {
-    it('it should successfully create a new user', (done) => {
+    it('should successfully create a new user', (done) => {
       request(app)
         .post('/api/v1/users/')
         .send({
           email: 'kenny@y.com',
-          password: 'kenny',
-          role: 3
+          password: 'kenny'
         })
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(201);
+            expect(res.body.email).to.equal('kenny@y.com');
+            bcrypt.compare('kenny', res.body.password, (err, resp) => {
+              expect(resp).to.equal(true);
+            });
+            expect(res.body.roleId).to.equal(3);
           }
           done();
         });
     });
-    it('it should not create a user with an invalid email', (done) => {
+    it('should not create a user with an invalid email', (done) => {
       request(app)
         .post('/api/v1/users/')
         .send({
           email: 'you@',
-          password: 'you',
-          role: 3
+          password: 'you'
         })
         .end((err, res) => {
           if (!err) {
@@ -82,13 +85,12 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('it should not create a user with an empty email', (done) => {
+    it('should not create a user with an empty email', (done) => {
       request(app)
         .post('/api/v1/users/')
         .send({
           email: '',
-          password: 'you',
-          role: 3
+          password: 'you'
         })
         .end((err, res) => {
           if (!err) {
@@ -98,13 +100,12 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('it should not create a user with an empty password', (done) => {
+    it('should not create a user with an empty password', (done) => {
       request(app)
         .post('/api/v1/users/')
         .send({
           email: 'a@y.com',
-          password: '',
-          role: 3
+          password: ''
         })
         .end((err, res) => {
           if (!err) {
@@ -114,7 +115,7 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('it should not create a user with an email that exists', (done) => {
+    it('should not create a user with an email that exists', (done) => {
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -125,8 +126,7 @@ describe('User Endpoints', () => {
         .post('/api/v1/users/')
         .send({
           email: process.env.EMAIL,
-          password: 'ppp',
-          role: 3
+          password: 'ppp'
         })
         .end((err, res) => {
           if (!err) {
@@ -141,6 +141,14 @@ describe('User Endpoints', () => {
   describe('Get Users Endpoint', () => {
     beforeEach((done) => {
       localStorage.clear();
+      User.create(
+        { email: process.env.EMAIL,
+          password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
+          roleId: 1
+        }
+      ).then(() => {
+        done();
+      });
       done();
     });
     it('should successfully get all users', (done) => {
@@ -150,11 +158,13 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body.users[0].email).to.equal(process.env.EMAIL);
+            expect(res.body.users[0].roleId).to.equal(1);
           }
           done();
         });
     });
-    it('should not authorize a user', (done) => {
+    it('should not authorize a non admin', (done) => {
       localStorage.set('token', userToken);
       request(app)
         .get('/api/v1/users/')
@@ -170,10 +180,11 @@ describe('User Endpoints', () => {
     it('should sussessfully paginate', (done) => {
       localStorage.set('token', adminToken);
       request(app)
-        .get('/api/v1/users?limit=1&offset=0')
+        .get('/api/v1/users?limit=1&offset=1')
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal('No User Found');
           }
           done();
         });
@@ -192,7 +203,7 @@ describe('User Endpoints', () => {
         done();
       });
     });
-    it('should return a 404 error if user not found', (done) => {
+    it('should return 404 if user not found', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/10')
@@ -211,6 +222,8 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body.email).to.equal(process.env.EMAIL);
+            expect(res.body.roleId).to.equal(1);
           }
           done();
         });
@@ -248,7 +261,7 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('should only allow a super admin to update other users role', (done) => {
+    it('should allow a super admin to update only a user\'s role', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/2')
@@ -338,12 +351,17 @@ describe('User Endpoints', () => {
         request(app)
           .put('/api/v1/users/2')
           .send({
-            email: 'kenny@y.com',
+            email: 'kenny3@y.com',
             password: 'kenny'
           })
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
+              expect(res.body.updatedDetails.email).to.equal('kenny3@y.com');
+              bcrypt.compare('kenny', res.body.updatedDetails.password,
+                (err, resp) => {
+                  expect(resp).to.equal(true);
+                });
             }
             done();
           });
@@ -359,6 +377,11 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body.updatedDetails.email).to.equal('kenny2@y.com');
+            bcrypt.compare('kenny2', res.body.updatedDetails.password,
+              (err, resp) => {
+                expect(resp).to.equal(true);
+              });
           }
           done();
         });
@@ -409,6 +432,7 @@ describe('User Endpoints', () => {
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
+              expect(res.body.updatedDetails.roleId).to.equal('3');
             }
             done();
           });
@@ -423,6 +447,7 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body.updatedDetails.roleId).to.equal('1');
           }
           done();
         });
@@ -555,7 +580,7 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('should not log user in with wrong password', (done) => {
+    it('should not log a user in with wrong password', (done) => {
       request(app)
         .post('/api/v1/users/login')
         .send({
@@ -570,7 +595,7 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('should should successfully log user in', (done) => {
+    it('should successfully log a user in', (done) => {
       request(app)
         .post('/api/v1/users/login')
         .send({
@@ -581,6 +606,7 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body.message).to.equal('login successful');
+            expect(res.body.user.email).to.equal(process.env.EMAIL);
           }
           done();
         });
@@ -630,7 +656,7 @@ describe('User Endpoints', () => {
           });
       });
 
-    it('should sreturn documents found', (done) => {
+    it('should successfully return all documents found', (done) => {
       Document.create(
         { title: 'TEST2',
           content: 'Testing2',
@@ -644,6 +670,10 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body[0].title).to.equal('TEST2');
+            expect(res.body[0].content).to.equal('Testing2');
+            expect(res.body[0].access).to.equal('Public');
+            expect(res.body[0].userId).to.equal(1);
           }
           done();
         });
