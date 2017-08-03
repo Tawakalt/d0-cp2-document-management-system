@@ -342,7 +342,7 @@ describe('Documents Endpoints', () => {
         .get('/api/v1/documents/1')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You are not authorized to view this document');
           }
@@ -416,7 +416,7 @@ describe('Documents Endpoints', () => {
         })
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You cannot update someone else\'s document');
           }
@@ -570,7 +570,7 @@ describe('Documents Endpoints', () => {
         .delete('/api/v1/documents/1')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You cannot delete someone else\'s document');
           }

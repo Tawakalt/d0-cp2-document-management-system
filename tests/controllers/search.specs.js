@@ -142,7 +142,7 @@ describe('Search Endpoints', () => {
         .get('/api/v1/search/documents?q=SUPERR')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You are not authorized to view this document');
           }

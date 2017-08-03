@@ -43,11 +43,11 @@ export default class usersController {
                 roleId: 3,
               })
               .then(createdUser => res.status(201).send(createdUser))
-              .catch(error => res.status(400).send(error.toString()));
+              .catch(error => res.status(500).send(error.toString()));
           });
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -113,7 +113,7 @@ export default class usersController {
           return res.status(200).send(user);
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -175,7 +175,7 @@ export default class usersController {
                               { updatedDetails, message }))
                             .catch((err) => {
                               if (!Utils.checkError(req, res, err)) {
-                                res.status(400).send(err.toString());
+                                res.status(500).send(err.toString());
                               }
                             });
                         }
@@ -186,7 +186,7 @@ export default class usersController {
             });
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -208,11 +208,11 @@ export default class usersController {
               .destroy()
               .then(() => res.status(200).send({
                 message: 'User successfully deleted' }))
-              .catch(err => res.status(400).send(err.toString()));
+              .catch(err => res.status(500).send(err.toString()));
           }
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -230,7 +230,7 @@ export default class usersController {
           email: req.body.email
         },
         attributes: {
-          exclude: ['createdAt', 'updatedAt', 'password']
+          exclude: ['createdAt', 'updatedAt']
         },
       })
       .then((user) => {
@@ -248,12 +248,13 @@ export default class usersController {
                 user.dataValues.roleId
               );
               localStorage.set('token', token);
-              return res.status(201).send({
+              delete user.dataValues.password;
+              return res.status(200).send({
                 message: 'login successful', user, token });
             });
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**

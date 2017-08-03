@@ -36,10 +36,10 @@ export default class documentsController {
             })
             .then(createdDocument => res.status(201).send({
               message: 'Document successfully created', createdDocument }))
-            .catch(error => res.status(400).send(error.toString()));
+            .catch(error => res.status(500).send(error.toString()));
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -112,7 +112,7 @@ export default class documentsController {
           }
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -150,14 +150,14 @@ export default class documentsController {
                 })
                 .catch((err) => {
                   if (!Utils.checkError(req, res, err)) {
-                    res.status(400).send(err.toString());
+                    res.status(500).send(err.toString());
                   }
                 });
             }
           }
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 
   /**
@@ -179,10 +179,10 @@ export default class documentsController {
               .destroy()
               .then(() => res.status(200).send({
                 message: 'Document successfully deleted' }))
-              .catch(err => res.status(400).send(err.toString()));
+              .catch(err => res.status(500).send(err.toString()));
           }
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => res.status(500).send(error.toString()));
   }
 }

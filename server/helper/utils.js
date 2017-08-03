@@ -41,7 +41,7 @@ export default class Utils {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.roleId === 3) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
     }
@@ -61,7 +61,7 @@ export default class Utils {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.roleId !== 1) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
     }
@@ -182,13 +182,13 @@ export default class Utils {
    */
   static allowUpdate(req, res, loggedInUser, userId, details) {
     if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(userId)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You cannot update someone else\'s details',
       });
     }
     if ((loggedInUser.roleId !== 1 && details.roleId) ||
       (loggedInUser.id === userId && details.roleId !== undefined)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'Common stop it!!! You can\'t change your role',
       });
     }
@@ -196,7 +196,7 @@ export default class Utils {
       (details.email || details.password)) {
       let message = 'You only have acess to change a user\'s role, ';
       message += 'not their email and definitely not their password!!!';
-      return res.status(401).send({
+      return res.status(403).send({
         message,
       });
     }
@@ -216,7 +216,7 @@ export default class Utils {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.id === parseInt(userId)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You cannot delete yourself!!!',
       });
     }

@@ -135,7 +135,7 @@ export default class Utils {
     if ((doc.access === 'Private' && doc.userId !== loggedInUser.id) ||
     (doc.access === 'Role' && allowed.includes(loggedInUser.roleId)
     === false)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You are not authorized to view this document'
       });
     }
@@ -155,7 +155,7 @@ export default class Utils {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You cannot update someone else\'s document',
       });
     }
@@ -226,7 +226,7 @@ export default class Utils {
     const loggedInUser = jwt.verify(localStorage.get('token'),
       process.env.JWT_SECRET);
     if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(401).send({
+      return res.status(403).send({
         message: 'You cannot delete someone else\'s document',
       });
     }

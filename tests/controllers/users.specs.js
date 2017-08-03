@@ -62,7 +62,6 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(201);
-            expect(res.body.message).to.equal('User successfully created');
           }
           done();
         });
@@ -161,7 +160,7 @@ describe('User Endpoints', () => {
         .get('/api/v1/users/')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You do not have access to this request!!!');
           }
@@ -260,7 +259,7 @@ describe('User Endpoints', () => {
         })
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             let message = 'You only have acess to change a user\'s role, ';
             message += 'not their email and definitely not their password!!!';
             expect(res.body.message).to.equal(message);
@@ -374,7 +373,7 @@ describe('User Endpoints', () => {
         })
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You cannot update someone else\'s details');
           }
@@ -392,7 +391,7 @@ describe('User Endpoints', () => {
         })
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'Common stop it!!! You can\'t change your role');
           }
@@ -484,7 +483,7 @@ describe('User Endpoints', () => {
         .delete('/api/v1/users/2')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal(
               'You do not have access to this request!!!');
           }
@@ -509,7 +508,7 @@ describe('User Endpoints', () => {
         .delete('/api/v1/users/1')
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(401);
+            expect(res.status).to.equal(403);
             expect(res.body.message).to.equal('You cannot delete yourself!!!');
           }
           done();
@@ -561,7 +560,7 @@ describe('User Endpoints', () => {
         .post('/api/v1/users/login')
         .send({
           email: process.env.EMAIL,
-          password: 'a'
+          password: '9'
         })
         .end((err, res) => {
           if (!err) {
@@ -580,7 +579,7 @@ describe('User Endpoints', () => {
         })
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(201);
+            expect(res.status).to.equal(200);
             expect(res.body.message).to.equal('login successful');
           }
           done();
