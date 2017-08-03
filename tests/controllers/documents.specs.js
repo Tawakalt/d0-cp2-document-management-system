@@ -157,6 +157,10 @@ describe('Documents Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(201);
             expect(res.body.message).to.equal('Document successfully created');
+            expect(res.body.createdDocument.title).to.equal('SUPER');
+            expect(res.body.createdDocument.content).to.equal('super');
+            expect(res.body.createdDocument.access).to.equal('Public');
+            expect(res.body.createdDocument.userId).to.equal(1);
           }
           done();
         });
@@ -404,7 +408,7 @@ describe('Documents Endpoints', () => {
           done();
         });
     });
-    it('should not allow someone else', (done) => {
+    it('should not allow a user to update someone else\'s document', (done) => {
       localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/documents/1')
@@ -528,6 +532,10 @@ describe('Documents Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body.message).to.equal('Update Successful');
+            expect(res.body.updatedDetails.title).to.equal('SUPER3');
+            expect(res.body.updatedDetails.content).to.equal('super2');
+            expect(res.body.updatedDetails.access).to.equal('Public');
+            expect(res.body.updatedDetails.userId).to.equal(1);
           }
           done();
         });
@@ -564,20 +572,21 @@ describe('Documents Endpoints', () => {
           done();
         });
     });
-    it('should not allow someone else', (done) => {
-      localStorage.set('token', userToken);
-      request(app)
-        .delete('/api/v1/documents/1')
-        .end((err, res) => {
-          if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
-              'You cannot delete someone else\'s document');
-          }
-          done();
-        });
-    });
-    it('should successfully delete a user', (done) => {
+    it('should not allow a non admin to delete someone else\'s document',
+      (done) => {
+        localStorage.set('token', userToken);
+        request(app)
+          .delete('/api/v1/documents/1')
+          .end((err, res) => {
+            if (!err) {
+              expect(res.status).to.equal(403);
+              expect(res.body.message).to.equal(
+                'You cannot delete someone else\'s document');
+            }
+            done();
+          });
+      });
+    it('should successfully delete a document', (done) => {
       localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/documents/1')
