@@ -40,7 +40,10 @@ export default class usersController {
                 password: hash,
                 roleId: 3,
               })
-              .then(createdUser => res.status(201).send(createdUser))
+              .then((createdUser) => {
+                delete createdUser.dataValues.password;
+                res.status(201).send(createdUser);
+              })
               .catch(error => res.status(500).send(error.toString()));
           });
         }
@@ -156,8 +159,11 @@ export default class usersController {
                           password: hash || user.password,
                           roleId: req.body.roleId || user.roleId
                         })
-                        .then(updatedDetails => res.status(200).send(
-                          { updatedDetails, message }))
+                        .then((updatedDetails) => {
+                          delete updatedDetails.dataValues.password;
+                          res.status(200).send(
+                            { updatedDetails, message });
+                        })
                         .catch((err) => {
                           if (!Utils.validationError(req, res, err)) {
                             res.status(500).send(err.toString());
