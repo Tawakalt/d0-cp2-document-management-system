@@ -7,7 +7,8 @@
     "postinstall": "gulp dev",
     "start": "node ./build/server.js",
     "startDev": "nodemon ./server/server.js --exec babel-node",
-    "test": "gulp dev && gulp coverage"
+    "test": "gulp dev && gulp coverage",
+    "configProdDb":"NODE_ENV=production sequelize db:migrate && NODE_ENV=production sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
