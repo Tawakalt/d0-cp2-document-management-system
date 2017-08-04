@@ -234,6 +234,20 @@ describe('User Endpoints', () => {
           done();
         });
     });
+    it('should not allow invalid UserId', (done) => {
+      request(app)
+        .get('/api/v1/users/aaa')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('User Id must be an integer');
+          }
+          done();
+        });
+    });
   });
 
   describe('Update User Endpoint', () => {

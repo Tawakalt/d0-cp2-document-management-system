@@ -386,6 +386,20 @@ describe('Documents Endpoints', () => {
           done();
         });
     });
+    it('should not allow invalid document id', (done) => {
+      request(app)
+        .get('/api/v1/documents/aaa')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (!err) {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('Document Id must be an integer');
+          }
+          done();
+        });
+    });
   });
 
   describe('Update Document Endpoint', () => {
