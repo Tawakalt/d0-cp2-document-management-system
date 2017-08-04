@@ -67,20 +67,6 @@ describe('Search Endpoints', () => {
       );
       done();
     });
-    it('should not allow an invalid email', (done) => {
-      request(app)
-        .get('/api/v1/search/users?q=a@y')
-        .set('Authorization', `${superToken}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Email!!!');
-          }
-          done();
-        });
-    });
     it('should display the right message when no user is found', (done) => {
       request(app)
         .get('/api/v1/search/users?q=a@y.com')
@@ -90,7 +76,7 @@ describe('Search Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('User Not Found');
+            expect(res.body.message).to.equal('No User Found');
           }
           done();
         });
@@ -104,6 +90,8 @@ describe('Search Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            expect(res.body[0].email).to.equal('tee@y.com');
+            expect(res.body[0].roleId).to.equal(1);
           }
           done();
         });
@@ -136,11 +124,12 @@ describe('Search Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('No Document Found');
           }
           done();
         });
     });
-    it('should not allow an unauthorized user', (done) => {
+    it('should return no document for an unauthorized user', (done) => {
       request(app)
         .get('/api/v1/search/documents?q=SUPERR')
         .set('Authorization', `${userToken}`)
@@ -148,25 +137,29 @@ describe('Search Endpoints', () => {
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
-              'You are not authorized to view this document');
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('No Document Found');
           }
           done();
         });
     });
-    it('should successfully return the document', (done) => {
-      request(app)
-        .get('/api/v1/search/documents?q=SUPERR')
-        .set('Authorization', `${superToken}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (!err) {
-            expect(res.status).to.equal(200);
-          }
-          done();
-        });
-    });
+    it('should successfully return the document for an authorized user',
+      (done) => {
+        request(app)
+          .get('/api/v1/search/documents?q=SUPERR')
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            if (!err) {
+              expect(res.status).to.equal(200);
+              expect(res.body[0].title).to.equal('SUPERR');
+              expect(res.body[0].content).to.equal('super');
+              expect(res.body[0].access).to.equal('Private');
+              expect(res.body[0].userId).to.equal(1);
+            }
+            done();
+          });
+      });
   });
 });

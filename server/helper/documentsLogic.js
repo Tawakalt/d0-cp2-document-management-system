@@ -221,4 +221,36 @@ export default class Utils {
     }
     return true;
   }
+
+  /**
+   * @description Filters Search Result 
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {object} doc the returned document
+   * @returns {boolean} false
+   * @memberof Utils
+   */
+  static filter(req, res, doc) {
+    let count = 0;
+    const newArr = [];
+    while (count < doc.length) {
+      const allowed = [doc[count].dataValues.User.dataValues.roleId, 1, 2];
+      if (!((doc[count].dataValues.access === 'Private'
+      && doc[count].dataValues.userId !== req.loggedInUser.id) ||
+      (doc[count].dataValues.access === 'Role'
+      && allowed.includes(req.loggedInUser.roleId)
+      === false))) {
+        delete doc[count].dataValues.User;
+        newArr.push(doc[count]);
+      }
+      count += 1;
+    }
+    if (newArr.length === 0) {
+      res.status(404).send({ message: 'No Document Found' });
+      return false;
+    }
+    res.status(200).send(newArr);
+    return false;
+  }
 }

@@ -1,9 +1,7 @@
-import validator from 'validator';
 import Utils from '../helper/utils';
 import utils from '../helper/documentsLogic';
 
 const User = require('../models').User;
-const Role = require('../models').Role;
 const Document = require('../models').Document;
 
 /**
@@ -22,27 +20,21 @@ export default class searchController {
    * @memberof searchController
    */
   static userSearch(req, res) {
-    if (req.query.q && validator.isEmail(req.query.q) === false) {
-      return res.status(400).send({
-        message: 'Invalid Email!!!',
-      });
-    }
+    const searchString = req.query.q.trim();
     return User
-      .findOne({
+      .findAll({
         where: {
-          email: req.query.q,
+          email: { $ilike: `%${searchString}%` },
         },
-        include: [
-          { model: Role,
-            attributes: ['role']
-          }
-        ],
         attributes: {
           exclude: ['createdAt', 'updatedAt', 'password']
         },
       })
       .then((user) => {
         if (Utils.isUser(req, res, user)) {
+          if (user.length === 0) {
+            return res.status(404).send({ message: 'No User Found' });
+          }
           return res.status(200).send(user);
         }
       })
@@ -59,14 +51,15 @@ export default class searchController {
    * @memberof searchController
    */
   static docSearch(req, res) {
+    const searchString = req.query.q.trim();
     return Document
-      .findOne({
+      .findAll({
         where: {
-          title: req.query.q,
+          title: { $ilike: `%${searchString}%` },
         },
         include: [
           { model: User,
-            attributes: ['email']
+            attributes: ['email', 'roleId']
           }
         ],
         attributes: {
@@ -75,7 +68,7 @@ export default class searchController {
       })
       .then((doc) => {
         if (utils.isDoc(req, res, doc)) {
-          if (utils.isAllowed(req, res, doc)) {
+          if (utils.filter(req, res, doc)) {
             return res.status(200).send(doc);
           }
         }
