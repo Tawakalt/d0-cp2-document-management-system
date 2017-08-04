@@ -276,23 +276,25 @@ export default class usersController {
    * @memberof usersController
    */
   static allUsersDoc(req, res) {
-    return Document
-      .findAll({
-        where: { userId: req.params.userId },
-        order: [
-          ['id', 'DESC']
-        ],
-        attributes: {
-          exclude: ['updatedAt']
-        }
-      })
-      .then((doc) => {
-        if (doc.length === 0) {
-          res.status(200).send(
-            { message: 'This User has not created any Document' });
-        } else {
-          res.status(200).send(doc);
-        }
-      });
+    if (Utils.userIdValid(req, res, req.params.userId)) {
+      return Document
+        .findAll({
+          where: { userId: req.params.userId },
+          order: [
+            ['id', 'DESC']
+          ],
+          attributes: {
+            exclude: ['updatedAt']
+          }
+        })
+        .then((doc) => {
+          if (doc.length === 0) {
+            res.status(200).send(
+              { message: 'This User has not created any Document' });
+          } else {
+            res.status(200).send(doc);
+          }
+        });
+    }
   }
 }
