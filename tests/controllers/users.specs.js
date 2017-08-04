@@ -60,9 +60,6 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(201);
             expect(res.body.email).to.equal('kenny@y.com');
-            bcrypt.compare('kenny', res.body.password, (err, resp) => {
-              expect(resp).to.equal(true);
-            });
             expect(res.body.roleId).to.equal(3);
           }
           done();
@@ -391,10 +388,6 @@ describe('User Endpoints', () => {
             if (!err) {
               expect(res.status).to.equal(200);
               expect(res.body.updatedDetails.email).to.equal('kenny3@y.com');
-              bcrypt.compare('kenny', res.body.updatedDetails.password,
-                (err, resp) => {
-                  expect(resp).to.equal(true);
-                });
             }
             done();
           });
@@ -413,10 +406,6 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body.updatedDetails.email).to.equal('kenny2@y.com');
-            bcrypt.compare('kenny2', res.body.updatedDetails.password,
-              (err, resp) => {
-                expect(resp).to.equal(true);
-              });
           }
           done();
         });
