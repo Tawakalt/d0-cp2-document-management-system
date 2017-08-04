@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import localStorage from 'local-storage';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
 
@@ -19,7 +18,6 @@ const saltRounds = 10;
 
 describe('Search Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     Document.destroy({
       where: {},
       truncate: true,
@@ -61,7 +59,6 @@ describe('Search Endpoints', () => {
 
   describe('Search Users Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: 'tee@y.com',
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -71,9 +68,11 @@ describe('Search Endpoints', () => {
       done();
     });
     it('should not allow an invalid email', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/users?q=a@y')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -83,9 +82,11 @@ describe('Search Endpoints', () => {
         });
     });
     it('should display the right message when no user is found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/users?q=a@y.com')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -95,9 +96,11 @@ describe('Search Endpoints', () => {
         });
     });
     it('should successfully return the user', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/users?q=tee@y.com')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -109,7 +112,6 @@ describe('Search Endpoints', () => {
 
   describe('Search Documents Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -126,9 +128,11 @@ describe('Search Endpoints', () => {
       });
     });
     it('should return 404 when no document is found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/documents?q=title')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -137,9 +141,11 @@ describe('Search Endpoints', () => {
         });
     });
     it('should not allow an unauthorized user', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .get('/api/v1/search/documents?q=SUPERR')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -150,9 +156,11 @@ describe('Search Endpoints', () => {
         });
     });
     it('should successfully return the document', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/documents?q=SUPERR')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);

@@ -1,6 +1,4 @@
 import bcrypt from 'bcrypt';
-import localStorage from 'local-storage';
-import jwt from 'jsonwebtoken';
 import jwtoken from '../helper/jwt';
 import Utils from '../helper/utils';
 import utils from '../helper/documentsLogic';
@@ -68,7 +66,8 @@ export default class usersController {
         exclude: ['createdAt', 'updatedAt', 'password']
       },
     };
-    if (!utils.listQuery(res, req.query.limit, req.query.offset, property)) {
+    if (!utils.listQuery(
+      req, res, req.query.limit, req.query.offset, property)) {
       return User
         .findAll(res.property)
         .then((users) => {
@@ -130,60 +129,55 @@ export default class usersController {
       .findById(req.params.userId)
       .then((user) => {
         if (!Utils.isUser(req, res, user)) {
-          jwt.verify(
-            localStorage.get('token'),
-            process.env.JWT_SECRET,
-            (error, loggedInUser) => {
-              if (!Utils.allowUpdate(
-                req, res, loggedInUser, parseInt(req.params.userId), req.body)
-              ) {
-                if (!Utils.isValidParams(
-                  req, res, req.body.email, req.body.password)) {
-                  bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-                    let message = '';
+          if (!Utils.allowUpdate(
+            req, res, parseInt(req.params.userId), req.body)
+          ) {
+            if (!Utils.isValidParams(
+              req, res, req.body.email, req.body.password)) {
+              bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+                let message = '';
+                if (req.body.email !== undefined) {
+                  if (req.body.email === user.email) {
+                    message += 'Email up to date. ';
+                  } else {
+                    message += 'Email successfully Updated. ';
+                  }
+                }
+                bcrypt.compare(
+                  req.body.password, user.password, (err, resp) => {
                     if (req.body.email !== undefined) {
-                      if (req.body.email === user.email) {
-                        message += 'Email up to date. ';
+                      if (resp === true) {
+                        message += 'Password up to date. ';
                       } else {
-                        message += 'Email successfully Updated. ';
+                        message += 'Password successfully Updated. ';
                       }
                     }
-                    bcrypt.compare(
-                      req.body.password, user.password, (err, resp) => {
-                        if (req.body.email !== undefined) {
-                          if (resp === true) {
-                            message += 'Password up to date. ';
-                          } else {
-                            message += 'Password successfully Updated. ';
-                          }
+                    if (!Utils.isRoleValid(req, res, req.body.roleId)) {
+                      if (req.body.roleId) {
+                        if (parseInt(req.body.roleId) === user.roleId) {
+                          message += 'Role up to date. ';
+                        } else {
+                          message += 'Role successfully Updated. ';
                         }
-                        if (!Utils.isRoleValid(req, res, req.body.roleId)) {
-                          if (req.body.roleId) {
-                            if (parseInt(req.body.roleId) === user.roleId) {
-                              message += 'Role up to date. ';
-                            } else {
-                              message += 'Role successfully Updated. ';
-                            }
+                      }
+                      return user
+                        .update({
+                          email: req.body.email || user.email,
+                          password: hash || user.password,
+                          roleId: req.body.roleId || user.roleId
+                        })
+                        .then(updatedDetails => res.status(200).send(
+                          { updatedDetails, message }))
+                        .catch((err) => {
+                          if (!Utils.checkError(req, res, err)) {
+                            res.status(500).send(err.toString());
                           }
-                          return user
-                            .update({
-                              email: req.body.email || user.email,
-                              password: hash || user.password,
-                              roleId: req.body.roleId || user.roleId
-                            })
-                            .then(updatedDetails => res.status(200).send(
-                              { updatedDetails, message }))
-                            .catch((err) => {
-                              if (!Utils.checkError(req, res, err)) {
-                                res.status(500).send(err.toString());
-                              }
-                            });
-                        }
-                      });
+                        });
+                    }
                   });
-                }
-              }
-            });
+              });
+            }
+          }
         }
       })
       .catch(error => res.status(500).send(error.toString()));
@@ -247,7 +241,6 @@ export default class usersController {
                 user.dataValues.email,
                 user.dataValues.roleId
               );
-              localStorage.set('token', token);
               delete user.dataValues.password;
               return res.status(200).send({
                 message: 'login successful', user, token });
@@ -266,7 +259,6 @@ export default class usersController {
    * @memberof usersController
    */
   static logout(req, res) {
-    localStorage.clear();
     return res.status(200).send({
       message: 'User sussefully logged out',
     });

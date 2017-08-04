@@ -1,4 +1,3 @@
-import localStorage from 'local-storage';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
 
@@ -20,11 +19,15 @@ export default class Utils {
    * @memberof Utils
    */
   static isLoggedIn(req, res, next) {
-    if (!localStorage.get('token')) {
+    if (!req.headers.authorization) {
       return res.status(401).send({
         message: 'You are not signed in',
       });
     }
+    const token = req.headers.authorization;
+    req.token = token;
+    req.loggedInUser = jwt.verify(req.token,
+      process.env.JWT_SECRET);
     next();
   }
 
@@ -38,9 +41,7 @@ export default class Utils {
    * @memberof Utils
    */
   static isAdmin(req, res, next) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId === 3) {
+    if (req.loggedInUser.roleId === 3) {
       return res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
@@ -58,14 +59,12 @@ export default class Utils {
    * @memberof Utils
    */
   static isSuper(req, res, next) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId !== 1) {
+    if (req.loggedInUser.roleId !== 1) {
       return res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
     }
-    if (loggedInUser.roleId === 1) {
+    if (req.loggedInUser.roleId === 1) {
       req.admin = true;
     }
     next();
@@ -174,25 +173,25 @@ export default class Utils {
    * @static
    * @param {object} req Client's request
    * @param {object} res Server Response
-   * @param {object} loggedInUser Details of the logged in user
    * @param {integer} userId Id of the User whose details is to be updated
    * @param {object} details Updated User details
    * @returns {object} response which includes status and and message
    * @memberof Utils
    */
-  static allowUpdate(req, res, loggedInUser, userId, details) {
-    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(userId)) {
+  static allowUpdate(req, res, userId, details) {
+    if (req.loggedInUser.roleId !== 1 &&
+      req.loggedInUser.id !== parseInt(userId)) {
       return res.status(403).send({
         message: 'You cannot update someone else\'s details',
       });
     }
-    if ((loggedInUser.roleId !== 1 && details.roleId) ||
-      (loggedInUser.id === userId && details.roleId !== undefined)) {
+    if ((req.loggedInUser.roleId !== 1 && details.roleId) ||
+      (req.loggedInUser.id === userId && details.roleId !== undefined)) {
       return res.status(403).send({
         message: 'Common stop it!!! You can\'t change your role',
       });
     }
-    if (loggedInUser.roleId === 1 && loggedInUser.id !== userId &&
+    if (req.loggedInUser.roleId === 1 && req.loggedInUser.id !== userId &&
       (details.email || details.password)) {
       let message = 'You only have acess to change a user\'s role, ';
       message += 'not their email and definitely not their password!!!';
@@ -213,9 +212,7 @@ export default class Utils {
    * @memberof Utils
    */
   static allowDelete(req, res, userId) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.id === parseInt(userId)) {
+    if (req.loggedInUser.id === parseInt(userId)) {
       return res.status(403).send({
         message: 'You cannot delete yourself!!!',
       });

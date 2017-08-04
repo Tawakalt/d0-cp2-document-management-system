@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import localStorage from 'local-storage';
 import validator from 'validator';
 
 /**
@@ -56,15 +54,13 @@ export default class Utils {
         message: 'Title already exists',
       });
     }
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    req.loggedInUser = loggedInUser.id;
     return false;
   }
 
   /**
    * @description adds more properties to the query
    * @static
+   * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} limit Number of rows to be returned
    * @param {integer} offset Number of rows to be skipped
@@ -72,7 +68,7 @@ export default class Utils {
    * @returns {object} response which includes status and and message
    * @memberof Utils
    */
-  static listQuery(res, limit, offset, property) {
+  static listQuery(req, res, limit, offset, property) {
     if (((limit && validator.isNumeric(limit) === false)
       && (offset && validator.isNumeric(offset) === false))
       || ((limit && limit <= 0) && (offset && offset < 0))) {
@@ -92,10 +88,8 @@ export default class Utils {
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId === 3) {
-      property.where = { userId: loggedInUser.id };
+    if (req.loggedInUser.roleId === 3) {
+      property.where = { userId: req.loggedInUser.id };
     }
     res.property = property;
     return false;
@@ -129,11 +123,9 @@ export default class Utils {
    * @memberof Utils
    */
   static isAllowed(req, res, doc) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
     const allowed = [doc.User.roleId, 1, 2];
-    if ((doc.access === 'Private' && doc.userId !== loggedInUser.id) ||
-    (doc.access === 'Role' && allowed.includes(loggedInUser.roleId)
+    if ((doc.access === 'Private' && doc.userId !== req.loggedInUser.id) ||
+    (doc.access === 'Role' && allowed.includes(req.loggedInUser.roleId)
     === false)) {
       return res.status(403).send({
         message: 'You are not authorized to view this document'
@@ -152,9 +144,8 @@ export default class Utils {
    * @memberof Utils
    */
   static allowUpdate(req, res, ownerId) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
+    if (req.loggedInUser.roleId !== 1 &&
+      req.loggedInUser.id !== parseInt(ownerId)) {
       return res.status(403).send({
         message: 'You cannot update someone else\'s document',
       });
@@ -223,9 +214,8 @@ export default class Utils {
    * @memberof Utils
    */
   static allowDelete(req, res, ownerId) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
+    if (req.loggedInUser.roleId !== 1 &&
+      req.loggedInUser.id !== parseInt(ownerId)) {
       return res.status(403).send({
         message: 'You cannot delete someone else\'s document',
       });

@@ -32,7 +32,7 @@ export default class documentsController {
               title: req.body.title,
               content: req.body.content,
               access: req.body.access,
-              userId: req.loggedInUser
+              userId: req.loggedInUser.id
             })
             .then(createdDocument => res.status(201).send({
               message: 'Document successfully created', createdDocument }))
@@ -60,7 +60,8 @@ export default class documentsController {
         exclude: ['createdAt', 'updatedAt']
       }
     };
-    if (!Utils.listQuery(res, req.query.limit, req.query.offset, property)) {
+    if (!Utils.listQuery(
+      req, res, req.query.limit, req.query.offset, property)) {
       return Document
         .findAll(res.property)
         .then((Documents) => {

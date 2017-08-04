@@ -28,7 +28,6 @@
 - dotenv: Loads enviroment variables from .env file
 - express: Fast, Unopinionated minimalistic web framework. Used as the web server for this application
 - jsonwebtoken: JSON Web Token Implementation
-- local-storage: A simplified localStorage API
 - morgan: HTTP Request Logger Middleware for NodeJs
 - pg: postreSQL Client
 - pg-hstore: A module for serializing and deserializing JSON data into hstore format

@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import localStorage from 'local-storage';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
 
@@ -20,7 +19,6 @@ const saltRounds = 10;
 
 describe('User Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     User.destroy({
       where: {},
       truncate: true,
@@ -140,7 +138,6 @@ describe('User Endpoints', () => {
 
   describe('Get Users Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -152,9 +149,11 @@ describe('User Endpoints', () => {
       done();
     });
     it('should successfully get all users', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -165,9 +164,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not authorize a non admin', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .get('/api/v1/users/')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -178,9 +179,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should sussessfully paginate', (done) => {
-      localStorage.set('token', adminToken);
       request(app)
         .get('/api/v1/users?limit=1&offset=1')
+        .set('Authorization', `${adminToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -193,7 +196,6 @@ describe('User Endpoints', () => {
 
   describe('Retrieve User Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -204,9 +206,11 @@ describe('User Endpoints', () => {
       });
     });
     it('should return 404 if user not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -216,9 +220,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should successfuly return the user if found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -232,7 +238,6 @@ describe('User Endpoints', () => {
 
   describe('Update User Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.bulkCreate([
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -247,9 +252,11 @@ describe('User Endpoints', () => {
       });
     });
     it('should return a 404 error if user not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           roleId: '3'
         })
@@ -262,9 +269,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should allow a super admin to update only a user\'s role', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/2')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           email: 'kenny2@y.com',
           password: 'kenny2',
@@ -281,9 +290,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow invalid Email from users', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           email: 'kenny2@',
           password: 'kenny'
@@ -297,9 +308,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow empty Email', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           email: '',
           password: 'kenny'
@@ -313,9 +326,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow empty Password', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           email: 'a@y.com',
           password: ''
@@ -329,9 +344,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow an email that already exists', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           email: process.env.EMAIL,
           password: 'pass'
@@ -347,13 +364,15 @@ describe('User Endpoints', () => {
     });
     it('should successfully update the user\'s details with the initial values',
       (done) => {
-        localStorage.set('token', userToken);
         request(app)
           .put('/api/v1/users/2')
           .send({
             email: 'kenny3@y.com',
             password: 'kenny'
           })
+          .set('Authorization', `${userToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
@@ -367,13 +386,15 @@ describe('User Endpoints', () => {
           });
       });
     it('should successfully update the user\'s details', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
         .send({
           email: 'kenny2@y.com',
           password: 'kenny2'
         })
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -387,13 +408,15 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow a user to update someone else\'s details', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/1')
         .send({
           email: 'kenny2@y.com',
           password: 'kenny2'
         })
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -404,7 +427,6 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow a user to change his/her own role', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/users/2')
         .send({
@@ -412,6 +434,9 @@ describe('User Endpoints', () => {
           password: 'kenny2',
           roleId: 1
         })
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -423,12 +448,14 @@ describe('User Endpoints', () => {
     });
     it('should allow a super admin to update a users role with what was there',
       (done) => {
-        localStorage.set('token', superToken);
         request(app)
           .put('/api/v1/users/2')
           .send({
             roleId: '3'
           })
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
@@ -438,12 +465,14 @@ describe('User Endpoints', () => {
           });
       });
     it('should allow a super admin to update a users role', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/2')
         .send({
           roleId: '1'
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -454,12 +483,14 @@ describe('User Endpoints', () => {
     });
     it('should not allow a super admin to update a user with an invalid role',
       (done) => {
-        localStorage.set('token', superToken);
         request(app)
           .put('/api/v1/users/2')
           .send({
             roleId: 'tty'
           })
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(400);
@@ -469,12 +500,14 @@ describe('User Endpoints', () => {
           });
       });
     it('should not allow a role that doesn\'t exist', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/users/2')
         .send({
           roleId: '20'
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -488,7 +521,6 @@ describe('User Endpoints', () => {
 
   describe('Delete Users Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.bulkCreate([
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -503,9 +535,11 @@ describe('User Endpoints', () => {
       });
     });
     it('should not allow a non Super Admin to delete a user', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .delete('/api/v1/users/2')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -516,9 +550,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should return a 404 error if user not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/users/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -528,9 +564,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should not allow a super Admin to delete him/herself', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/users/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -540,9 +578,11 @@ describe('User Endpoints', () => {
         });
     });
     it('should successfully delete a user', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/users/2')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -555,7 +595,6 @@ describe('User Endpoints', () => {
 
   describe('Login Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -615,10 +654,11 @@ describe('User Endpoints', () => {
 
   describe('Logout Endpoint', () => {
     it('should successfully log user out', (done) => {
-      localStorage.clear();
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/logout')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -631,7 +671,6 @@ describe('User Endpoints', () => {
 
   describe('Retrieve all docs of a user\'s Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -643,9 +682,11 @@ describe('User Endpoints', () => {
     });
     it('should return the appropriate message when no document is found for',
       (done) => {
-        localStorage.set('token', superToken);
         request(app)
           .get('/api/v1/users/1/documents')
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
@@ -664,9 +705,11 @@ describe('User Endpoints', () => {
           userId: 1
         }
       );
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/users/1/documents')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);

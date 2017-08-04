@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import localStorage from 'local-storage';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
 
@@ -19,7 +18,6 @@ const saltRounds = 10;
 
 describe('Documents Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     Document.destroy({
       where: {},
       truncate: true,
@@ -61,7 +59,6 @@ describe('Documents Endpoints', () => {
 
   describe('Create Documents Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -72,7 +69,6 @@ describe('Documents Endpoints', () => {
       });
     });
     it('should not create a document without title', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
         .send({
@@ -81,6 +77,9 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -90,7 +89,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not create a document without content', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
         .send({
@@ -99,6 +97,9 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -108,7 +109,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not create a document without access type', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
         .send({
@@ -117,6 +117,9 @@ describe('Documents Endpoints', () => {
           access: '',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -126,7 +129,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not create a document with an invalid access type', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
         .send({
@@ -135,6 +137,9 @@ describe('Documents Endpoints', () => {
           access: 'access',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -144,7 +149,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfully create a new document', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .post('/api/v1/documents/')
         .send({
@@ -153,6 +157,9 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(201);
@@ -166,7 +173,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not create a document with a title that exists', (done) => {
-      localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
           content: 'content',
@@ -182,6 +188,9 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: 1
         })
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -194,7 +203,6 @@ describe('Documents Endpoints', () => {
 
   describe('Get Documents Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -204,9 +212,11 @@ describe('Documents Endpoints', () => {
       done();
     });
     it('should display the right message when no document is found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/documents/')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -216,7 +226,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfully get all documents for an admin', (done) => {
-      localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
           content: 'super',
@@ -226,6 +235,9 @@ describe('Documents Endpoints', () => {
       );
       request(app)
         .get('/api/v1/documents/')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -234,7 +246,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfully get all documents for a user', (done) => {
-      localStorage.set('token', userToken);
       Document.create(
         { title: 'SUPER',
           content: 'super',
@@ -244,6 +255,9 @@ describe('Documents Endpoints', () => {
       );
       request(app)
         .get('/api/v1/documents/')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -252,7 +266,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow limit and offset as alphabets', (done) => {
-      localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
           content: 'super',
@@ -262,6 +275,9 @@ describe('Documents Endpoints', () => {
       );
       request(app)
         .get('/api/v1/documents?limit=a&offset=b')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -271,7 +287,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow limit as an alphabet', (done) => {
-      localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
           content: 'super',
@@ -281,6 +296,9 @@ describe('Documents Endpoints', () => {
       );
       request(app)
         .get('/api/v1/documents?limit=a&offset=0')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -290,7 +308,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow offset as an alphabet', (done) => {
-      localStorage.set('token', superToken);
       Document.create(
         { title: 'SUPER',
           content: 'super',
@@ -300,6 +317,9 @@ describe('Documents Endpoints', () => {
       );
       request(app)
         .get('/api/v1/documents?limit=1&offset=a')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -312,7 +332,6 @@ describe('Documents Endpoints', () => {
 
   describe('Retrieve Document Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -329,9 +348,11 @@ describe('Documents Endpoints', () => {
       });
     });
     it('should return a 404 error if document not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/documents/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -341,9 +362,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not authorize an authorized user', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .get('/api/v1/documents/1')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(403);
@@ -354,9 +377,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfuly return for an authorized user', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
@@ -368,7 +393,6 @@ describe('Documents Endpoints', () => {
 
   describe('Update Document Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -391,9 +415,11 @@ describe('Documents Endpoints', () => {
       });
     });
     it('should return a 404 error if document not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'SUPER!!!',
           content: 'super',
@@ -409,9 +435,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow a user to update someone else\'s document', (done) => {
-      localStorage.set('token', userToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'TEST3',
           content: 'test3',
@@ -428,9 +456,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow empty title', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: '',
           content: 'test3',
@@ -446,9 +476,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow empty content', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'Title',
           content: '',
@@ -464,9 +496,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow an invalid access type', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'Title',
           content: 'Content',
@@ -482,9 +516,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow empty access type', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'TEST3',
           content: 'test3',
@@ -500,9 +536,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should not allow a title that already exists', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'SUPER2',
           content: 'super2',
@@ -519,9 +557,11 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfully update document\'s details', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .put('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .send({
           title: 'SUPER3',
           content: 'super2',
@@ -544,7 +584,6 @@ describe('Documents Endpoints', () => {
 
   describe('Delete Documents Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -561,9 +600,11 @@ describe('Documents Endpoints', () => {
       });
     });
     it('should return a 404 error if document not found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/documents/10')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(404);
@@ -574,9 +615,11 @@ describe('Documents Endpoints', () => {
     });
     it('should not allow a non admin to delete someone else\'s document',
       (done) => {
-        localStorage.set('token', userToken);
         request(app)
           .delete('/api/v1/documents/1')
+          .set('Authorization', `${userToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(403);
@@ -587,9 +630,11 @@ describe('Documents Endpoints', () => {
           });
       });
     it('should successfully delete a document', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .delete('/api/v1/documents/1')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);

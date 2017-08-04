@@ -1,5 +1,4 @@
 import request from 'supertest';
-import localStorage from 'local-storage';
 import { expect } from 'chai';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
@@ -17,7 +16,6 @@ const token = jwtoken.sign(1, process.env.EMAIL, 1);
 
 describe('Role Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     User.destroy({
       where: {},
       truncate: true,
@@ -72,12 +70,14 @@ describe('Role Endpoints', () => {
       });
     });
     it('should not allow an invalid role', (done) => {
-      localStorage.set('token', token);
       request(app)
         .post('/api/v1/roles/')
         .send({
           role: ''
         })
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(400);
@@ -87,12 +87,14 @@ describe('Role Endpoints', () => {
         });
     });
     it('should successfully create a new role', (done) => {
-      localStorage.set('token', token);
       request(app)
         .post('/api/v1/roles/')
         .send({
           role: 'Editor'
         })
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(201);
@@ -127,9 +129,11 @@ describe('Role Endpoints', () => {
       });
     });
     it('should successfully get all roles', (done) => {
-      localStorage.set('token', token);
       request(app)
         .get('/api/v1/roles/')
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
