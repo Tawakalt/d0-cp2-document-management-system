@@ -7,39 +7,6 @@ import validator from 'validator';
  */
 export default class Utils {
   /**
-   * @description Checks the validity of the documents parameters
-   * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
-   * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
-   * @memberof Utils
-   */
-  static isValid(req, res, next) {
-    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
-      return res.status(400).send({
-        message: 'Title is Required',
-      });
-    }
-    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
-      return res.status(400).send({
-        message: 'Content is Required',
-      });
-    }
-    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
-      return res.status(400).send({
-        message: 'Access is Required',
-      });
-    }
-    if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      return res.status(400).send({
-        message: 'Invalid Access Type',
-      });
-    }
-    next();
-  }
-
-  /**
    * @description checks if Title exists
    * @static
    * @param {object} req Client's request
