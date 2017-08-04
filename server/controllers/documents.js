@@ -26,7 +26,7 @@ export default class documentsController {
         },
       })
       .then((doc) => {
-        if (!Utils.doesTitleExist(req, res, doc)) {
+        if (Utils.titleExist(req, res, doc)) {
           return Document
             .create({
               title: req.body.title,
@@ -60,7 +60,7 @@ export default class documentsController {
         exclude: ['createdAt', 'updatedAt']
       }
     };
-    if (!Utils.listQuery(
+    if (Utils.listQuery(
       req, res, req.query.limit, req.query.offset, property)) {
       return Document
         .findAll(res.property)
@@ -71,7 +71,8 @@ export default class documentsController {
           const page = Math.round((req.query.offset || 0) /
           (req.query.limit || 10)) + 1;
           if (Documents.length === 0) {
-            res.status(200).send({ message: 'No Document has been created' });
+            return res.status(200).send({
+              message: 'No Document has been created' });
           }
           res.status(200).send({ Documents,
             metaData: {
@@ -95,25 +96,27 @@ export default class documentsController {
    * @memberof documentsController
    */
   static retrieve(req, res) {
-    return Document
-      .findById(req.params.docId, {
-        include: [{
-          model: User,
-          attributes: ['email']
-        }],
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        }
-      })
-      .then((doc) => {
-        if (!Utils.isDoc(req, res, doc)) {
-          if (!Utils.isAllowed(req, res, doc)) {
-            delete doc.dataValues.User;
-            return res.status(200).send(doc);
+    if (Utils.docIdValid(req, res, req.params.docId)) {
+      return Document
+        .findById(req.params.docId, {
+          include: [{
+            model: User,
+            attributes: ['email']
+          }],
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
           }
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+        })
+        .then((doc) => {
+          if (Utils.isDoc(req, res, doc)) {
+            if (Utils.isAllowed(req, res, doc)) {
+              delete doc.dataValues.User;
+              return res.status(200).send(doc);
+            }
+          }
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 
   /**
@@ -133,9 +136,9 @@ export default class documentsController {
         }],
       })
       .then((doc) => {
-        if (!Utils.isDoc(req, res, doc)) {
-          if (!Utils.allowUpdate(req, res, doc.userId)) {
-            if (!Utils.isValidParams(req, res)) {
+        if (Utils.isDoc(req, res, doc)) {
+          if (Utils.allowUpdate(req, res, doc.userId)) {
+            if (Utils.isValidParams(req, res)) {
               return doc
                 .update({
                   title: req.body.title || doc.title,
@@ -143,14 +146,13 @@ export default class documentsController {
                   access: req.body.access || doc.access,
                 })
                 .then((updatedDetails) => {
-                  // console.log(updatedDetails);
                   delete updatedDetails.dataValues.User;
                   res.status(200).send({
                     message: 'Update Successful', updatedDetails
                   });
                 })
                 .catch((err) => {
-                  if (!Utils.checkError(req, res, err)) {
+                  if (!Utils.validationError(req, res, err)) {
                     res.status(500).send(err.toString());
                   }
                 });
@@ -174,8 +176,8 @@ export default class documentsController {
     return Document
       .findById(req.params.docId)
       .then((doc) => {
-        if (!Utils.isDoc(req, res, doc)) {
-          if (!Utils.allowDelete(req, res, doc.userId)) {
+        if (Utils.isDoc(req, res, doc)) {
+          if (Utils.allowDelete(req, res, doc.userId)) {
             return doc
               .destroy()
               .then(() => res.status(200).send({

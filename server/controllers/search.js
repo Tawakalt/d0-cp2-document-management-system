@@ -42,7 +42,7 @@ export default class searchController {
         },
       })
       .then((user) => {
-        if (!Utils.isUser(req, res, user)) {
+        if (Utils.isUser(req, res, user)) {
           return res.status(200).send(user);
         }
       })
@@ -74,8 +74,8 @@ export default class searchController {
         }
       })
       .then((doc) => {
-        if (!utils.isDoc(req, res, doc)) {
-          if (!utils.isAllowed(req, res, doc)) {
+        if (utils.isDoc(req, res, doc)) {
+          if (utils.isAllowed(req, res, doc)) {
             return res.status(200).send(doc);
           }
         }

@@ -32,7 +32,7 @@ export default class usersController {
         },
       })
       .then((user) => {
-        if (!Utils.doesEmailExist(req, res, user)) {
+        if (Utils.allowEmail(req, res, user)) {
           bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
             return User
               .create({
@@ -66,7 +66,7 @@ export default class usersController {
         exclude: ['createdAt', 'updatedAt', 'password']
       },
     };
-    if (!utils.listQuery(
+    if (utils.listQuery(
       req, res, req.query.limit, req.query.offset, property)) {
       return User
         .findAll(res.property)
@@ -77,7 +77,7 @@ export default class usersController {
           const page = Math.round((req.query.offset || 0) /
           (req.query.limit || 10)) + 1;
           if (users.length === 0) {
-            res.status(200).send({ message: 'No User Found' });
+            return res.status(200).send({ message: 'No User Found' });
           }
           res.status(200).send({ users,
             metaData: {
@@ -101,18 +101,20 @@ export default class usersController {
    * @memberof usersController
    */
   static retrieve(req, res) {
-    return User
-      .findById(req.params.userId, {
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'password']
-        },
-      })
-      .then((user) => {
-        if (!Utils.isUser(req, res, user)) {
-          return res.status(200).send(user);
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+    if (Utils.userIdValid(req, res, req.params.userId)) {
+      return User
+        .findById(req.params.userId, {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password']
+          },
+        })
+        .then((user) => {
+          if (Utils.isUser(req, res, user)) {
+            return res.status(200).send(user);
+          }
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 
   /**
@@ -128,11 +130,11 @@ export default class usersController {
     return User
       .findById(req.params.userId)
       .then((user) => {
-        if (!Utils.isUser(req, res, user)) {
-          if (!Utils.allowUpdate(
+        if (Utils.isUser(req, res, user)) {
+          if (Utils.allowUpdate(
             req, res, parseInt(req.params.userId), req.body)
           ) {
-            if (!Utils.isValidParams(
+            if (Utils.isValidParams(
               req, res, req.body.email, req.body.password)) {
               bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
                 let message = '';
@@ -152,7 +154,7 @@ export default class usersController {
                         message += 'Password successfully Updated. ';
                       }
                     }
-                    if (!Utils.isRoleValid(req, res, req.body.roleId)) {
+                    if (Utils.isRoleValid(req, res, req.body.roleId)) {
                       if (req.body.roleId) {
                         if (parseInt(req.body.roleId) === user.roleId) {
                           message += 'Role up to date. ';
@@ -169,7 +171,7 @@ export default class usersController {
                         .then(updatedDetails => res.status(200).send(
                           { updatedDetails, message }))
                         .catch((err) => {
-                          if (!Utils.checkError(req, res, err)) {
+                          if (!Utils.validationError(req, res, err)) {
                             res.status(500).send(err.toString());
                           }
                         });
@@ -196,8 +198,8 @@ export default class usersController {
     return User
       .findById(req.params.userId)
       .then((user) => {
-        if (!Utils.isUser(req, res, user)) {
-          if (!Utils.allowDelete(req, res, parseInt(req.params.userId))) {
+        if (Utils.isUser(req, res, user)) {
+          if (Utils.allowDelete(req, res, parseInt(req.params.userId))) {
             return user
               .destroy()
               .then(() => res.status(200).send({
@@ -228,7 +230,7 @@ export default class usersController {
         },
       })
       .then((user) => {
-        if (!Utils.isUser(req, res, user)) {
+        if (Utils.isUser(req, res, user)) {
           bcrypt.compare(
             req.body.password, user.dataValues.password, (err, resp) => {
               if (resp === false) {

@@ -203,12 +203,16 @@ describe('Documents Endpoints', () => {
 
   describe('Get Documents Endpoint', () => {
     beforeEach((done) => {
-      User.create(
+      User.bulkCreate([
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
           roleId: 1
+        },
+        { email: 'kay@y.com',
+          password: bcrypt.hashSync('kay', saltRounds),
+          roleId: 1
         }
-      );
+      ]);
       done();
     });
     it('should display the right message when no document is found', (done) => {
@@ -221,8 +225,8 @@ describe('Documents Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body.message).to.equal('No Document has been created');
+            done();
           }
-          done();
         });
     });
     it('should successfully get all documents for an admin', (done) => {
@@ -246,13 +250,6 @@ describe('Documents Endpoints', () => {
         });
     });
     it('should successfully get all documents for a user', (done) => {
-      Document.create(
-        { title: 'SUPER',
-          content: 'super',
-          access: 'Public',
-          userId: 1
-        }
-      );
       request(app)
         .get('/api/v1/documents/')
         .set('Authorization', `${userToken}`)
@@ -261,8 +258,8 @@ describe('Documents Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
+            done();
           }
-          done();
         });
     });
     it('should not allow limit and offset as alphabets', (done) => {

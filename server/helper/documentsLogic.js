@@ -15,13 +15,14 @@ export default class Utils {
    * @returns {object} response which includes status and and message
    * @memberof Utils
    */
-  static doesTitleExist(req, res, doc) {
+  static titleExist(req, res, doc) {
     if (doc) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Title already exists',
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
@@ -39,19 +40,22 @@ export default class Utils {
     if (((limit && validator.isNumeric(limit) === false)
       && (offset && validator.isNumeric(offset) === false))
       || ((limit && limit <= 0) && (offset && offset < 0))) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Limit and Offset',
       });
+      return false;
     } else if ((limit && validator.isNumeric(limit) === false) ||
     (limit && limit <= 0)) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Limit',
       });
+      return false;
     } else if ((offset && validator.isNumeric(offset) === false) ||
     (offset && offset < 0)) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Offset',
       });
+      return false;
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
@@ -59,7 +63,7 @@ export default class Utils {
       property.where = { userId: req.loggedInUser.id };
     }
     res.property = property;
-    return false;
+    return true;
   }
 
   /**
@@ -73,11 +77,12 @@ export default class Utils {
    */
   static isDoc(req, res, doc) {
     if (!doc) {
-      return res.status(404).send({
+      res.status(404).send({
         message: 'Document Not Found'
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
@@ -94,11 +99,12 @@ export default class Utils {
     if ((doc.access === 'Private' && doc.userId !== req.loggedInUser.id) ||
     (doc.access === 'Role' && allowed.includes(req.loggedInUser.roleId)
     === false)) {
-      return res.status(403).send({
+      res.status(403).send({
         message: 'You are not authorized to view this document'
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
@@ -113,11 +119,12 @@ export default class Utils {
   static allowUpdate(req, res, ownerId) {
     if (req.loggedInUser.roleId !== 1 &&
       req.loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(403).send({
+      res.status(403).send({
         message: 'You cannot update someone else\'s document',
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
@@ -130,26 +137,30 @@ export default class Utils {
    */
   static isValidParams(req, res) {
     if (!req.body.title && validator.isEmpty(req.body.title) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Title is Required',
       });
+      return false;
     }
     if (!req.body.content && validator.isEmpty(req.body.content) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Content is Required',
       });
+      return false;
     }
     if (!req.body.access && validator.isEmpty(req.body.access) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Access is Required',
       });
+      return false;
     }
     if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Access Type',
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
@@ -161,12 +172,13 @@ export default class Utils {
    * @returns {object} response which includes status and and message
    * @memberof Utils
    */
-  static checkError(req, res, err) {
+  static validationError(req, res, err) {
     if (err.toString() ===
       'SequelizeUniqueConstraintError: Validation error') {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Your Edited Title already exists!!!',
       });
+      return true;
     }
     return false;
   }
@@ -183,10 +195,30 @@ export default class Utils {
   static allowDelete(req, res, ownerId) {
     if (req.loggedInUser.roleId !== 1 &&
       req.loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(403).send({
+      res.status(403).send({
         message: 'You cannot delete someone else\'s document',
       });
+      return false;
     }
-    return false;
+    return true;
+  }
+
+  /**
+   * @description Validates document ID for retrieval
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {any} docId Id of the document to be retrieved
+   * @returns {object} response which includes status and and message
+   * @memberof Utils
+   */
+  static docIdValid(req, res, docId) {
+    if (!validator.isNumeric(docId)) {
+      res.status(400).send({
+        message: 'Document Id must be an integer',
+      });
+      return false;
+    }
+    return true;
   }
 }
