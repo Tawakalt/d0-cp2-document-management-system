@@ -157,8 +157,8 @@ describe('User Endpoints', () => {
         .end((err, res) => {
           if (!err) {
             expect(res.status).to.equal(200);
-            expect(res.body.users[0].email).to.equal(process.env.EMAIL);
-            expect(res.body.users[0].roleId).to.equal(1);
+            expect(res.body.object[0].email).to.equal(process.env.EMAIL);
+            expect(res.body.object[0].roleId).to.equal(1);
           }
           done();
         });

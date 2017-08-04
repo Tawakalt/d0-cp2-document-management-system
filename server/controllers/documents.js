@@ -65,23 +65,11 @@ export default class documentsController {
       return Document
         .findAll(res.property)
         .then((Documents) => {
-          const totalCount = Documents.length;
-          let pageCount = Math.round(totalCount / (req.query.limit || 10));
-          pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
-          const page = Math.round((req.query.offset || 0) /
-          (req.query.limit || 10)) + 1;
           if (Documents.length === 0) {
             return res.status(200).send({
               message: 'No Document has been created' });
           }
-          res.status(200).send({ Documents,
-            metaData: {
-              page,
-              pageCount,
-              count: Documents.length,
-              totalCount,
-            }
-          });
+          Utils.paginate(req, res, Documents);
         });
     }
   }

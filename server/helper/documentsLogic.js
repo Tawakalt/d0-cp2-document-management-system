@@ -253,4 +253,28 @@ export default class Utils {
     res.status(200).send(newArr);
     return false;
   }
+
+  /**
+   * @description Paginates Result 
+   * @static
+   * @param {object} req Client's request
+   * @param {object} res Server Response
+   * @param {object} object the returned document or user
+   * @memberof Utils
+   */
+  static paginate(req, res, object) {
+    const totalCount = object.length;
+    let pageCount = Math.round(totalCount / (req.query.limit || 10));
+    pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
+    const page = Math.round((req.query.offset || 0) /
+    (req.query.limit || 10)) + 1;
+    res.status(200).send({ object,
+      metaData: {
+        page,
+        pageCount,
+        count: object.length,
+        totalCount,
+      }
+    });
+  }
 }
