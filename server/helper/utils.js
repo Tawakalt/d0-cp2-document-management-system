@@ -63,19 +63,19 @@ export default class Utils {
    * @memberof Utils
    */
   static isValidParams(req, res, email, password) {
-    if (email === '' || (email && validator.isEmpty(email) === true)) {
+    if (email === '' || (email && validator.isEmpty(email))) {
       res.status(400).send({
         message: 'Email is Required!!!',
       });
       return false;
     }
-    if (password === '' || (password && validator.isEmpty(password) === true)) {
+    if (password === '' || (password && validator.isEmpty(password))) {
       res.status(400).send({
         message: 'Password is Required!!!',
       });
       return false;
     }
-    if (email && validator.isEmail(email) === false) {
+    if (email && !(validator.isEmail(email))) {
       res.status(400).send({
         message: 'Invalid Email!!!',
       });
@@ -151,7 +151,7 @@ export default class Utils {
    */
   static isRoleValid(req, res, roleId) {
     if (roleId &&
-      validator.isNumeric(roleId) === false) {
+      !(validator.isNumeric(roleId))) {
       res.status(400).send({
         message: 'Invalid RoleId!!!',
       });

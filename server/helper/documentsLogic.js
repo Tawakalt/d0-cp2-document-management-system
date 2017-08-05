@@ -37,20 +37,20 @@ export default class Utils {
    * @memberof Utils
    */
   static listQuery(req, res, limit, offset, property) {
-    if (((limit && validator.isNumeric(limit) === false)
-      && (offset && validator.isNumeric(offset) === false))
+    if (((limit && !(validator.isNumeric(limit)))
+      && (offset && !(validator.isNumeric(offset))))
       || ((limit && limit <= 0) && (offset && offset < 0))) {
       res.status(400).send({
         message: 'Invalid Limit and Offset',
       });
       return false;
-    } else if ((limit && validator.isNumeric(limit) === false) ||
+    } else if ((limit && !(validator.isNumeric(limit))) ||
     (limit && limit <= 0)) {
       res.status(400).send({
         message: 'Invalid Limit',
       });
       return false;
-    } else if ((offset && validator.isNumeric(offset) === false) ||
+    } else if ((offset && !(validator.isNumeric(offset))) ||
     (offset && offset < 0)) {
       res.status(400).send({
         message: 'Invalid Offset',
@@ -136,19 +136,19 @@ export default class Utils {
    * @memberof Utils
    */
   static isValidParams(req, res) {
-    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
+    if (!req.body.title && validator.isEmpty(req.body.title)) {
       res.status(400).send({
         message: 'Title is Required',
       });
       return false;
     }
-    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
+    if (!req.body.content && validator.isEmpty(req.body.content)) {
       res.status(400).send({
         message: 'Content is Required',
       });
       return false;
     }
-    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
+    if (!req.body.access && validator.isEmpty(req.body.access)) {
       res.status(400).send({
         message: 'Access is Required',
       });

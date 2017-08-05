@@ -57,7 +57,7 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {boolean} true or false
+   * @returns {boolean} false
    * @memberof Utils
    */
   static isSuperAdmin(req, res, next) {
@@ -69,7 +69,6 @@ export default class Middleware {
     }
     if (req.loggedInUser.roleId === 1) {
       req.admin = true;
-      return true;
     }
     next();
   }
@@ -84,19 +83,19 @@ export default class Middleware {
    * @memberof Utils
    */
   static isUserValid(req, res, next) {
-    if (!req.body.email && validator.isEmpty(req.body.email) === true) {
+    if (!req.body.email && validator.isEmpty(req.body.email)) {
       res.status(400).send({
         message: 'Email is Required',
       });
       return false;
     }
-    if (!req.body.password && validator.isEmpty(req.body.password) === true) {
+    if (!req.body.password && validator.isEmpty(req.body.password)) {
       res.status(400).send({
         message: 'Password is Required',
       });
       return false;
     }
-    if (req.body.email && validator.isEmail(req.body.email) === false) {
+    if (req.body.email && !(validator.isEmail(req.body.email))) {
       res.status(400).send({
         message: 'Invalid Email',
       });
@@ -115,19 +114,19 @@ export default class Middleware {
    * @memberof Utils
    */
   static isDocumentValid(req, res, next) {
-    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
+    if (!req.body.title && validator.isEmpty(req.body.title)) {
       res.status(400).send({
         message: 'Title is Required',
       });
       return false;
     }
-    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
+    if (!req.body.content && validator.isEmpty(req.body.content)) {
       res.status(400).send({
         message: 'Content is Required',
       });
       return false;
     }
-    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
+    if (!req.body.access && validator.isEmpty(req.body.access)) {
       res.status(400).send({
         message: 'Access is Required',
       });
