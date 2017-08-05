@@ -118,65 +118,67 @@ export default class usersController {
    * @memberof usersController
    */
   static update(req, res) {
-    return User
-      .findById(req.params.userId)
-      .then((user) => {
-        if (Utils.isUser(req, res, user)) {
-          if (Utils.allowUpdate(
-            req, res, parseInt(req.params.userId), req.body)
-          ) {
-            if (Utils.isValidParams(
-              req, res, req.body.email, req.body.password)) {
-              bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-                let message = '';
-                if (req.body.email !== undefined) {
-                  if (req.body.email === user.email) {
-                    message += 'Email up to date. ';
-                  } else {
-                    message += 'Email successfully Updated. ';
-                  }
-                }
-                bcrypt.compare(
-                  req.body.password, user.password, (err, resp) => {
-                    if (req.body.email !== undefined) {
-                      if (resp === true) {
-                        message += 'Password up to date. ';
-                      } else {
-                        message += 'Password successfully Updated. ';
-                      }
+    if (Utils.userIdValid(req, res, req.params.userId)) {
+      return User
+        .findById(req.params.userId)
+        .then((user) => {
+          if (Utils.isUser(req, res, user)) {
+            if (Utils.allowUpdate(
+              req, res, parseInt(req.params.userId), req.body)
+            ) {
+              if (Utils.isValidParams(
+                req, res, req.body.email, req.body.password)) {
+                bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+                  let message = '';
+                  if (req.body.email !== undefined) {
+                    if (req.body.email === user.email) {
+                      message += 'Email up to date. ';
+                    } else {
+                      message += 'Email successfully Updated. ';
                     }
-                    if (Utils.isRoleValid(req, res, req.body.roleId)) {
-                      if (req.body.roleId) {
-                        if (parseInt(req.body.roleId) === user.roleId) {
-                          message += 'Role up to date. ';
+                  }
+                  bcrypt.compare(
+                    req.body.password, user.password, (err, resp) => {
+                      if (req.body.email !== undefined) {
+                        if (resp === true) {
+                          message += 'Password up to date. ';
                         } else {
-                          message += 'Role successfully Updated. ';
+                          message += 'Password successfully Updated. ';
                         }
                       }
-                      return user
-                        .update({
-                          email: req.body.email || user.email,
-                          password: hash || user.password,
-                          roleId: req.body.roleId || user.roleId
-                        })
-                        .then((updatedDetails) => {
-                          delete updatedDetails.dataValues.password;
-                          res.status(200).send(
-                            { updatedDetails, message });
-                        })
-                        .catch((err) => {
-                          if (!Utils.validationError(req, res, err)) {
-                            res.status(500).send(err.toString());
+                      if (Utils.isRoleValid(req, res, req.body.roleId)) {
+                        if (req.body.roleId) {
+                          if (parseInt(req.body.roleId) === user.roleId) {
+                            message += 'Role up to date. ';
+                          } else {
+                            message += 'Role successfully Updated. ';
                           }
-                        });
-                    }
-                  });
-              });
+                        }
+                        return user
+                          .update({
+                            email: req.body.email || user.email,
+                            password: hash || user.password,
+                            roleId: req.body.roleId || user.roleId
+                          })
+                          .then((updatedDetails) => {
+                            delete updatedDetails.dataValues.password;
+                            res.status(200).send(
+                              { updatedDetails, message });
+                          })
+                          .catch((err) => {
+                            if (!Utils.validationError(req, res, err)) {
+                              res.status(500).send(err.toString());
+                            }
+                          });
+                      }
+                    });
+                });
+              }
             }
           }
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 
   /**
@@ -189,20 +191,22 @@ export default class usersController {
    * @memberof usersController
    */
   static destroy(req, res) {
-    return User
-      .findById(req.params.userId)
-      .then((user) => {
-        if (Utils.isUser(req, res, user)) {
-          if (Utils.allowDelete(req, res, parseInt(req.params.userId))) {
-            return user
-              .destroy()
-              .then(() => res.status(200).send({
-                message: 'User successfully deleted' }))
-              .catch(err => res.status(500).send(err.toString()));
+    if (Utils.userIdValid(req, res, req.params.userId)) {
+      return User
+        .findById(req.params.userId)
+        .then((user) => {
+          if (Utils.isUser(req, res, user)) {
+            if (Utils.allowDelete(req, res, parseInt(req.params.userId))) {
+              return user
+                .destroy()
+                .then(() => res.status(200).send({
+                  message: 'User successfully deleted' }))
+                .catch(err => res.status(500).send(err.toString()));
+            }
           }
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 
   /**

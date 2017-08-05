@@ -117,38 +117,40 @@ export default class documentsController {
    * @memberof documentsController
    */
   static update(req, res) {
-    return Document
-      .findById(req.params.docId, {
-        include: [{
-          model: User,
-        }],
-      })
-      .then((doc) => {
-        if (Utils.isDoc(req, res, doc)) {
-          if (Utils.allowUpdate(req, res, doc.userId)) {
-            if (Utils.isValidParams(req, res)) {
-              return doc
-                .update({
-                  title: req.body.title || doc.title,
-                  content: req.body.content || doc.content,
-                  access: req.body.access || doc.access,
-                })
-                .then((updatedDetails) => {
-                  delete updatedDetails.dataValues.User;
-                  res.status(200).send({
-                    message: 'Update Successful', updatedDetails
+    if (Utils.docIdValid(req, res, req.params.docId)) {
+      return Document
+        .findById(req.params.docId, {
+          include: [{
+            model: User,
+          }],
+        })
+        .then((doc) => {
+          if (Utils.isDoc(req, res, doc)) {
+            if (Utils.allowUpdate(req, res, doc.userId)) {
+              if (Utils.isValidParams(req, res)) {
+                return doc
+                  .update({
+                    title: req.body.title || doc.title,
+                    content: req.body.content || doc.content,
+                    access: req.body.access || doc.access,
+                  })
+                  .then((updatedDetails) => {
+                    delete updatedDetails.dataValues.User;
+                    res.status(200).send({
+                      message: 'Update Successful', updatedDetails
+                    });
+                  })
+                  .catch((err) => {
+                    if (!Utils.validationError(req, res, err)) {
+                      res.status(500).send(err.toString());
+                    }
                   });
-                })
-                .catch((err) => {
-                  if (!Utils.validationError(req, res, err)) {
-                    res.status(500).send(err.toString());
-                  }
-                });
+              }
             }
           }
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 
   /**
@@ -161,19 +163,21 @@ export default class documentsController {
    * @memberof documentsController
    */
   static destroy(req, res) {
-    return Document
-      .findById(req.params.docId)
-      .then((doc) => {
-        if (Utils.isDoc(req, res, doc)) {
-          if (Utils.allowDelete(req, res, doc.userId)) {
-            return doc
-              .destroy()
-              .then(() => res.status(200).send({
-                message: 'Document successfully deleted' }))
-              .catch(err => res.status(500).send(err.toString()));
+    if (Utils.docIdValid(req, res, req.params.docId)) {
+      return Document
+        .findById(req.params.docId)
+        .then((doc) => {
+          if (Utils.isDoc(req, res, doc)) {
+            if (Utils.allowDelete(req, res, doc.userId)) {
+              return doc
+                .destroy()
+                .then(() => res.status(200).send({
+                  message: 'Document successfully deleted' }))
+                .catch(err => res.status(500).send(err.toString()));
+            }
           }
-        }
-      })
-      .catch(error => res.status(500).send(error.toString()));
+        })
+        .catch(error => res.status(500).send(error.toString()));
+    }
   }
 }
