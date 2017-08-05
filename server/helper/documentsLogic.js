@@ -12,7 +12,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} doc The returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static titleExist(req, res, doc) {
@@ -33,7 +33,7 @@ export default class Utils {
    * @param {integer} limit Number of rows to be returned
    * @param {integer} offset Number of rows to be skipped
    * @param {object} property query property
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static listQuery(req, res, limit, offset, property) {
@@ -72,7 +72,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} doc the returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isDoc(req, res, doc) {
@@ -91,7 +91,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} doc the returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isAllowed(req, res, doc) {
@@ -113,7 +113,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} ownerId id of the document owner
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static allowUpdate(req, res, ownerId) {
@@ -132,7 +132,7 @@ export default class Utils {
    * @static
    * @param {object} req Client's request
    * @param {object} res Server Response
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isValidParams(req, res) {
@@ -169,7 +169,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} err server error
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static validationError(req, res, err) {
@@ -189,7 +189,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} ownerId id of the document owner
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static allowDelete(req, res, ownerId) {
@@ -209,7 +209,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {any} docId Id of the document to be retrieved
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static docIdValid(req, res, docId) {

@@ -14,7 +14,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} user User details
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isUser(req, res, user) {
@@ -39,7 +39,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {object} user user details
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static allowEmail(req, res, user) {
@@ -59,7 +59,7 @@ export default class Utils {
    * @param {object} res Server Response
    * @param {string} email user's email
    * @param {string} password user's password
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isValidParams(req, res, email, password) {
@@ -91,7 +91,7 @@ export default class Utils {
    * @param {object} res Server Response
    * @param {integer} userId Id of the User whose details is to be updated
    * @param {object} details Updated User details
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static allowUpdate(req, res, userId, details) {
@@ -127,7 +127,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} userId Id of the User to be deleted
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static allowDelete(req, res, userId) {
@@ -146,7 +146,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {integer} roleId Users roleId
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isRoleValid(req, res, roleId) {
@@ -166,7 +166,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {string} err Server error
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static validationError(req, res, err) {
@@ -196,7 +196,7 @@ export default class Utils {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {any} userId Id of the document to be retrieved
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static userIdValid(req, res, userId) {
