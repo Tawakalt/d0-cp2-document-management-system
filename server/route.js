@@ -17,16 +17,16 @@ app.use(express.static(path.resolve(__dirname, './../public')));
 app.get('/', (request, response) => {
   response.sendFile(path.resolve(__dirname, './../public', 'index.html'));
 });
-app.get('*', (req, res) => res.status(404).send({
+app.get('*', (request, response) => response.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.post('*', (req, res) => res.status(404).send({
+app.post('*', (request, response) => response.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.put('*', (req, res) => res.status(404).send({
+app.put('*', (request, response) => response.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
-app.delete('*', (req, res) => res.status(404).send({
+app.delete('*', (request, response) => response.status(404).send({
   message: 'INVALID ROUTE!!!.',
 }));
 

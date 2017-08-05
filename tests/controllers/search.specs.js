@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import localStorage from 'local-storage';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
 
@@ -19,7 +18,6 @@ const saltRounds = 10;
 
 describe('Search Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     Document.destroy({
       where: {},
       truncate: true,
@@ -61,7 +59,6 @@ describe('Search Endpoints', () => {
 
   describe('Search Users Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: 'tee@y.com',
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -70,37 +67,31 @@ describe('Search Endpoints', () => {
       );
       done();
     });
-    it('should not allow an invalid email', (done) => {
-      localStorage.set('token', superToken);
-      request(app)
-        .get('/api/v1/search/users?q=a@y')
-        .end((err, res) => {
-          if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Email!!!');
-          }
-          done();
-        });
-    });
     it('should display the right message when no user is found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/users?q=a@y.com')
-        .end((err, res) => {
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('User Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No User Found');
           }
           done();
         });
     });
     it('should successfully return the user', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/users?q=tee@y.com')
-        .end((err, res) => {
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
+            expect(response.status).to.equal(200);
+            expect(response.body[0].email).to.equal('tee@y.com');
+            expect(response.body[0].roleId).to.equal(1);
           }
           done();
         });
@@ -109,7 +100,6 @@ describe('Search Endpoints', () => {
 
   describe('Search Documents Endpoint', () => {
     beforeEach((done) => {
-      localStorage.clear();
       User.create(
         { email: process.env.EMAIL,
           password: bcrypt.hashSync(process.env.PASSWORD, saltRounds),
@@ -126,39 +116,50 @@ describe('Search Endpoints', () => {
       });
     });
     it('should return 404 when no document is found', (done) => {
-      localStorage.set('token', superToken);
       request(app)
         .get('/api/v1/search/documents?q=title')
-        .end((err, res) => {
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No Document Found');
           }
           done();
         });
     });
-    it('should not allow an unauthorized user', (done) => {
-      localStorage.set('token', userToken);
+    it('should return no document for an unauthorized user', (done) => {
       request(app)
         .get('/api/v1/search/documents?q=SUPERR')
-        .end((err, res) => {
+        .set('Authorization', `${userToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal(
-              'You are not authorized to view this document');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No Document Found');
           }
           done();
         });
     });
-    it('should successfully return the document', (done) => {
-      localStorage.set('token', superToken);
-      request(app)
-        .get('/api/v1/search/documents?q=SUPERR')
-        .end((err, res) => {
-          if (!err) {
-            expect(res.status).to.equal(200);
-          }
-          done();
-        });
-    });
+    it('should successfully return the document for an authorized user',
+      (done) => {
+        request(app)
+          .get('/api/v1/search/documents?q=SUPERR')
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .end((err, response) => {
+            if (!err) {
+              expect(response.status).to.equal(200);
+              expect(response.body[0].title).to.equal('SUPERR');
+              expect(response.body[0].content).to.equal('super');
+              expect(response.body[0].access).to.equal('Private');
+              expect(response.body[0].userId).to.equal(1);
+            }
+            done();
+          });
+      });
   });
 });

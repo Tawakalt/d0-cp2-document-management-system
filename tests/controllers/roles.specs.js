@@ -1,5 +1,4 @@
 import request from 'supertest';
-import localStorage from 'local-storage';
 import { expect } from 'chai';
 import app from '../../build/server';
 import jwtoken from '../../server/helper/jwt';
@@ -17,7 +16,6 @@ const token = jwtoken.sign(1, process.env.EMAIL, 1);
 
 describe('Role Endpoints', () => {
   beforeEach((done) => {
-    localStorage.clear();
     User.destroy({
       where: {},
       truncate: true,
@@ -53,10 +51,10 @@ describe('Role Endpoints', () => {
         .send({
           role: 'Editor'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You are not signed in');
+            expect(response.status).to.equal(401);
+            expect(response.body.message).to.equal('You are not signed in');
           }
           done();
         });
@@ -71,17 +69,37 @@ describe('Role Endpoints', () => {
         done();
       });
     });
+    it('should not allow an invalid role', (done) => {
+      request(app)
+        .post('/api/v1/roles/')
+        .send({
+          role: ''
+        })
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
+          if (!err) {
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Role');
+          }
+          done();
+        });
+    });
     it('should successfully create a new role', (done) => {
-      localStorage.set('token', token);
       request(app)
         .post('/api/v1/roles/')
         .send({
           role: 'Editor'
         })
-        .end((err, res) => {
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(201);
-            expect(res.body.message).to.equal('Role successfully created');
+            expect(response.status).to.equal(201);
+            expect(response.body.message).to.equal('Role successfully created');
+            expect(response.body.role.role).to.equal('Editor');
           }
           done();
         });
@@ -92,10 +110,10 @@ describe('Role Endpoints', () => {
     it('should reject the request when not signed in', (done) => {
       request(app)
         .get('/api/v1/roles/')
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You are not signed in');
+            expect(response.status).to.equal(401);
+            expect(response.body.message).to.equal('You are not signed in');
           }
           done();
         });
@@ -111,13 +129,17 @@ describe('Role Endpoints', () => {
       });
     });
     it('should successfully get all roles', (done) => {
-      localStorage.set('token', token);
       request(app)
         .get('/api/v1/roles/')
-        .end((err, res) => {
+        .set('Authorization', `${token}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body[0].role).to.equal('Super Admin');
+            expect(response.status).to.equal(200);
+            expect(response.body[0].role).to.equal('Super Admin');
+            expect(response.body[1].role).to.equal('Admin');
+            expect(response.body[2].role).to.equal('User');
           }
           done();
         });

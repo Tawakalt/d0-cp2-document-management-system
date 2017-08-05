@@ -319,7 +319,13 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Role successfully created"</span>
+    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Role successfully created"</span><span class="p">,</span>
+    <span class="s2">"role"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Editor"</span><span class="p">,</span>
+        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:09:26.255Z"</span><span class="p">,</span>
+        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:09:26.255Z"</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre><h3 id='request'>Request</h3>
 <ul>
@@ -338,38 +344,19 @@ We have language bindings only in Javascript! You can view code examples in the 
 <pre class="highlight javascript tab-javascript"><code><span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Super Admin"</span><span class="p">,</span>
-        <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"superadmin@y.com"</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Super Admin"</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Admin"</span><span class="p">,</span>
-        <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Admin"</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">"id"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"User"</span><span class="p">,</span>
-        <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">"id"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"me@y.com"</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">]</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"User"</span>
     <span class="p">},</span>
     <span class="p">{</span>
         <span class="s2">"id"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Editor"</span><span class="p">,</span>
-        <span class="s2">"users"</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Editor"</span>
     <span class="p">}</span>
 <span class="p">]</span>
 </code></pre><h3 id='request-2'>Request</h3>
@@ -414,7 +401,13 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"login successful"</span>
+    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"login successful"</span><span class="p">,</span>
+    <span class="s2">"user"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span><span class="p">,</span>
+        <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">"token"</span><span class="p">:</span> <span class="s2">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDIsImVtYWlsIjoidHJpYWw2QHkuY29tIiwicm9sZUlkIjozLCJpYXQiOjE1MDE4NzI3NzcsImV4cCI6MTUwMTg3NjM3N30.ACJAGVzAUQmZIco89yOgNQoqg6Y2ZSr2JqkLXW7Zy_8"</span>
 <span class="p">}</span>
 </code></pre><h3 id='request'>Request</h3>
 <ul>
@@ -438,7 +431,11 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"User successfully created"</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"me@y.com"</span><span class="p">,</span>
+    <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T18:50:21.924Z"</span><span class="p">,</span>
+    <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T18:50:21.924Z"</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-2'>Request</h3>
 <ul>
@@ -455,22 +452,16 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Sample JSON structured response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"object"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
             <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"my@y.com"</span><span class="p">,</span>
-            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"User"</span>
-            <span class="p">}</span>
+            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span>
         <span class="p">},</span>
         <span class="p">{</span>
             <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span><span class="p">,</span>
-            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Super Admin"</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">1</span>
         <span class="p">}</span>
     <span class="p">],</span>
     <span class="s2">"metaData"</span><span class="p">:</span> <span class="p">{</span>
@@ -516,10 +507,7 @@ We have language bindings only in Javascript! You can view code examples in the 
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
     <span class="s2">"id"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
     <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"busola@y.com"</span><span class="p">,</span>
-    <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Admin"</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">2</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-4'>Request</h3>
 <ul>
@@ -544,6 +532,13 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
+    <span class="s2">"updatedDetails"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"mee@y.com"</span><span class="p">,</span>
+        <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T18:40:34.175Z"</span><span class="p">,</span>
+        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T18:58:47.018Z"</span>
+    <span class="p">},</span>
     <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Email successfully Updated. Password successfully Updated. "</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-5'>Request</h3>
@@ -644,7 +639,16 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Document successfully created"</span>
+    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Document successfully created"</span><span class="p">,</span>
+    <span class="s2">"createdDocument"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY PRIVATE DOCUMENT!!!"</span><span class="p">,</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This is for me alone!"</span><span class="p">,</span>
+        <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
+        <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:02:15.670Z"</span><span class="p">,</span>
+        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:02:15.670Z"</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre><h3 id='request'>Request</h3>
 <ul>
@@ -661,26 +665,20 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Sample JSON structured response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"doc"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"object"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
             <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY2"</span><span class="p">,</span>
             <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"my"</span><span class="p">,</span>
             <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
-            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"my@y.com"</span>
-            <span class="p">}</span>
+            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">2</span>
         <span class="p">},</span>
         <span class="p">{</span>
             <span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY"</span><span class="p">,</span>
             <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"my"</span><span class="p">,</span>
             <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Role"</span><span class="p">,</span>
-            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"admin@y.com"</span>
-            <span class="p">}</span>
+            <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">1</span>
         <span class="p">},</span>  
     <span class="p">],</span>
     <span class="s2">"metaData"</span><span class="p">:</span> <span class="p">{</span>
@@ -728,10 +726,7 @@ We have language bindings only in Javascript! You can view code examples in the 
     <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Doc By Andela 4"</span><span class="p">,</span>
     <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This doc was created by Andela 4"</span><span class="p">,</span>
     <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
-    <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"andela@y.com"</span>
-    <span class="p">}</span>
+    <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-3'>Request</h3>
 <ul>
@@ -757,7 +752,16 @@ We have language bindings only in Javascript! You can view code examples in the 
 <p>Response:</p>
 </blockquote>
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
-    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Update Successful"</span>
+    <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Update Successful"</span><span class="p">,</span>
+    <span class="s2">"updatedDetails"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"MY PRIVATE DOCUMENT EDITED!!!"</span><span class="p">,</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This is for me alone!"</span><span class="p">,</span>
+        <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Private"</span><span class="p">,</span>
+        <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"createdAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:02:15.670Z"</span><span class="p">,</span>
+        <span class="s2">"updatedAt"</span><span class="p">:</span> <span class="s2">"2017-08-04T19:06:31.979Z"</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-4'>Request</h3>
 <ul>
@@ -794,10 +798,7 @@ We have language bindings only in Javascript! You can view code examples in the 
 <pre class="highlight javascript tab-javascript"><code><span class="p">{</span>
     <span class="s2">"id"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
     <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"cj@y.com"</span><span class="p">,</span>
-    <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">"Role"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"Admin"</span>
-    <span class="p">}</span>
+    <span class="s2">"roleId"</span><span class="p">:</span> <span class="mi">2</span>
 <span class="p">}</span>
 </code></pre><h3 id='request'>Request</h3>
 <ul>
@@ -832,10 +833,7 @@ We have language bindings only in Javascript! You can view code examples in the 
     <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Doc By Andela"</span><span class="p">,</span>
     <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This doc was created by Andela"</span><span class="p">,</span>
     <span class="s2">"access"</span><span class="p">:</span> <span class="s2">"Public"</span><span class="p">,</span>
-    <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="s2">"User"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"andela@y.com"</span>
-    <span class="p">}</span>
+    <span class="s2">"userId"</span><span class="p">:</span> <span class="mi">20</span>
 <span class="p">}</span>
 </code></pre><h3 id='request-2'>Request</h3>
 <ul>
@@ -868,7 +866,7 @@ We have language bindings only in Javascript! You can view code examples in the 
 
 <table><thead>
 <tr>
-<th>Error Code</th>
+<th>Status Code</th>
 <th>Meaning</th>
 <th>Description</th>
 </tr>
@@ -891,6 +889,11 @@ We have language bindings only in Javascript! You can view code examples in the 
 <tr>
 <td>401</td>
 <td>Unauthorized</td>
+<td>You are not signed in</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
 <td>You are unauthorized to make the request</td>
 </tr>
 <tr>

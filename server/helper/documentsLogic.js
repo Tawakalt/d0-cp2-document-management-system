@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import localStorage from 'local-storage';
 import validator from 'validator';
 
 /**
@@ -9,206 +7,178 @@ import validator from 'validator';
  */
 export default class Utils {
   /**
-   * @description Checks the validity of the documents parameters
-   * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
-   * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
-   * @memberof Utils
-   */
-  static isValid(req, res, next) {
-    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
-      return res.status(400).send({
-        message: 'Title is Required',
-      });
-    }
-    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
-      return res.status(400).send({
-        message: 'Content is Required',
-      });
-    }
-    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
-      return res.status(400).send({
-        message: 'Access is Required',
-      });
-    }
-    if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      return res.status(400).send({
-        message: 'Invalid Access Type',
-      });
-    }
-    next();
-  }
-
-  /**
    * @description checks if Title exists
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {object} doc The returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static doesTitleExist(req, res, doc) {
+  static titleExist(request, res, doc) {
     if (doc) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Title already exists',
       });
+      return false;
     }
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    req.loggedInUser = loggedInUser.id;
-    return false;
+    return true;
   }
 
   /**
    * @description adds more properties to the query
    * @static
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {integer} limit Number of rows to be returned
    * @param {integer} offset Number of rows to be skipped
    * @param {object} property query property
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static listQuery(res, limit, offset, property) {
-    if (((limit && validator.isNumeric(limit) === false)
-      && (offset && validator.isNumeric(offset) === false))
+  static listQuery(request, res, limit, offset, property) {
+    if (((limit && !(validator.isNumeric(limit)))
+      && (offset && !(validator.isNumeric(offset))))
       || ((limit && limit <= 0) && (offset && offset < 0))) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Limit and Offset',
       });
-    } else if ((limit && validator.isNumeric(limit) === false) ||
+      return false;
+    } else if ((limit && !(validator.isNumeric(limit))) ||
     (limit && limit <= 0)) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Limit',
       });
-    } else if ((offset && validator.isNumeric(offset) === false) ||
+      return false;
+    } else if ((offset && !(validator.isNumeric(offset))) ||
     (offset && offset < 0)) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Offset',
       });
+      return false;
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId === 3) {
-      property.where = { userId: loggedInUser.id };
+    if (request.loggedInUser.roleId === 3) {
+      property.where = { userId: request.loggedInUser.id };
     }
     res.property = property;
-    return false;
+    return true;
   }
 
   /**
    * @description Checks if document exists
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {object} doc the returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isDoc(req, res, doc) {
+  static isDoc(request, res, doc) {
     if (!doc) {
-      return res.status(404).send({
+      res.status(404).send({
         message: 'Document Not Found'
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
    * @description Checks Authorization for viewing
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {object} doc the returned document
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isAllowed(req, res, doc) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
+  static isAllowed(request, res, doc) {
     const allowed = [doc.User.roleId, 1, 2];
-    if ((doc.access === 'Private' && doc.userId !== loggedInUser.id) ||
-    (doc.access === 'Role' && allowed.includes(loggedInUser.roleId)
+    if ((doc.access === 'Private' && doc.userId !== request.loggedInUser.id) ||
+    (doc.access === 'Role' && allowed.includes(request.loggedInUser.roleId)
     === false)) {
-      return res.status(401).send({
+      res.status(403).send({
         message: 'You are not authorized to view this document'
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
    * @description Checks Authorization for updating
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {integer} ownerId id of the document owner
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static allowUpdate(req, res, ownerId) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(401).send({
+  static allowUpdate(request, res, ownerId) {
+    if (request.loggedInUser.roleId !== 1 &&
+      request.loggedInUser.id !== parseInt(ownerId)) {
+      res.status(403).send({
         message: 'You cannot update someone else\'s document',
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
    * @description Checks Validity of parameters
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isValidParams(req, res) {
-    if (!req.body.title && validator.isEmpty(req.body.title) === true) {
-      return res.status(400).send({
+  static isValidParams(request, res) {
+    if (!request.body.title && validator.isEmpty(request.body.title)) {
+      res.status(400).send({
         message: 'Title is Required',
       });
+      return false;
     }
-    if (!req.body.content && validator.isEmpty(req.body.content) === true) {
-      return res.status(400).send({
+    if (!request.body.content && validator.isEmpty(request.body.content)) {
+      res.status(400).send({
         message: 'Content is Required',
       });
+      return false;
     }
-    if (!req.body.access && validator.isEmpty(req.body.access) === true) {
-      return res.status(400).send({
+    if (!request.body.access && validator.isEmpty(request.body.access)) {
+      res.status(400).send({
         message: 'Access is Required',
       });
+      return false;
     }
-    if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      return res.status(400).send({
+    if (!(['Public', 'Private', 'Role'].includes(request.body.access))) {
+      res.status(400).send({
         message: 'Invalid Access Type',
       });
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
    * @description checks validation error
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {object} err server error
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static checkError(req, res, err) {
+  static validationError(request, res, err) {
     if (err.toString() ===
       'SequelizeUniqueConstraintError: Validation error') {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Your Edited Title already exists!!!',
       });
+      return true;
     }
     return false;
   }
@@ -216,20 +186,95 @@ export default class Utils {
   /**
    * @description Checks Authorization for deleting
    * @static
-   * @param {object} req Client's request
+   * @param {object} request Client's request
    * @param {object} res Server Response
    * @param {integer} ownerId id of the document owner
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
-  static allowDelete(req, res, ownerId) {
-    const loggedInUser = jwt.verify(localStorage.get('token'),
-      process.env.JWT_SECRET);
-    if (loggedInUser.roleId !== 1 && loggedInUser.id !== parseInt(ownerId)) {
-      return res.status(401).send({
+  static allowDelete(request, res, ownerId) {
+    if (request.loggedInUser.roleId !== 1 &&
+      request.loggedInUser.id !== parseInt(ownerId)) {
+      res.status(403).send({
         message: 'You cannot delete someone else\'s document',
       });
+      return false;
     }
+    return true;
+  }
+
+  /**
+   * @description Validates document ID for retrieval
+   * @static
+   * @param {object} request Client's request
+   * @param {object} res Server Response
+   * @param {any} docId Id of the document to be retrieved
+   * @returns {boolean} true or false
+   * @memberof Utils
+   */
+  static docIdValid(request, res, docId) {
+    if (!validator.isNumeric(docId)) {
+      res.status(400).send({
+        message: 'Document Id must be an integer',
+      });
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * @description Filters Search Result 
+   * @static
+   * @param {object} request Client's request
+   * @param {object} res Server Response
+   * @param {object} doc the returned document
+   * @returns {boolean} false
+   * @memberof Utils
+   */
+  static filter(request, res, doc) {
+    let count = 0;
+    const newArr = [];
+    while (count < doc.length) {
+      const allowed = [doc[count].dataValues.User.dataValues.roleId, 1, 2];
+      if (!((doc[count].dataValues.access === 'Private'
+      && doc[count].dataValues.userId !== request.loggedInUser.id) ||
+      (doc[count].dataValues.access === 'Role'
+      && allowed.includes(request.loggedInUser.roleId)
+      === false))) {
+        delete doc[count].dataValues.User;
+        newArr.push(doc[count]);
+      }
+      count += 1;
+    }
+    if (newArr.length === 0) {
+      res.status(404).send({ message: 'No Document Found' });
+      return false;
+    }
+    res.status(200).send(newArr);
     return false;
+  }
+
+  /**
+   * @description Paginates Result 
+   * @static
+   * @param {object} request Client's request
+   * @param {object} res Server Response
+   * @param {object} object the returned document or user
+   * @memberof Utils
+   */
+  static paginate(request, res, object) {
+    const totalCount = object.length;
+    let pageCount = Math.round(totalCount / (request.query.limit || 10));
+    pageCount = (pageCount < 1 && totalCount > 0) ? 1 : pageCount;
+    const page = Math.round((request.query.offset || 0) /
+    (request.query.limit || 10)) + 1;
+    res.status(200).send({ object,
+      metaData: {
+        page,
+        pageCount,
+        count: object.length,
+        totalCount,
+      }
+    });
   }
 }

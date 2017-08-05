@@ -28,7 +28,6 @@
 - dotenv: Loads enviroment variables from .env file
 - express: Fast, Unopinionated minimalistic web framework. Used as the web server for this application
 - jsonwebtoken: JSON Web Token Implementation
-- local-storage: A simplified localStorage API
 - morgan: HTTP Request Logger Middleware for NodeJs
 - pg: postreSQL Client
 - pg-hstore: A module for serializing and deserializing JSON data into hstore format
@@ -87,9 +86,9 @@
 
 - The main purpose of this repository is to continue to evolve the application, making it faster and easier to use. Development of the application happens in the open on GitHub, and we are grateful to the community for future contribution to bugfixes and improvements.
 - To Contribute:  
-  - create a branch from master following the branch naming convention in the project wiki  
-  - implement your feature with commit messages that follow the commit message convention in the project wiki  
-  - Raise a PR that follows the the pr naming convention in the project wiki
+  - create a branch from master following the branch naming convention in the [project wiki](https://github.com/Tawakalt/d0-cp2-document-management-system/wiki/Branch-Naming-Convention).   
+  - implement your feature with commit messages that follow the commit message convention in the [project wiki](https://github.com/Tawakalt/d0-cp2-document-management-system/wiki/Commit-Naming-Convention).
+  - Raise a PR that follows the the PR naming and description convention in the [project wiki](https://github.com/Tawakalt/d0-cp2-document-management-system/wiki/Pull-Request-Naming-And-Description-Convention).
 
 ## Disclaimer
 - This application and its functions are limited by time constraint and is in no way at its best.
