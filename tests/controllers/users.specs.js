@@ -373,12 +373,12 @@ describe('User Endpoints', () => {
           done();
         });
     });
-    it('should successfully update the user\'s details with the initial values',
+    it('should successfully update the user\'s details with the initial email',
       (done) => {
         request(app)
           .put('/api/v1/users/2')
           .send({
-            email: 'kenny3@y.com',
+            email: 'kenny@y.com',
             password: 'kenny'
           })
           .set('Authorization', `${userToken}`)
@@ -387,7 +387,9 @@ describe('User Endpoints', () => {
           .end((err, res) => {
             if (!err) {
               expect(res.status).to.equal(200);
-              expect(res.body.updatedDetails.email).to.equal('kenny3@y.com');
+              expect(res.body.updatedDetails.email).to.equal('kenny@y.com');
+              expect(res.body.message).to.equal(
+                'Email up to date. Password successfully Updated. ');
             }
             done();
           });
@@ -406,6 +408,8 @@ describe('User Endpoints', () => {
           if (!err) {
             expect(res.status).to.equal(200);
             expect(res.body.updatedDetails.email).to.equal('kenny2@y.com');
+            expect(res.body.message).to.equal(
+              'Email successfully Updated. Password successfully Updated. ');
           }
           done();
         });
