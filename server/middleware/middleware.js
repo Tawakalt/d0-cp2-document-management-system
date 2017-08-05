@@ -15,14 +15,15 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} false
    * @memberof Utils
    */
   static authenticate(req, res, next) {
     if (!req.headers.authorization) {
-      return res.status(401).send({
+      res.status(401).send({
         message: 'You are not signed in',
       });
+      return false;
     }
     const token = req.headers.authorization;
     req.token = token;
@@ -37,14 +38,15 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} false
    * @memberof Utils
    */
   static isAdmin(req, res, next) {
     if (req.loggedInUser.roleId === 3) {
-      return res.status(403).send({
+      res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
+      return false;
     }
     next();
   }
@@ -55,17 +57,19 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} true or false
    * @memberof Utils
    */
   static isSuper(req, res, next) {
     if (req.loggedInUser.roleId !== 1) {
-      return res.status(403).send({
+      res.status(403).send({
         message: 'You do not have access to this request!!!',
       });
+      return false;
     }
     if (req.loggedInUser.roleId === 1) {
       req.admin = true;
+      return true;
     }
     next();
   }
@@ -76,24 +80,27 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} false
    * @memberof Utils
    */
   static isUserValid(req, res, next) {
     if (!req.body.email && validator.isEmpty(req.body.email) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Email is Required',
       });
+      return false;
     }
     if (!req.body.password && validator.isEmpty(req.body.password) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Password is Required',
       });
+      return false;
     }
     if (req.body.email && validator.isEmail(req.body.email) === false) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Email',
       });
+      return false;
     }
     next();
   }
@@ -104,29 +111,33 @@ export default class Middleware {
    * @param {object} req Client's request
    * @param {object} res Server Response
    * @param {function} next Tell the next function to execute
-   * @returns {object} response which includes status and and message
+   * @returns {boolean} false
    * @memberof Utils
    */
   static isDocumentValid(req, res, next) {
     if (!req.body.title && validator.isEmpty(req.body.title) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Title is Required',
       });
+      return false;
     }
     if (!req.body.content && validator.isEmpty(req.body.content) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Content is Required',
       });
+      return false;
     }
     if (!req.body.access && validator.isEmpty(req.body.access) === true) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Access is Required',
       });
+      return false;
     }
     if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      return res.status(400).send({
+      res.status(400).send({
         message: 'Invalid Access Type',
       });
+      return false;
     }
     next();
   }
