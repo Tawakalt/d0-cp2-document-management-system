@@ -11,10 +11,10 @@ describe('Routes', () => {
           .send({
             role: 'Editor'
           })
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(404);
-              expect(res.body.message).to.equal('INVALID ROUTE!!!.');
+              expect(response.status).to.equal(404);
+              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             }
             done();
           });
@@ -25,10 +25,10 @@ describe('Routes', () => {
       (done) => {
         request(app)
           .get('/api/roles/')
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(404);
-              expect(res.body.message).to.equal('INVALID ROUTE!!!.');
+              expect(response.status).to.equal(404);
+              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             }
             done();
           });
@@ -42,10 +42,10 @@ describe('Routes', () => {
           .send({
             role: 'Editor'
           })
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(404);
-              expect(res.body.message).to.equal('INVALID ROUTE!!!.');
+              expect(response.status).to.equal(404);
+              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             }
             done();
           });
@@ -56,10 +56,10 @@ describe('Routes', () => {
       (done) => {
         request(app)
           .delete('/api/roles/')
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(404);
-              expect(res.body.message).to.equal('INVALID ROUTE!!!.');
+              expect(response.status).to.equal(404);
+              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             }
             done();
           });

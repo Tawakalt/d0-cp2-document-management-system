@@ -19,48 +19,48 @@ export default class usersController {
   /**
    * @description Allows Users to signup
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static create(req, res) {
+  static create(request, response) {
     return User
       .findOne({
         where: {
-          email: req.body.email,
+          email: request.body.email,
         },
       })
       .then((user) => {
-        if (Utils.allowEmail(req, res, user)) {
-          bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+        if (Utils.allowEmail(request, response, user)) {
+          bcrypt.hash(request.body.password, saltRounds, (err, hash) => {
             return User
               .create({
-                email: req.body.email,
+                email: request.body.email,
                 password: hash,
                 roleId: 3,
               })
               .then((createdUser) => {
                 delete createdUser.dataValues.password;
-                res.status(201).send(createdUser);
+                response.status(201).send(createdUser);
               })
-              .catch(error => res.status(500).send(error.toString()));
+              .catch(error => response.status(500).send(error.toString()));
           });
         }
       })
-      .catch(error => res.status(500).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 
   /**
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to View all Users
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static list(req, res) {
+  static list(request, response) {
     const property = {
       order: [
         ['id', 'DESC']
@@ -70,14 +70,14 @@ export default class usersController {
       },
     };
     if (utils.listQuery(
-      req, res, req.query.limit, req.query.offset, property)) {
+      request, response, request.query.limit, request.query.offset, property)) {
       return User
-        .findAll(res.property)
+        .findAll(response.property)
         .then((users) => {
           if (users.length === 0) {
-            return res.status(200).send({ message: 'No User Found' });
+            return response.status(200).send({ message: 'No User Found' });
           }
-          utils.paginate(req, res, users);
+          utils.paginate(request, response, users);
         });
     }
   }
@@ -86,25 +86,25 @@ export default class usersController {
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Get a specific User
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static retrieve(req, res) {
-    if (Utils.userIdValid(req, res, req.params.userId)) {
+  static retrieve(request, response) {
+    if (Utils.userIdValid(request, response, request.params.userId)) {
       return User
-        .findById(req.params.userId, {
+        .findById(request.params.userId, {
           attributes: {
             exclude: ['createdAt', 'updatedAt', 'password']
           },
         })
         .then((user) => {
-          if (Utils.isUser(req, res, user)) {
-            return res.status(200).send(user);
+          if (Utils.isUser(request, response, user)) {
+            return response.status(200).send(user);
           }
         })
-        .catch(error => res.status(500).send(error.toString()));
+        .catch(error => response.status(500).send(error.toString()));
     }
   }
 
@@ -112,43 +112,44 @@ export default class usersController {
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Update a User
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static update(req, res) {
-    if (Utils.userIdValid(req, res, req.params.userId)) {
+  static update(request, response) {
+    if (Utils.userIdValid(request, response, request.params.userId)) {
       return User
-        .findById(req.params.userId)
+        .findById(request.params.userId)
         .then((user) => {
-          if (Utils.isUser(req, res, user)) {
+          if (Utils.isUser(request, response, user)) {
             if (Utils.allowUpdate(
-              req, res, parseInt(req.params.userId), req.body)
+              request, response, parseInt(request.params.userId), request.body)
             ) {
               if (Utils.isValidParams(
-                req, res, req.body.email, req.body.password)) {
-                bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+                request, response, request.body.email, request.body.password)) {
+                bcrypt.hash(request.body.password, saltRounds, (err, hash) => {
                   let message = '';
-                  if (req.body.email !== undefined) {
-                    if (req.body.email === user.email) {
+                  if (request.body.email !== undefined) {
+                    if (request.body.email === user.email) {
                       message += 'Email up to date. ';
                     } else {
                       message += 'Email successfully Updated. ';
                     }
                   }
                   bcrypt.compare(
-                    req.body.password, user.password, (err, resp) => {
-                      if (req.body.email !== undefined) {
+                    request.body.password, user.password, (err, resp) => {
+                      if (request.body.email !== undefined) {
                         if (resp === true) {
                           message += 'Password up to date. ';
                         } else {
                           message += 'Password successfully Updated. ';
                         }
                       }
-                      if (Utils.isRoleValid(req, res, req.body.roleId)) {
-                        if (req.body.roleId) {
-                          if (parseInt(req.body.roleId) === user.roleId) {
+                      if (Utils.isRoleValid(
+                        request, response, request.body.roleId)) {
+                        if (request.body.roleId) {
+                          if (parseInt(request.body.roleId) === user.roleId) {
                             message += 'Role up to date. ';
                           } else {
                             message += 'Role successfully Updated. ';
@@ -156,18 +157,19 @@ export default class usersController {
                         }
                         return user
                           .update({
-                            email: req.body.email || user.email,
+                            email: request.body.email || user.email,
                             password: hash || user.password,
-                            roleId: req.body.roleId || user.roleId
+                            roleId: request.body.roleId || user.roleId
                           })
                           .then((updatedDetails) => {
                             delete updatedDetails.dataValues.password;
-                            res.status(200).send(
+                            response.status(200).send(
                               { updatedDetails, message });
                           })
                           .catch((err) => {
-                            if (!Utils.validationError(req, res, err)) {
-                              res.status(500).send(err.toString());
+                            if (!Utils.validationError(
+                              request, response, err)) {
+                              response.status(500).send(err.toString());
                             }
                           });
                       }
@@ -177,7 +179,7 @@ export default class usersController {
             }
           }
         })
-        .catch(error => res.status(500).send(error.toString()));
+        .catch(error => response.status(500).send(error.toString()));
     }
   }
 
@@ -185,54 +187,55 @@ export default class usersController {
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Delete a User
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static destroy(req, res) {
-    if (Utils.userIdValid(req, res, req.params.userId)) {
+  static destroy(request, response) {
+    if (Utils.userIdValid(request, response, request.params.userId)) {
       return User
-        .findById(req.params.userId)
+        .findById(request.params.userId)
         .then((user) => {
-          if (Utils.isUser(req, res, user)) {
-            if (Utils.allowDelete(req, res, parseInt(req.params.userId))) {
+          if (Utils.isUser(request, response, user)) {
+            if (Utils.allowDelete(request, response,
+              parseInt(request.params.userId))) {
               return user
                 .destroy()
-                .then(() => res.status(200).send({
+                .then(() => response.status(200).send({
                   message: 'User successfully deleted' }))
-                .catch(err => res.status(500).send(err.toString()));
+                .catch(err => response.status(500).send(err.toString()));
             }
           }
         })
-        .catch(error => res.status(500).send(error.toString()));
+        .catch(error => response.status(500).send(error.toString()));
     }
   }
 
   /**
    * @description Allows Registered Users to login
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static login(req, res) {
+  static login(request, response) {
     return User
       .find({
         where: {
-          email: req.body.email
+          email: request.body.email
         },
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
       })
       .then((user) => {
-        if (Utils.isUser(req, res, user)) {
+        if (Utils.isUser(request, response, user)) {
           bcrypt.compare(
-            req.body.password, user.dataValues.password, (err, resp) => {
+            request.body.password, user.dataValues.password, (err, resp) => {
               if (resp === false) {
-                return res.status(400).send({
+                return response.status(400).send({
                   message: 'Wrong Password',
                 });
               }
@@ -242,24 +245,24 @@ export default class usersController {
                 user.dataValues.roleId
               );
               delete user.dataValues.password;
-              return res.status(200).send({
+              return response.status(200).send({
                 message: 'login successful', user, token });
             });
         }
       })
-      .catch(error => res.status(500).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 
   /**
-   * @description Allows Resgistered and Loggedin Users to Logout
+   * @description Allows Registered and Loggedin Users to Logout
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static logout(req, res) {
-    return res.status(200).send({
+  static logout(request, response) {
+    return response.status(200).send({
       message: 'User sussefully logged out',
     });
   }
@@ -268,16 +271,16 @@ export default class usersController {
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to View All Documents of a Registered User
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof usersController
    */
-  static allUsersDoc(req, res) {
-    if (Utils.userIdValid(req, res, req.params.userId)) {
+  static allUsersDoc(request, response) {
+    if (Utils.userIdValid(request, response, request.params.userId)) {
       return Document
         .findAll({
-          where: { userId: req.params.userId },
+          where: { userId: request.params.userId },
           order: [
             ['id', 'DESC']
           ],
@@ -287,10 +290,10 @@ export default class usersController {
         })
         .then((doc) => {
           if (doc.length === 0) {
-            res.status(200).send(
+            response.status(200).send(
               { message: 'This User has not created any Document' });
           } else {
-            res.status(200).send(doc);
+            response.status(200).send(doc);
           }
         });
     }

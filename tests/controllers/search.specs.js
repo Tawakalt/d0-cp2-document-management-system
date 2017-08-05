@@ -73,10 +73,10 @@ describe('Search Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('No User Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No User Found');
           }
           done();
         });
@@ -87,11 +87,11 @@ describe('Search Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body[0].email).to.equal('tee@y.com');
-            expect(res.body[0].roleId).to.equal(1);
+            expect(response.status).to.equal(200);
+            expect(response.body[0].email).to.equal('tee@y.com');
+            expect(response.body[0].roleId).to.equal(1);
           }
           done();
         });
@@ -121,10 +121,10 @@ describe('Search Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('No Document Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No Document Found');
           }
           done();
         });
@@ -135,10 +135,10 @@ describe('Search Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('No Document Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('No Document Found');
           }
           done();
         });
@@ -150,13 +150,13 @@ describe('Search Endpoints', () => {
           .set('Authorization', `${superToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(200);
-              expect(res.body[0].title).to.equal('SUPERR');
-              expect(res.body[0].content).to.equal('super');
-              expect(res.body[0].access).to.equal('Private');
-              expect(res.body[0].userId).to.equal(1);
+              expect(response.status).to.equal(200);
+              expect(response.body[0].title).to.equal('SUPERR');
+              expect(response.body[0].content).to.equal('super');
+              expect(response.body[0].access).to.equal('Private');
+              expect(response.body[0].userId).to.equal(1);
             }
             done();
           });

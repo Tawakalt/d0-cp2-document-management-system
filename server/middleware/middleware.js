@@ -12,22 +12,22 @@ export default class Middleware {
   /**
    * @description Checks if User is Loggedin
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @param {function} next Tell the next function to execute
    * @returns {boolean} false
    * @memberof Utils
    */
-  static authenticate(req, res, next) {
-    if (!req.headers.authorization) {
-      res.status(401).send({
+  static authenticate(request, response, next) {
+    if (!request.headers.authorization) {
+      response.status(401).send({
         message: 'You are not signed in',
       });
       return false;
     }
-    const token = req.headers.authorization;
-    req.token = token;
-    req.loggedInUser = jwt.verify(req.token,
+    const token = request.headers.authorization;
+    request.token = token;
+    request.loggedInUser = jwt.verify(request.token,
       process.env.JWT_SECRET);
     next();
   }
@@ -35,15 +35,15 @@ export default class Middleware {
   /**
    * @description Checks if User is an Admin
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @param {function} next Tell the next function to execute
    * @returns {boolean} false
    * @memberof Utils
    */
-  static isAdmin(req, res, next) {
-    if (req.loggedInUser.roleId === 3) {
-      res.status(403).send({
+  static isAdmin(request, response, next) {
+    if (request.loggedInUser.roleId === 3) {
+      response.status(403).send({
         message: 'You do not have access to this request!!!',
       });
       return false;
@@ -54,21 +54,21 @@ export default class Middleware {
   /**
    * @description Checks if User is a Super Admin
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @param {function} next Tell the next function to execute
    * @returns {boolean} false
    * @memberof Utils
    */
-  static isSuperAdmin(req, res, next) {
-    if (req.loggedInUser.roleId !== 1) {
-      res.status(403).send({
+  static isSuperAdmin(request, response, next) {
+    if (request.loggedInUser.roleId !== 1) {
+      response.status(403).send({
         message: 'You do not have access to this request!!!',
       });
       return false;
     }
-    if (req.loggedInUser.roleId === 1) {
-      req.admin = true;
+    if (request.loggedInUser.roleId === 1) {
+      request.admin = true;
     }
     next();
   }
@@ -76,27 +76,27 @@ export default class Middleware {
   /**
    * @description Validates User parameters
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @param {function} next Tell the next function to execute
    * @returns {boolean} false
    * @memberof Utils
    */
-  static isUserValid(req, res, next) {
-    if (!req.body.email && validator.isEmpty(req.body.email)) {
-      res.status(400).send({
+  static isUserValid(request, response, next) {
+    if (!request.body.email && validator.isEmpty(request.body.email)) {
+      response.status(400).send({
         message: 'Email is Required',
       });
       return false;
     }
-    if (!req.body.password && validator.isEmpty(req.body.password)) {
-      res.status(400).send({
+    if (!request.body.password && validator.isEmpty(request.body.password)) {
+      response.status(400).send({
         message: 'Password is Required',
       });
       return false;
     }
-    if (req.body.email && !(validator.isEmail(req.body.email))) {
-      res.status(400).send({
+    if (request.body.email && !(validator.isEmail(request.body.email))) {
+      response.status(400).send({
         message: 'Invalid Email',
       });
       return false;
@@ -107,33 +107,33 @@ export default class Middleware {
   /**
    * @description Checks the validity of the documents parameters
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @param {function} next Tell the next function to execute
    * @returns {boolean} false
    * @memberof Utils
    */
-  static isDocumentValid(req, res, next) {
-    if (!req.body.title && validator.isEmpty(req.body.title)) {
-      res.status(400).send({
+  static isDocumentValid(request, response, next) {
+    if (!request.body.title && validator.isEmpty(request.body.title)) {
+      response.status(400).send({
         message: 'Title is Required',
       });
       return false;
     }
-    if (!req.body.content && validator.isEmpty(req.body.content)) {
-      res.status(400).send({
+    if (!request.body.content && validator.isEmpty(request.body.content)) {
+      response.status(400).send({
         message: 'Content is Required',
       });
       return false;
     }
-    if (!req.body.access && validator.isEmpty(req.body.access)) {
-      res.status(400).send({
+    if (!request.body.access && validator.isEmpty(request.body.access)) {
+      response.status(400).send({
         message: 'Access is Required',
       });
       return false;
     }
-    if (!(['Public', 'Private', 'Role'].includes(req.body.access))) {
-      res.status(400).send({
+    if (!(['Public', 'Private', 'Role'].includes(request.body.access))) {
+      response.status(400).send({
         message: 'Invalid Access Type',
       });
       return false;

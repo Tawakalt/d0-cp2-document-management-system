@@ -56,11 +56,11 @@ describe('User Endpoints', () => {
           email: 'kenny@y.com',
           password: 'kenny'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(201);
-            expect(res.body.email).to.equal('kenny@y.com');
-            expect(res.body.roleId).to.equal(3);
+            expect(response.status).to.equal(201);
+            expect(response.body.email).to.equal('kenny@y.com');
+            expect(response.body.roleId).to.equal(3);
           }
           done();
         });
@@ -72,10 +72,10 @@ describe('User Endpoints', () => {
           email: 'you@',
           password: 'you'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Email');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Email');
           }
           done();
         });
@@ -87,10 +87,10 @@ describe('User Endpoints', () => {
           email: '',
           password: 'you'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Email is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Email is Required');
           }
           done();
         });
@@ -102,10 +102,10 @@ describe('User Endpoints', () => {
           email: 'a@y.com',
           password: ''
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Password is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Password is Required');
           }
           done();
         });
@@ -123,10 +123,10 @@ describe('User Endpoints', () => {
           email: process.env.EMAIL,
           password: 'ppp'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Email already exists');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Email already exists');
           }
           done();
         });
@@ -151,11 +151,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.object[0].email).to.equal(process.env.EMAIL);
-            expect(res.body.object[0].roleId).to.equal(1);
+            expect(response.status).to.equal(200);
+            expect(response.body.object[0].email).to.equal(process.env.EMAIL);
+            expect(response.body.object[0].roleId).to.equal(1);
           }
           done();
         });
@@ -166,10 +166,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'You do not have access to this request!!!');
           }
           done();
@@ -181,10 +181,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${adminToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('No User Found');
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal('No User Found');
           }
           done();
         });
@@ -208,10 +208,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('User Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('User Not Found');
           }
           done();
         });
@@ -222,11 +222,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.email).to.equal(process.env.EMAIL);
-            expect(res.body.roleId).to.equal(1);
+            expect(response.status).to.equal(200);
+            expect(response.body.email).to.equal(process.env.EMAIL);
+            expect(response.body.roleId).to.equal(1);
           }
           done();
         });
@@ -237,10 +237,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('User Id must be an integer');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal(
+              'User Id must be an integer');
           }
           done();
         });
@@ -271,10 +272,10 @@ describe('User Endpoints', () => {
         .send({
           roleId: '3'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('User Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('User Not Found');
           }
           done();
         });
@@ -290,12 +291,12 @@ describe('User Endpoints', () => {
           password: 'kenny2',
           roleId: '3'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
+            expect(response.status).to.equal(403);
             let message = 'You only have acess to change a user\'s role, ';
             message += 'not their email and definitely not their password!!!';
-            expect(res.body.message).to.equal(message);
+            expect(response.body.message).to.equal(message);
           }
           done();
         });
@@ -310,10 +311,10 @@ describe('User Endpoints', () => {
           email: 'kenny2@',
           password: 'kenny'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Email!!!');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Email!!!');
           }
           done();
         });
@@ -328,10 +329,10 @@ describe('User Endpoints', () => {
           email: '',
           password: 'kenny'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Email is Required!!!');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Email is Required!!!');
           }
           done();
         });
@@ -346,10 +347,10 @@ describe('User Endpoints', () => {
           email: 'a@y.com',
           password: ''
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Password is Required!!!');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Password is Required!!!');
           }
           done();
         });
@@ -364,10 +365,10 @@ describe('User Endpoints', () => {
           email: process.env.EMAIL,
           password: 'pass'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal(
               'Your Edited Email already exists!!!');
           }
           done();
@@ -384,11 +385,12 @@ describe('User Endpoints', () => {
           .set('Authorization', `${userToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(200);
-              expect(res.body.updatedDetails.email).to.equal('kenny@y.com');
-              expect(res.body.message).to.equal(
+              expect(response.status).to.equal(200);
+              expect(response.body.updatedDetails.email).to.equal(
+                'kenny@y.com');
+              expect(response.body.message).to.equal(
                 'Email up to date. Password successfully Updated. ');
             }
             done();
@@ -404,11 +406,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.updatedDetails.email).to.equal('kenny2@y.com');
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(200);
+            expect(response.body.updatedDetails.email).to.equal('kenny2@y.com');
+            expect(response.body.message).to.equal(
               'Email successfully Updated. Password successfully Updated. ');
           }
           done();
@@ -424,10 +426,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'You cannot update someone else\'s details');
           }
           done();
@@ -444,10 +446,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'Common stop it!!! You can\'t change your role');
           }
           done();
@@ -463,10 +465,10 @@ describe('User Endpoints', () => {
           .set('Authorization', `${superToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(200);
-              expect(res.body.updatedDetails.roleId).to.equal('3');
+              expect(response.status).to.equal(200);
+              expect(response.body.updatedDetails.roleId).to.equal('3');
             }
             done();
           });
@@ -480,10 +482,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.updatedDetails.roleId).to.equal('1');
+            expect(response.status).to.equal(200);
+            expect(response.body.updatedDetails.roleId).to.equal('1');
           }
           done();
         });
@@ -498,10 +500,10 @@ describe('User Endpoints', () => {
           .set('Authorization', `${superToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(400);
-              expect(res.body.message).to.equal('Invalid RoleId!!!');
+              expect(response.status).to.equal(400);
+              expect(response.body.message).to.equal('Invalid RoleId!!!');
             }
             done();
           });
@@ -515,10 +517,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal(
               'There is no role with that RoleId!!!');
           }
           done();
@@ -547,10 +549,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'You do not have access to this request!!!');
           }
           done();
@@ -562,10 +564,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('User Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('User Not Found');
           }
           done();
         });
@@ -576,10 +578,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal('You cannot delete yourself!!!');
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
+              'You cannot delete yourself!!!');
           }
           done();
         });
@@ -590,10 +593,10 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('User successfully deleted');
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal('User successfully deleted');
           }
           done();
         });
@@ -618,10 +621,10 @@ describe('User Endpoints', () => {
           email: 'a@y.com',
           password: 'a'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('Kindly Sign Up First');
+            expect(response.status).to.equal(401);
+            expect(response.body.message).to.equal('Kindly Sign Up First');
           }
           done();
         });
@@ -633,10 +636,10 @@ describe('User Endpoints', () => {
           email: process.env.EMAIL,
           password: '9'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Wrong Password');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Wrong Password');
           }
           done();
         });
@@ -648,11 +651,11 @@ describe('User Endpoints', () => {
           email: process.env.EMAIL,
           password: process.env.PASSWORD
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('login successful');
-            expect(res.body.user.email).to.equal(process.env.EMAIL);
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal('login successful');
+            expect(response.body.user.email).to.equal(process.env.EMAIL);
           }
           done();
         });
@@ -666,10 +669,11 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('User sussefully logged out');
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal(
+              'User sussefully logged out');
           }
           done();
         });
@@ -694,10 +698,10 @@ describe('User Endpoints', () => {
           .set('Authorization', `${superToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(200);
-              expect(res.body.message).to.equal(
+              expect(response.status).to.equal(200);
+              expect(response.body.message).to.equal(
                 'This User has not created any Document');
             }
             done();
@@ -717,13 +721,13 @@ describe('User Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body[0].title).to.equal('TEST2');
-            expect(res.body[0].content).to.equal('Testing2');
-            expect(res.body[0].access).to.equal('Public');
-            expect(res.body[0].userId).to.equal(1);
+            expect(response.status).to.equal(200);
+            expect(response.body[0].title).to.equal('TEST2');
+            expect(response.body[0].content).to.equal('Testing2');
+            expect(response.body[0].access).to.equal('Public');
+            expect(response.body[0].userId).to.equal(1);
           }
           done();
         });

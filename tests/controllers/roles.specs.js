@@ -51,10 +51,10 @@ describe('Role Endpoints', () => {
         .send({
           role: 'Editor'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You are not signed in');
+            expect(response.status).to.equal(401);
+            expect(response.body.message).to.equal('You are not signed in');
           }
           done();
         });
@@ -78,10 +78,10 @@ describe('Role Endpoints', () => {
         .set('Authorization', `${token}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Role');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Role');
           }
           done();
         });
@@ -95,11 +95,11 @@ describe('Role Endpoints', () => {
         .set('Authorization', `${token}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(201);
-            expect(res.body.message).to.equal('Role successfully created');
-            expect(res.body.role.role).to.equal('Editor');
+            expect(response.status).to.equal(201);
+            expect(response.body.message).to.equal('Role successfully created');
+            expect(response.body.role.role).to.equal('Editor');
           }
           done();
         });
@@ -110,10 +110,10 @@ describe('Role Endpoints', () => {
     it('should reject the request when not signed in', (done) => {
       request(app)
         .get('/api/v1/roles/')
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(401);
-            expect(res.body.message).to.equal('You are not signed in');
+            expect(response.status).to.equal(401);
+            expect(response.body.message).to.equal('You are not signed in');
           }
           done();
         });
@@ -134,12 +134,12 @@ describe('Role Endpoints', () => {
         .set('Authorization', `${token}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body[0].role).to.equal('Super Admin');
-            expect(res.body[1].role).to.equal('Admin');
-            expect(res.body[2].role).to.equal('User');
+            expect(response.status).to.equal(200);
+            expect(response.body[0].role).to.equal('Super Admin');
+            expect(response.body[1].role).to.equal('Admin');
+            expect(response.body[2].role).to.equal('User');
           }
           done();
         });

@@ -80,10 +80,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Title is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Title is Required');
           }
           done();
         });
@@ -100,10 +100,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Content is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Content is Required');
           }
           done();
         });
@@ -120,10 +120,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Access is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Access is Required');
           }
           done();
         });
@@ -140,10 +140,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Access Type');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Access Type');
           }
           done();
         });
@@ -160,14 +160,15 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(201);
-            expect(res.body.message).to.equal('Document successfully created');
-            expect(res.body.createdDocument.title).to.equal('SUPER');
-            expect(res.body.createdDocument.content).to.equal('super');
-            expect(res.body.createdDocument.access).to.equal('Public');
-            expect(res.body.createdDocument.userId).to.equal(1);
+            expect(response.status).to.equal(201);
+            expect(response.body.message).to.equal(
+              'Document successfully created');
+            expect(response.body.createdDocument.title).to.equal('SUPER');
+            expect(response.body.createdDocument.content).to.equal('super');
+            expect(response.body.createdDocument.access).to.equal('Public');
+            expect(response.body.createdDocument.userId).to.equal(1);
           }
           done();
         });
@@ -191,10 +192,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Title already exists');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Title already exists');
           }
           done();
         });
@@ -221,10 +222,11 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('No Document has been created');
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal(
+              'No Document has been created');
             done();
           }
         });
@@ -242,9 +244,9 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
+            expect(response.status).to.equal(200);
           }
           done();
         });
@@ -255,9 +257,9 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
+            expect(response.status).to.equal(200);
             done();
           }
         });
@@ -275,10 +277,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Limit and Offset');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Limit and Offset');
           }
           done();
         });
@@ -296,10 +298,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Limit');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Limit');
           }
           done();
         });
@@ -317,10 +319,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Offset');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Offset');
           }
           done();
         });
@@ -350,10 +352,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('Document Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('Document Not Found');
           }
           done();
         });
@@ -364,10 +366,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'You are not authorized to view this document');
           }
           done();
@@ -379,9 +381,9 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
+            expect(response.status).to.equal(200);
           }
           done();
         });
@@ -392,10 +394,11 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Document Id must be an integer');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal(
+              'Document Id must be an integer');
           }
           done();
         });
@@ -437,10 +440,10 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: 1
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('Document Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('Document Not Found');
           }
           done();
         });
@@ -457,10 +460,10 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(403);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
               'You cannot update someone else\'s document');
           }
           done();
@@ -478,10 +481,10 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Title is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Title is Required');
           }
           done();
         });
@@ -498,10 +501,10 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Content is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Content is Required');
           }
           done();
         });
@@ -518,10 +521,10 @@ describe('Documents Endpoints', () => {
           access: 'access',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Invalid Access Type');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid Access Type');
           }
           done();
         });
@@ -538,10 +541,10 @@ describe('Documents Endpoints', () => {
           access: '',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal('Access is Required');
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Access is Required');
           }
           done();
         });
@@ -558,10 +561,10 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(400);
-            expect(res.body.message).to.equal(
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal(
               'Your Edited Title already exists!!!');
           }
           done();
@@ -579,14 +582,14 @@ describe('Documents Endpoints', () => {
           access: 'Public',
           userId: '1'
         })
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('Update Successful');
-            expect(res.body.updatedDetails.title).to.equal('SUPER3');
-            expect(res.body.updatedDetails.content).to.equal('super2');
-            expect(res.body.updatedDetails.access).to.equal('Public');
-            expect(res.body.updatedDetails.userId).to.equal(1);
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal('Update Successful');
+            expect(response.body.updatedDetails.title).to.equal('SUPER3');
+            expect(response.body.updatedDetails.content).to.equal('super2');
+            expect(response.body.updatedDetails.access).to.equal('Public');
+            expect(response.body.updatedDetails.userId).to.equal(1);
           }
           done();
         });
@@ -616,10 +619,10 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(404);
-            expect(res.body.message).to.equal('Document Not Found');
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('Document Not Found');
           }
           done();
         });
@@ -631,10 +634,10 @@ describe('Documents Endpoints', () => {
           .set('Authorization', `${userToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
-          .end((err, res) => {
+          .end((err, response) => {
             if (!err) {
-              expect(res.status).to.equal(403);
-              expect(res.body.message).to.equal(
+              expect(response.status).to.equal(403);
+              expect(response.body.message).to.equal(
                 'You cannot delete someone else\'s document');
             }
             done();
@@ -646,10 +649,11 @@ describe('Documents Endpoints', () => {
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end((err, response) => {
           if (!err) {
-            expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('Document successfully deleted');
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal(
+              'Document successfully deleted');
           }
           done();
         });

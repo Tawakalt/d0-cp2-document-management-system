@@ -14,13 +14,13 @@ export default class searchController {
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Users
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof searchController
    */
-  static userSearch(req, res) {
-    const searchString = req.query.q.trim();
+  static userSearch(request, response) {
+    const searchString = request.query.q.trim();
     return User
       .findAll({
         where: {
@@ -31,27 +31,27 @@ export default class searchController {
         },
       })
       .then((user) => {
-        if (Utils.isUser(req, res, user)) {
+        if (Utils.isUser(request, response, user)) {
           if (user.length === 0) {
-            return res.status(404).send({ message: 'No User Found' });
+            return response.status(404).send({ message: 'No User Found' });
           }
-          return res.status(200).send(user);
+          return response.status(200).send(user);
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => response.status(400).send(error.toString()));
   }
 
   /**
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Documents
    * @static
-   * @param {object} req Client's request
-   * @param {object} res Server Response
+   * @param {object} request Client's request
+   * @param {object} response Server Response
    * @returns {object} response which includes status and and message
    * @memberof searchController
    */
-  static docSearch(req, res) {
-    const searchString = req.query.q.trim();
+  static docSearch(request, response) {
+    const searchString = request.query.q.trim();
     return Document
       .findAll({
         where: {
@@ -67,12 +67,12 @@ export default class searchController {
         }
       })
       .then((doc) => {
-        if (utils.isDoc(req, res, doc)) {
-          if (utils.filter(req, res, doc)) {
-            return res.status(200).send(doc);
+        if (utils.isDoc(request, response, doc)) {
+          if (utils.filter(request, response, doc)) {
+            return response.status(200).send(doc);
           }
         }
       })
-      .catch(error => res.status(400).send(error.toString()));
+      .catch(error => response.status(400).send(error.toString()));
   }
 }
