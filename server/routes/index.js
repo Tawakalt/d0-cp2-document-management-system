@@ -7,7 +7,7 @@ import Middleware from '../middleware/middleware';
 const Route = (app) => {
   // Endpoints for roles
   app.post('/api/v1/roles',
-    Middleware.authenticate, Middleware.isSuper, rolesController.create);
+    Middleware.authenticate, Middleware.isSuperAdmin, rolesController.create);
   app.get('/api/v1/roles',
     Middleware.authenticate, Middleware.isAdmin, rolesController.list);
 
@@ -29,7 +29,7 @@ const Route = (app) => {
     Middleware.authenticate, usersController.update);
 
   app.delete('/api/v1/users/:userId',
-    Middleware.authenticate, Middleware.isSuper, usersController.destroy);
+    Middleware.authenticate, Middleware.isSuperAdmin, usersController.destroy);
 
   // Endpoints for documents
   app.post('/api/v1/documents', Middleware.authenticate,

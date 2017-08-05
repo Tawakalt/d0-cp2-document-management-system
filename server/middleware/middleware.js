@@ -60,7 +60,7 @@ export default class Middleware {
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isSuper(req, res, next) {
+  static isSuperAdmin(req, res, next) {
     if (req.loggedInUser.roleId !== 1) {
       res.status(403).send({
         message: 'You do not have access to this request!!!',
