@@ -26,14 +26,27 @@ export default class RolesController {
       });
     }
     return Role
-      .create({
-        role: request.body.role,
+      .findOne({
+        where: {
+          role: request.body.role,
+        },
       })
       .then((role) => {
-        response.status(201).send({
-          message: 'Role successfully created', role });
+        if (role) {
+          response.status(400).send({
+            message: 'Role already exists' });
+        }
+        return Role
+          .create({
+            role: request.body.role,
+          })
+          .then((createdRole) => {
+            response.status(201).send({
+              message: 'Role successfully created', createdRole });
+          })
+          .catch(error => response.status(500).send(error));
       })
-      .catch(error => response.status(400).send(error));
+      .catch(error => response.status(500).send(error));
   }
 
   /**
@@ -56,6 +69,6 @@ export default class RolesController {
         }
       })
       .then(role => response.status(200).send(role))
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 }

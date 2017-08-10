@@ -99,7 +99,7 @@ describe('Role Endpoints', () => {
           if (!err) {
             expect(response.status).to.equal(201);
             expect(response.body.message).to.equal('Role successfully created');
-            expect(response.body.role.role).to.equal('Editor');
+            expect(response.body.createdRole.role).to.equal('Editor');
           }
           done();
         });
