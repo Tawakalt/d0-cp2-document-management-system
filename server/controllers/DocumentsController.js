@@ -56,6 +56,11 @@ export default class DocumentsController {
       order: [
         ['id', 'DESC']
       ],
+      include: [
+        { model: User,
+          attributes: ['email', 'roleId']
+        }
+      ],
       attributes: {
         exclude: ['createdAt', 'updatedAt']
       }
@@ -69,7 +74,8 @@ export default class DocumentsController {
             return response.status(200).send({
               message: 'No Document has been created' });
           }
-          DocumentsLogic.paginate(request, response, Documents);
+          DocumentsLogic.filter(request, response, Documents);
+          DocumentsLogic.paginate(request, response, response.document);
         });
     }
   }

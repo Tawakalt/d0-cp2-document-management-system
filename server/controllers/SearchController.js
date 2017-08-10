@@ -68,9 +68,8 @@ export default class SearchController {
       })
       .then((document) => {
         if (DocumentsLogic.isDocument(request, response, document)) {
-          if (DocumentsLogic.filter(request, response, document)) {
-            return response.status(200).send(document);
-          }
+          DocumentsLogic.filter(request, response, document);
+          DocumentsLogic.paginate(request, response, response.document);
         }
       })
       .catch(error => response.status(400).send(error.toString()));

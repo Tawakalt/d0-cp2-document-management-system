@@ -59,9 +59,9 @@ export default class DocumentsLogic {
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
-    if (request.loggedInUser.roleId === 3) {
-      property.where = { userId: request.loggedInUser.id };
-    }
+    // if (request.loggedInUser.roleId === 3) {
+    //   property.where = { userId: request.loggedInUser.id };
+    // }
     response.property = property;
     return true;
   }
@@ -236,14 +236,14 @@ export default class DocumentsLogic {
     let count = 0;
     const newArr = [];
     while (count < document.length) {
-      const allowed = [doc[count].dataValues.User.dataValues.roleId, 1, 2];
-      if (!((doc[count].dataValues.access === 'Private'
-      && doc[count].dataValues.userId !== request.loggedInUser.id) ||
-      (doc[count].dataValues.access === 'Role'
+      const allowed = [document[count].dataValues.User.dataValues.roleId, 1, 2];
+      if (!((document[count].dataValues.access === 'Private'
+      && document[count].dataValues.userId !== request.loggedInUser.id) ||
+      (document[count].dataValues.access === 'Role'
       && allowed.includes(request.loggedInUser.roleId)
       === false))) {
-        delete doc[count].dataValues.User;
-        newArr.push(doc[count]);
+        delete document[count].dataValues.User;
+        newArr.push(document[count]);
       }
       count += 1;
     }
@@ -251,7 +251,7 @@ export default class DocumentsLogic {
       response.status(404).send({ message: 'No Document Found' });
       return false;
     }
-    response.status(200).send(newArr);
+    response.document = newArr;
     return false;
   }
 

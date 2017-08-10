@@ -153,10 +153,10 @@ describe('Search Endpoints', () => {
           .end((err, response) => {
             if (!err) {
               expect(response.status).to.equal(200);
-              expect(response.body[0].title).to.equal('SUPERR');
-              expect(response.body[0].content).to.equal('super');
-              expect(response.body[0].access).to.equal('Private');
-              expect(response.body[0].userId).to.equal(1);
+              expect(response.body.object[0].title).to.equal('SUPERR');
+              expect(response.body.object[0].content).to.equal('super');
+              expect(response.body.object[0].access).to.equal('Private');
+              expect(response.body.object[0].userId).to.equal(1);
             }
             done();
           });
