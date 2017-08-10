@@ -1,4 +1,4 @@
-import Utils from '../helper/documentsLogic';
+import DocumentsLogic from '../helper/DocumentsLogic';
 
 const Document = require('../models').Document;
 const User = require('../models').User;
@@ -8,7 +8,7 @@ const User = require('../models').User;
  * @export
  * @class documentsController
  */
-export default class documentsController {
+export default class DocumentsController {
   /**
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Create Documents
@@ -26,7 +26,7 @@ export default class documentsController {
         },
       })
       .then((doc) => {
-        if (Utils.titleExist(request, response, doc)) {
+        if (DocumentsLogic.titleExist(request, response, doc)) {
           return Document
             .create({
               title: request.body.title,
@@ -60,7 +60,7 @@ export default class documentsController {
         exclude: ['createdAt', 'updatedAt']
       }
     };
-    if (Utils.listQuery(
+    if (DocumentsLogic.listQuery(
       request, response, request.query.limit, request.query.offset, property)) {
       return Document
         .findAll(response.property)
@@ -69,7 +69,7 @@ export default class documentsController {
             return response.status(200).send({
               message: 'No Document has been created' });
           }
-          Utils.paginate(request, response, Documents);
+          DocumentsLogic.paginate(request, response, Documents);
         });
     }
   }
@@ -84,7 +84,7 @@ export default class documentsController {
    * @memberof documentsController
    */
   static retrieve(request, response) {
-    if (Utils.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
       return Document
         .findById(request.params.docId, {
           include: [{
@@ -96,8 +96,8 @@ export default class documentsController {
           }
         })
         .then((doc) => {
-          if (Utils.isDoc(request, response, doc)) {
-            if (Utils.isAllowed(request, response, doc)) {
+          if (DocumentsLogic.isDoc(request, response, doc)) {
+            if (DocumentsLogic.isAllowed(request, response, doc)) {
               delete doc.dataValues.User;
               return response.status(200).send(doc);
             }
@@ -117,7 +117,7 @@ export default class documentsController {
    * @memberof documentsController
    */
   static update(request, response) {
-    if (Utils.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
       return Document
         .findById(request.params.docId, {
           include: [{
@@ -125,9 +125,9 @@ export default class documentsController {
           }],
         })
         .then((doc) => {
-          if (Utils.isDoc(request, response, doc)) {
-            if (Utils.allowUpdate(request, response, doc.userId)) {
-              if (Utils.isValidParams(request, response)) {
+          if (DocumentsLogic.isDoc(request, response, doc)) {
+            if (DocumentsLogic.allowUpdate(request, response, doc.userId)) {
+              if (DocumentsLogic.isValidParams(request, response)) {
                 return doc
                   .update({
                     title: request.body.title || doc.title,
@@ -141,7 +141,8 @@ export default class documentsController {
                     });
                   })
                   .catch((err) => {
-                    if (!Utils.validationError(request, response, err)) {
+                    if (!DocumentsLogic.validationError(
+                      request, response, err)) {
                       response.status(500).send(err.toString());
                     }
                   });
@@ -163,12 +164,12 @@ export default class documentsController {
    * @memberof documentsController
    */
   static destroy(request, response) {
-    if (Utils.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
       return Document
         .findById(request.params.docId)
         .then((doc) => {
-          if (Utils.isDoc(request, response, doc)) {
-            if (Utils.allowDelete(request, response, doc.userId)) {
+          if (DocumentsLogic.isDoc(request, response, doc)) {
+            if (DocumentsLogic.allowDelete(request, response, doc.userId)) {
               return doc
                 .destroy()
                 .then(() => response.status(200).send({

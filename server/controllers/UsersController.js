@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwtoken from '../helper/jwt';
-import Utils from '../helper/utils';
-import utils from '../helper/documentsLogic';
+import Utils from '../helper/Utils';
+import DocumentsLogic from '../helper/DocumentsLogic';
 
 require('dotenv').config();
 
@@ -15,7 +15,7 @@ const saltRounds = 10;
  * @export
  * @class usersController
  */
-export default class usersController {
+export default class UsersController {
   /**
    * @description Allows Users to signup
    * @static
@@ -69,7 +69,7 @@ export default class usersController {
         exclude: ['createdAt', 'updatedAt', 'password']
       },
     };
-    if (utils.listQuery(
+    if (DocumentsLogic.listQuery(
       request, response, request.query.limit, request.query.offset, property)) {
       return User
         .findAll(response.property)
@@ -77,7 +77,7 @@ export default class usersController {
           if (users.length === 0) {
             return response.status(200).send({ message: 'No User Found' });
           }
-          utils.paginate(request, response, users);
+          DocumentsLogic.paginate(request, response, users);
         });
     }
   }

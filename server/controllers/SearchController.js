@@ -1,5 +1,5 @@
-import Utils from '../helper/utils';
-import utils from '../helper/documentsLogic';
+import Utils from '../helper/Utils';
+import DocumentsLogic from '../helper/DocumentsLogic';
 
 const User = require('../models').User;
 const Document = require('../models').Document;
@@ -9,7 +9,7 @@ const Document = require('../models').Document;
  * @export
  * @class searchController
  */
-export default class searchController {
+export default class SearchController {
   /**
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Users
@@ -67,8 +67,8 @@ export default class searchController {
         }
       })
       .then((doc) => {
-        if (utils.isDoc(request, response, doc)) {
-          if (utils.filter(request, response, doc)) {
+        if (DocumentsLogic.isDoc(request, response, doc)) {
+          if (DocumentsLogic.filter(request, response, doc)) {
             return response.status(200).send(doc);
           }
         }

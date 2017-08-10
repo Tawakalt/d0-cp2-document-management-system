@@ -5,7 +5,7 @@ import validator from 'validator';
  * @export
  * @class Utils
  */
-export default class Utils {
+export default class DocumentsLogic {
   /**
    * @description checks if Title exists
    * @static

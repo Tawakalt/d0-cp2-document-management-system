@@ -7,7 +7,7 @@ const Role = require('../models').Role;
  * @export
  * @class rolesController
  */
-export default class rolesController {
+export default class RolesController {
   /**
    * @description Allows Authorized Registered and Loggedin Personnels 
    *              to Create Roles
