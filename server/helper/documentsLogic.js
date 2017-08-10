@@ -11,18 +11,18 @@ export default class DocumentsLogic {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc The returned document
+   * @param {object} document The returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static titleExist(request, response, doc) {
-    if (doc) {
+  static titleExist(request, response, document) {
+    if (document) {
       response.status(400).send({
         message: 'Title already exists',
       });
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   /**
@@ -71,12 +71,12 @@ export default class DocumentsLogic {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isDoc(request, response, doc) {
-    if (!doc) {
+  static isDocument(request, response, document) {
+    if (!document) {
       response.status(404).send({
         message: 'Document Not Found'
       });
@@ -90,14 +90,15 @@ export default class DocumentsLogic {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isAllowed(request, response, doc) {
-    const allowed = [doc.User.roleId, 1, 2];
-    if ((doc.access === 'Private' && doc.userId !== request.loggedInUser.id) ||
-    (doc.access === 'Role' && allowed.includes(request.loggedInUser.roleId)
+  static isAllowed(request, response, document) {
+    const allowed = [document.User.roleId, 1, 2];
+    if ((document.access === 'Private' &&
+      document.userId !== request.loggedInUser.id) ||
+    (document.access === 'Role' && allowed.includes(request.loggedInUser.roleId)
     === false)) {
       response.status(403).send({
         message: 'You are not authorized to view this document'
@@ -208,12 +209,12 @@ export default class DocumentsLogic {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {any} docId Id of the document to be retrieved
+   * @param {any} documentId Id of the document to be retrieved
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static docIdValid(request, response, docId) {
-    if (!validator.isNumeric(docId)) {
+  static documentIdValid(request, response, documentId) {
+    if (!validator.isNumeric(documentId)) {
       response.status(400).send({
         message: 'Document Id must be an integer',
       });
@@ -227,14 +228,14 @@ export default class DocumentsLogic {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} false
    * @memberof Utils
    */
-  static filter(request, response, doc) {
+  static filter(request, response, document) {
     let count = 0;
     const newArr = [];
-    while (count < doc.length) {
+    while (count < document.length) {
       const allowed = [doc[count].dataValues.User.dataValues.roleId, 1, 2];
       if (!((doc[count].dataValues.access === 'Private'
       && doc[count].dataValues.userId !== request.loggedInUser.id) ||

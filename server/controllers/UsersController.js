@@ -32,7 +32,7 @@ export default class UsersController {
         },
       })
       .then((user) => {
-        if (Utils.allowEmail(request, response, user)) {
+        if (!Utils.emailExists(request, response, user)) {
           bcrypt.hash(request.body.password, saltRounds, (err, hash) => {
             return User
               .create({
@@ -146,7 +146,7 @@ export default class UsersController {
                           message += 'Password successfully Updated. ';
                         }
                       }
-                      if (Utils.isRoleValid(
+                      if (Utils.roleIdValid(
                         request, response, request.body.roleId)) {
                         if (request.body.roleId) {
                           if (parseInt(request.body.roleId) === user.roleId) {
@@ -288,12 +288,12 @@ export default class UsersController {
             exclude: ['updatedAt']
           }
         })
-        .then((doc) => {
-          if (doc.length === 0) {
+        .then((document) => {
+          if (document.length === 0) {
             response.status(200).send(
               { message: 'This User has not created any Document' });
           } else {
-            response.status(200).send(doc);
+            response.status(200).send(document);
           }
         });
     }

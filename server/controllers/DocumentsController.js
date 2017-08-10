@@ -25,8 +25,8 @@ export default class DocumentsController {
           title: request.body.title,
         },
       })
-      .then((doc) => {
-        if (DocumentsLogic.titleExist(request, response, doc)) {
+      .then((document) => {
+        if (!DocumentsLogic.titleExist(request, response, document)) {
           return Document
             .create({
               title: request.body.title,
@@ -84,9 +84,10 @@ export default class DocumentsController {
    * @memberof documentsController
    */
   static retrieve(request, response) {
-    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.documentIdValid(
+      request, response, request.params.documentId)) {
       return Document
-        .findById(request.params.docId, {
+        .findById(request.params.documentId, {
           include: [{
             model: User,
             attributes: ['email']
@@ -95,11 +96,11 @@ export default class DocumentsController {
             exclude: ['createdAt', 'updatedAt']
           }
         })
-        .then((doc) => {
-          if (DocumentsLogic.isDoc(request, response, doc)) {
-            if (DocumentsLogic.isAllowed(request, response, doc)) {
-              delete doc.dataValues.User;
-              return response.status(200).send(doc);
+        .then((document) => {
+          if (DocumentsLogic.isDocument(request, response, document)) {
+            if (DocumentsLogic.isAllowed(request, response, document)) {
+              delete document.dataValues.User;
+              return response.status(200).send(document);
             }
           }
         })
@@ -117,22 +118,24 @@ export default class DocumentsController {
    * @memberof documentsController
    */
   static update(request, response) {
-    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.documentIdValid(
+      request, response, request.params.documentId)) {
       return Document
-        .findById(request.params.docId, {
+        .findById(request.params.documentId, {
           include: [{
             model: User,
           }],
         })
-        .then((doc) => {
-          if (DocumentsLogic.isDoc(request, response, doc)) {
-            if (DocumentsLogic.allowUpdate(request, response, doc.userId)) {
+        .then((document) => {
+          if (DocumentsLogic.isDocument(request, response, document)) {
+            if (DocumentsLogic.allowUpdate(
+              request, response, document.userId)) {
               if (DocumentsLogic.isValidParams(request, response)) {
-                return doc
+                return document
                   .update({
-                    title: request.body.title || doc.title,
-                    content: request.body.content || doc.content,
-                    access: request.body.access || doc.access,
+                    title: request.body.title || document.title,
+                    content: request.body.content || document.content,
+                    access: request.body.access || document.access,
                   })
                   .then((updatedDetails) => {
                     delete updatedDetails.dataValues.User;
@@ -164,13 +167,15 @@ export default class DocumentsController {
    * @memberof documentsController
    */
   static destroy(request, response) {
-    if (DocumentsLogic.docIdValid(request, response, request.params.docId)) {
+    if (DocumentsLogic.documentIdValid(
+      request, response, request.params.documentId)) {
       return Document
-        .findById(request.params.docId)
-        .then((doc) => {
-          if (DocumentsLogic.isDoc(request, response, doc)) {
-            if (DocumentsLogic.allowDelete(request, response, doc.userId)) {
-              return doc
+        .findById(request.params.documentId)
+        .then((document) => {
+          if (DocumentsLogic.isDocument(request, response, document)) {
+            if (DocumentsLogic.allowDelete(
+              request, response, document.userId)) {
+              return document
                 .destroy()
                 .then(() => response.status(200).send({
                   message: 'Document successfully deleted' }))

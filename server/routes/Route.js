@@ -37,13 +37,13 @@ const Route = (app) => {
 
   app.get('/api/v1/documents',
     Middleware.authenticate, DocumentsController.list);
-  app.get('/api/v1/documents/:docId',
+  app.get('/api/v1/documents/:documentId',
     Middleware.authenticate, DocumentsController.retrieve);
 
-  app.put('/api/v1/documents/:docId',
+  app.put('/api/v1/documents/:documentId',
     Middleware.authenticate, DocumentsController.update);
 
-  app.delete('/api/v1/documents/:docId',
+  app.delete('/api/v1/documents/:documentId',
     Middleware.authenticate, DocumentsController.destroy);
 
   // Endpoints for Search

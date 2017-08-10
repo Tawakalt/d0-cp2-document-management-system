@@ -66,10 +66,10 @@ export default class SearchController {
           exclude: ['createdAt', 'updatedAt']
         }
       })
-      .then((doc) => {
-        if (DocumentsLogic.isDoc(request, response, doc)) {
-          if (DocumentsLogic.filter(request, response, doc)) {
-            return response.status(200).send(doc);
+      .then((document) => {
+        if (DocumentsLogic.isDocument(request, response, document)) {
+          if (DocumentsLogic.filter(request, response, document)) {
+            return response.status(200).send(document);
           }
         }
       })

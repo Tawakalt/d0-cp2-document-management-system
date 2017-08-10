@@ -42,14 +42,14 @@ export default class Utils {
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static allowEmail(request, response, user) {
+  static emailExists(request, response, user) {
     if (user) {
       response.status(400).send({
         message: 'Email already exists',
       });
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   /**
@@ -150,7 +150,7 @@ export default class Utils {
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isRoleValid(request, response, roleId) {
+  static roleIdValid(request, response, roleId) {
     if (roleId &&
       !(validator.isNumeric(roleId))) {
       response.status(400).send({
