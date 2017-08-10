@@ -33,7 +33,7 @@ export default class RolesController {
       })
       .then((role) => {
         if (role) {
-          response.status(400).send({
+          return response.status(400).send({
             message: 'Role already exists' });
         }
         return Role
