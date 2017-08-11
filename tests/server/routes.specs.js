@@ -12,10 +12,8 @@ describe('Routes', () => {
             role: 'Editor'
           })
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(404);
-              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
-            }
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             done();
           });
       });
@@ -26,10 +24,8 @@ describe('Routes', () => {
         request(app)
           .get('/api/roles/')
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(404);
-              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
-            }
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             done();
           });
       });
@@ -43,10 +39,8 @@ describe('Routes', () => {
             role: 'Editor'
           })
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(404);
-              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
-            }
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             done();
           });
       });
@@ -57,10 +51,8 @@ describe('Routes', () => {
         request(app)
           .delete('/api/roles/')
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(404);
-              expect(response.body.message).to.equal('INVALID ROUTE!!!.');
-            }
+            expect(response.status).to.equal(404);
+            expect(response.body.message).to.equal('INVALID ROUTE!!!.');
             done();
           });
       });

@@ -1,10 +1,10 @@
-import { roles } from './roles';
-import { users } from './users';
-import { documents } from './documents';
+import RolesController from './RolesController';
+import UsersController from './UsersController';
+import DocumentsController from './DocumentsController';
 
 // Export controllers
 export default {
-  roles,
-  users,
-  documents,
+  RolesController,
+  UsersController,
+  DocumentsController,
 };

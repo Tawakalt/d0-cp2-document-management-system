@@ -1,5 +1,5 @@
-import Utils from '../helper/utils';
-import utils from '../helper/documentsLogic';
+import Utils from '../helper/Utils';
+import DocumentsLogic from '../helper/DocumentsLogic';
 
 const User = require('../models').User;
 const Document = require('../models').Document;
@@ -9,7 +9,7 @@ const Document = require('../models').Document;
  * @export
  * @class searchController
  */
-export default class searchController {
+export default class SearchController {
   /**
    * @description Allows Authorized Registered and Loggedin Personnels
    *              to Search for Users
@@ -38,7 +38,7 @@ export default class searchController {
           return response.status(200).send(user);
         }
       })
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 
   /**
@@ -66,13 +66,12 @@ export default class searchController {
           exclude: ['createdAt', 'updatedAt']
         }
       })
-      .then((doc) => {
-        if (utils.isDoc(request, response, doc)) {
-          if (utils.filter(request, response, doc)) {
-            return response.status(200).send(doc);
-          }
+      .then((document) => {
+        if (DocumentsLogic.isDocument(request, response, document)) {
+          DocumentsLogic.filter(request, response, document);
+          DocumentsLogic.paginate(request, response, response.document);
         }
       })
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 }

@@ -27,9 +27,14 @@ export default class Middleware {
     }
     const token = request.headers.authorization;
     request.token = token;
-    request.loggedInUser = jwt.verify(request.token,
-      process.env.JWT_SECRET);
-    next();
+    jwt.verify(request.token, process.env.JWT_SECRET, (error, decoded) => {
+      if (error) {
+        return response
+          .send({ message: 'Error encountered while processing request' });
+      }
+      request.loggedInUser = decoded;
+      next();
+    });
   }
 
   /**

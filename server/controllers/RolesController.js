@@ -7,7 +7,7 @@ const Role = require('../models').Role;
  * @export
  * @class rolesController
  */
-export default class rolesController {
+export default class RolesController {
   /**
    * @description Allows Authorized Registered and Loggedin Personnels 
    *              to Create Roles
@@ -26,14 +26,27 @@ export default class rolesController {
       });
     }
     return Role
-      .create({
-        role: request.body.role,
+      .findOne({
+        where: {
+          role: request.body.role,
+        },
       })
       .then((role) => {
-        response.status(201).send({
-          message: 'Role successfully created', role });
+        if (role) {
+          return response.status(400).send({
+            message: 'Role already exists' });
+        }
+        return Role
+          .create({
+            role: request.body.role,
+          })
+          .then((createdRole) => {
+            response.status(201).send({
+              message: 'Role successfully created', createdRole });
+          })
+          .catch(error => response.status(500).send(error));
       })
-      .catch(error => response.status(400).send(error));
+      .catch(error => response.status(500).send(error));
   }
 
   /**
@@ -56,6 +69,6 @@ export default class rolesController {
         }
       })
       .then(role => response.status(200).send(role))
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 }

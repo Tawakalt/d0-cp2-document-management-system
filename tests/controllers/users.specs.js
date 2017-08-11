@@ -57,11 +57,9 @@ describe('User Endpoints', () => {
           password: 'kenny'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(201);
-            expect(response.body.email).to.equal('kenny@y.com');
-            expect(response.body.roleId).to.equal(3);
-          }
+          expect(response.status).to.equal(201);
+          expect(response.body.email).to.equal('kenny@y.com');
+          expect(response.body.roleId).to.equal(3);
           done();
         });
     });
@@ -73,10 +71,8 @@ describe('User Endpoints', () => {
           password: 'you'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Email');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Email');
           done();
         });
     });
@@ -88,10 +84,8 @@ describe('User Endpoints', () => {
           password: 'you'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Email is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Email is Required');
           done();
         });
     });
@@ -103,10 +97,8 @@ describe('User Endpoints', () => {
           password: ''
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Password is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Password is Required');
           done();
         });
     });
@@ -124,16 +116,32 @@ describe('User Endpoints', () => {
           password: 'ppp'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Email already exists');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Email already exists');
           done();
         });
     });
   });
 
   describe('Get Users Endpoint', () => {
+    it('should return the right message when no user is found', (done) => {
+      User.destroy({
+        where: {},
+        truncate: true,
+        cascade: true,
+        restartIdentity: true
+      });
+      request(app)
+        .get('/api/v1/users/')
+        .set('Authorization', `${superToken}`)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .end((err, response) => {
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal('No User Found');
+          done();
+        });
+    });
     beforeEach((done) => {
       User.create(
         { email: process.env.EMAIL,
@@ -152,40 +160,43 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.object[0].email).to.equal(process.env.EMAIL);
-            expect(response.body.object[0].roleId).to.equal(1);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.object[0].email).to.equal(process.env.EMAIL);
+          expect(response.body.object[0].roleId).to.equal(1);
+          expect(response.body.metaData.page).to.equal(1);
+          expect(response.body.metaData.pageCount).to.equal(1);
+          expect(response.body.metaData.count).to.equal(1);
+          expect(response.body.metaData.totalCount).to.equal(1);
           done();
         });
     });
-    it('should not authorize a non admin', (done) => {
+    it('should not allow a non admin to get all users', (done) => {
       request(app)
         .get('/api/v1/users/')
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You do not have access to this request!!!');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You do not have access to this request!!!');
           done();
         });
     });
-    it('should sussessfully paginate', (done) => {
+    it('should sussessfully apply pagination', (done) => {
       request(app)
-        .get('/api/v1/users?limit=1&offset=1')
+        .get('/api/v1/users?limit=1&offset=0')
         .set('Authorization', `${adminToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal('No User Found');
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.object[0].email).to.equal(process.env.EMAIL);
+          expect(response.body.object[0].roleId).to.equal(1);
+          expect(response.body.metaData.page).to.equal(1);
+          expect(response.body.metaData.pageCount).to.equal(1);
+          expect(response.body.metaData.count).to.equal(1);
+          expect(response.body.metaData.totalCount).to.equal(1);
           done();
         });
     });
@@ -209,10 +220,8 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('User Not Found');
           done();
         });
     });
@@ -223,11 +232,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.email).to.equal(process.env.EMAIL);
-            expect(response.body.roleId).to.equal(1);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.email).to.equal(process.env.EMAIL);
+          expect(response.body.roleId).to.equal(1);
           done();
         });
     });
@@ -238,11 +245,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal(
-              'User Id must be an integer');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal(
+            'User Id must be an integer');
           done();
         });
     });
@@ -273,10 +278,8 @@ describe('User Endpoints', () => {
           roleId: '3'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('User Not Found');
           done();
         });
     });
@@ -292,12 +295,10 @@ describe('User Endpoints', () => {
           roleId: '3'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            let message = 'You only have acess to change a user\'s role, ';
-            message += 'not their email and definitely not their password!!!';
-            expect(response.body.message).to.equal(message);
-          }
+          expect(response.status).to.equal(403);
+          let message = 'You only have acess to change a user\'s role, ';
+          message += 'not their email and definitely not their password!!!';
+          expect(response.body.message).to.equal(message);
           done();
         });
     });
@@ -312,14 +313,12 @@ describe('User Endpoints', () => {
           password: 'kenny'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Email!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Email!!!');
           done();
         });
     });
-    it('should not allow empty Email', (done) => {
+    it('should not allow an empty Email', (done) => {
       request(app)
         .put('/api/v1/users/2')
         .set('Authorization', `${userToken}`)
@@ -330,14 +329,12 @@ describe('User Endpoints', () => {
           password: 'kenny'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Email is Required!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Email is Required!!!');
           done();
         });
     });
-    it('should not allow empty Password', (done) => {
+    it('should not allow an empty Password', (done) => {
       request(app)
         .put('/api/v1/users/2')
         .set('Authorization', `${userToken}`)
@@ -348,10 +345,8 @@ describe('User Endpoints', () => {
           password: ''
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Password is Required!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Password is Required!!!');
           done();
         });
     });
@@ -366,56 +361,71 @@ describe('User Endpoints', () => {
           password: 'pass'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal(
-              'Your Edited Email already exists!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal(
+            'Your Edited Email already exists!!!');
           done();
         });
     });
-    it('should successfully update the user\'s details with the initial email',
+    xit('should successfully update the only the user\'s email',
       (done) => {
         request(app)
           .put('/api/v1/users/2')
           .send({
-            email: 'kenny@y.com',
+            email: 'kenny555@y.com',
             password: 'kenny'
           })
           .set('Authorization', `${userToken}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(200);
-              expect(response.body.updatedDetails.email).to.equal(
-                'kenny@y.com');
-              expect(response.body.message).to.equal(
-                'Email up to date. Password successfully Updated. ');
-            }
+            expect(response.status).to.equal(200);
+            expect(response.body.updatedDetails.email).to.equal(
+              'kenny555@y.com');
+            expect(response.body.message).to.equal(
+              'Email successfully Updated. Password up to date. ');
             done();
           });
       });
-    it('should successfully update the user\'s details', (done) => {
-      request(app)
-        .put('/api/v1/users/2')
-        .send({
-          email: 'kenny2@y.com',
-          password: 'kenny2'
-        })
-        .set('Authorization', `${userToken}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .end((err, response) => {
-          if (!err) {
+    it('should successfully update the only the user\'s password',
+      (done) => {
+        request(app)
+          .put('/api/v1/users/2')
+          .send({
+            email: 'kenny@y.com',
+            password: 'kenny555'
+          })
+          .set('Authorization', `${userToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .end((err, response) => {
+            expect(response.status).to.equal(200);
+            expect(response.body.updatedDetails.email).to.equal(
+              'kenny@y.com');
+            expect(response.body.message).to.equal(
+              'Email up to date. Password successfully Updated. ');
+            done();
+          });
+      });
+    it('should successfully update both the user\'s email and password',
+      (done) => {
+        request(app)
+          .put('/api/v1/users/2')
+          .send({
+            email: 'kenny2@y.com',
+            password: 'kenny2'
+          })
+          .set('Authorization', `${userToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .end((err, response) => {
             expect(response.status).to.equal(200);
             expect(response.body.updatedDetails.email).to.equal('kenny2@y.com');
             expect(response.body.message).to.equal(
               'Email successfully Updated. Password successfully Updated. ');
-          }
-          done();
-        });
-    });
+            done();
+          });
+      });
     it('should not allow a user to update someone else\'s details', (done) => {
       request(app)
         .put('/api/v1/users/1')
@@ -427,11 +437,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You cannot update someone else\'s details');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You cannot update someone else\'s details');
           done();
         });
     });
@@ -447,11 +455,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'Common stop it!!! You can\'t change your role');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'Common stop it!!! You can\'t change your role');
           done();
         });
     });
@@ -466,10 +472,9 @@ describe('User Endpoints', () => {
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(200);
-              expect(response.body.updatedDetails.roleId).to.equal('3');
-            }
+            expect(response.status).to.equal(200);
+            expect(response.body.updatedDetails.roleId).to.equal('3');
+            expect(response.body.message).to.equal('Role up to date. ');
             done();
           });
       });
@@ -483,10 +488,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.updatedDetails.roleId).to.equal('1');
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.updatedDetails.roleId).to.equal('1');
+          expect(response.body.message).to.equal('Role successfully Updated. ');
           done();
         });
     });
@@ -501,10 +505,8 @@ describe('User Endpoints', () => {
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(400);
-              expect(response.body.message).to.equal('Invalid RoleId!!!');
-            }
+            expect(response.status).to.equal(400);
+            expect(response.body.message).to.equal('Invalid RoleId!!!');
             done();
           });
       });
@@ -518,11 +520,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal(
-              'There is no role with that RoleId!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal(
+            'There is no role with that RoleId!!!');
           done();
         });
     });
@@ -550,11 +550,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You do not have access to this request!!!');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You do not have access to this request!!!');
           done();
         });
     });
@@ -565,10 +563,8 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('User Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('User Not Found');
           done();
         });
     });
@@ -579,11 +575,9 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You cannot delete yourself!!!');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You cannot delete yourself!!!');
           done();
         });
     });
@@ -594,10 +588,8 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal('User successfully deleted');
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal('User successfully deleted');
           done();
         });
     });
@@ -622,10 +614,8 @@ describe('User Endpoints', () => {
           password: 'a'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(401);
-            expect(response.body.message).to.equal('Kindly Sign Up First');
-          }
+          expect(response.status).to.equal(401);
+          expect(response.body.message).to.equal('Kindly Sign Up First');
           done();
         });
     });
@@ -637,10 +627,8 @@ describe('User Endpoints', () => {
           password: '9'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Wrong Password');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Wrong Password');
           done();
         });
     });
@@ -652,11 +640,9 @@ describe('User Endpoints', () => {
           password: process.env.PASSWORD
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal('login successful');
-            expect(response.body.user.email).to.equal(process.env.EMAIL);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal('login successful');
+          expect(response.body.user.email).to.equal(process.env.EMAIL);
           done();
         });
     });
@@ -670,17 +656,15 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal(
-              'User sussefully logged out');
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal(
+            'User sussefully logged out');
           done();
         });
     });
   });
 
-  describe('Retrieve all docs of a user\'s Endpoint', () => {
+  describe('Get all documents of a user\'s Endpoint', () => {
     beforeEach((done) => {
       User.create(
         { email: process.env.EMAIL,
@@ -699,11 +683,9 @@ describe('User Endpoints', () => {
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(200);
-              expect(response.body.message).to.equal(
-                'This User has not created any Document');
-            }
+            expect(response.status).to.equal(200);
+            expect(response.body.message).to.equal(
+              'This User has not created any Document');
             done();
           });
       });
@@ -722,13 +704,11 @@ describe('User Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body[0].title).to.equal('TEST2');
-            expect(response.body[0].content).to.equal('Testing2');
-            expect(response.body[0].access).to.equal('Public');
-            expect(response.body[0].userId).to.equal(1);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body[0].title).to.equal('TEST2');
+          expect(response.body[0].content).to.equal('Testing2');
+          expect(response.body[0].access).to.equal('Public');
+          expect(response.body[0].userId).to.equal(1);
           done();
         });
     });

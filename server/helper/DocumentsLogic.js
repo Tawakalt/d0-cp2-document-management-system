@@ -5,24 +5,24 @@ import validator from 'validator';
  * @export
  * @class Utils
  */
-export default class Utils {
+export default class DocumentsLogic {
   /**
    * @description checks if Title exists
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc The returned document
+   * @param {object} document The returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static titleExist(request, response, doc) {
-    if (doc) {
+  static titleExist(request, response, document) {
+    if (document) {
       response.status(400).send({
         message: 'Title already exists',
       });
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   /**
@@ -59,9 +59,9 @@ export default class Utils {
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
-    if (request.loggedInUser.roleId === 3) {
-      property.where = { userId: request.loggedInUser.id };
-    }
+    // if (request.loggedInUser.roleId === 3) {
+    //   property.where = { userId: request.loggedInUser.id };
+    // }
     response.property = property;
     return true;
   }
@@ -71,12 +71,12 @@ export default class Utils {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isDoc(request, response, doc) {
-    if (!doc) {
+  static isDocument(request, response, document) {
+    if (!document) {
       response.status(404).send({
         message: 'Document Not Found'
       });
@@ -90,14 +90,15 @@ export default class Utils {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static isAllowed(request, response, doc) {
-    const allowed = [doc.User.roleId, 1, 2];
-    if ((doc.access === 'Private' && doc.userId !== request.loggedInUser.id) ||
-    (doc.access === 'Role' && allowed.includes(request.loggedInUser.roleId)
+  static isAllowed(request, response, document) {
+    const allowed = [document.User.roleId, 1, 2];
+    if ((document.access === 'Private' &&
+      document.userId !== request.loggedInUser.id) ||
+    (document.access === 'Role' && allowed.includes(request.loggedInUser.roleId)
     === false)) {
       response.status(403).send({
         message: 'You are not authorized to view this document'
@@ -208,12 +209,12 @@ export default class Utils {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {any} docId Id of the document to be retrieved
+   * @param {any} documentId Id of the document to be retrieved
    * @returns {boolean} true or false
    * @memberof Utils
    */
-  static docIdValid(request, response, docId) {
-    if (!validator.isNumeric(docId)) {
+  static documentIdValid(request, response, documentId) {
+    if (!validator.isNumeric(documentId)) {
       response.status(400).send({
         message: 'Document Id must be an integer',
       });
@@ -227,22 +228,22 @@ export default class Utils {
    * @static
    * @param {object} request Client's request
    * @param {object} response Server Response
-   * @param {object} doc the returned document
+   * @param {object} document the returned document
    * @returns {boolean} false
    * @memberof Utils
    */
-  static filter(request, response, doc) {
+  static filter(request, response, document) {
     let count = 0;
     const newArr = [];
-    while (count < doc.length) {
-      const allowed = [doc[count].dataValues.User.dataValues.roleId, 1, 2];
-      if (!((doc[count].dataValues.access === 'Private'
-      && doc[count].dataValues.userId !== request.loggedInUser.id) ||
-      (doc[count].dataValues.access === 'Role'
+    while (count < document.length) {
+      const allowed = [document[count].dataValues.User.dataValues.roleId, 1, 2];
+      if (!((document[count].dataValues.access === 'Private'
+      && document[count].dataValues.userId !== request.loggedInUser.id) ||
+      (document[count].dataValues.access === 'Role'
       && allowed.includes(request.loggedInUser.roleId)
       === false))) {
-        delete doc[count].dataValues.User;
-        newArr.push(doc[count]);
+        delete document[count].dataValues.User;
+        newArr.push(document[count]);
       }
       count += 1;
     }
@@ -250,7 +251,7 @@ export default class Utils {
       response.status(404).send({ message: 'No Document Found' });
       return false;
     }
-    response.status(200).send(newArr);
+    response.document = newArr;
     return false;
   }
 
