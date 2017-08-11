@@ -81,10 +81,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Title is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Title is Required');
           done();
         });
     });
@@ -101,10 +99,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Content is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Content is Required');
           done();
         });
     });
@@ -121,10 +117,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Access is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Access is Required');
           done();
         });
     });
@@ -141,10 +135,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Access Type');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Access Type');
           done();
         });
     });
@@ -161,15 +153,13 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(201);
-            expect(response.body.message).to.equal(
-              'Document successfully created');
-            expect(response.body.createdDocument.title).to.equal('SUPER');
-            expect(response.body.createdDocument.content).to.equal('super');
-            expect(response.body.createdDocument.access).to.equal('Public');
-            expect(response.body.createdDocument.userId).to.equal(1);
-          }
+          expect(response.status).to.equal(201);
+          expect(response.body.message).to.equal(
+            'Document successfully created');
+          expect(response.body.createdDocument.title).to.equal('SUPER');
+          expect(response.body.createdDocument.content).to.equal('super');
+          expect(response.body.createdDocument.access).to.equal('Public');
+          expect(response.body.createdDocument.userId).to.equal(1);
           done();
         });
     });
@@ -193,10 +183,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Title already exists');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Title already exists');
           done();
         });
     });
@@ -223,19 +211,17 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal(
-              'No Document has been created');
-            done();
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal(
+            'No Document has been created');
+          done();
         });
     });
     it('should successfully get all documents for an admin', (done) => {
       Document.create(
-        { title: 'SUPER',
-          content: 'super',
-          access: 'Public',
+        { title: 'Ooooo',
+          content: 'o o o',
+          access: 'Role',
           userId: 1
         }
       );
@@ -245,23 +231,47 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.object[0].title).to.equal('Ooooo');
+          expect(response.body.object[0].content).to.equal('o o o');
+          expect(response.body.object[0].access).to.equal('Role');
+          expect(response.body.object[0].userId).to.equal(1);
+          expect(response.body.metaData.page).to.equal(1);
+          expect(response.body.metaData.pageCount).to.equal(1);
+          expect(response.body.metaData.count).to.equal(1);
+          expect(response.body.metaData.totalCount).to.equal(1);
           done();
         });
     });
-    it('should successfully get all documents for a user', (done) => {
+    it('should successfully get all documents a user has access to', (done) => {
+      Document.bulkCreate([
+        { title: 'Ooooo',
+          content: 'o o o',
+          access: 'Role',
+          userId: 1
+        },
+        { title: 'okkkkkkk',
+          content: 'super',
+          access: 'Public',
+          userId: 1
+        }
+      ]);
       request(app)
         .get('/api/v1/documents/')
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            done();
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.object[0].title).to.equal('okkkkkkk');
+          expect(response.body.object[0].content).to.equal('super');
+          expect(response.body.object[0].access).to.equal('Public');
+          expect(response.body.object[0].userId).to.equal(1);
+          expect(response.body.metaData.page).to.equal(1);
+          expect(response.body.metaData.pageCount).to.equal(1);
+          expect(response.body.metaData.count).to.equal(1);
+          expect(response.body.metaData.totalCount).to.equal(1);
+          done();
         });
     });
     it('should not allow limit and offset as alphabets', (done) => {
@@ -278,10 +288,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Limit and Offset');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Limit and Offset');
           done();
         });
     });
@@ -299,10 +307,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Limit');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Limit');
           done();
         });
     });
@@ -320,10 +326,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Offset');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Offset');
           done();
         });
     });
@@ -353,53 +357,51 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('Document Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('Document Not Found');
           done();
         });
     });
-    it('should not authorize an authorized user', (done) => {
+    it('should not allow an authorized user', (done) => {
       request(app)
         .get('/api/v1/documents/1')
         .set('Authorization', `${userToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You are not authorized to view this document');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You are not authorized to view this document');
           done();
         });
     });
-    it('should successfuly return for an authorized user', (done) => {
-      request(app)
-        .get('/api/v1/documents/1')
-        .set('Authorization', `${superToken}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .end((err, response) => {
-          if (!err) {
+    it('should successfuly return the document found for an authorized user',
+      (done) => {
+        request(app)
+          .get('/api/v1/documents/1')
+          .set('Authorization', `${superToken}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .end((err, response) => {
             expect(response.status).to.equal(200);
-          }
-          done();
-        });
-    });
-    it('should not allow invalid document id', (done) => {
+            expect(response.body.id).to.equal(1);
+            expect(response.body.title).to.equal('SUPERR');
+            expect(response.body.content).to.equal('super');
+            expect(response.body.access).to.equal('Private');
+            expect(response.body.userId).to.equal(1);
+            done();
+          });
+      });
+    it('should not allow an invalid document id', (done) => {
       request(app)
         .get('/api/v1/documents/aaa')
         .set('Authorization', `${superToken}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal(
-              'Document Id must be an integer');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal(
+            'Document Id must be an integer');
           done();
         });
     });
@@ -441,10 +443,8 @@ describe('Documents Endpoints', () => {
           userId: 1
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('Document Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('Document Not Found');
           done();
         });
     });
@@ -461,15 +461,13 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(403);
-            expect(response.body.message).to.equal(
-              'You cannot update someone else\'s document');
-          }
+          expect(response.status).to.equal(403);
+          expect(response.body.message).to.equal(
+            'You cannot update someone else\'s document');
           done();
         });
     });
-    it('should not allow empty title', (done) => {
+    it('should not allow an empty title', (done) => {
       request(app)
         .put('/api/v1/documents/1')
         .set('Authorization', `${superToken}`)
@@ -482,14 +480,12 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Title is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Title is Required');
           done();
         });
     });
-    it('should not allow empty content', (done) => {
+    it('should not allow an empty content', (done) => {
       request(app)
         .put('/api/v1/documents/1')
         .set('Authorization', `${superToken}`)
@@ -502,10 +498,8 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Content is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Content is Required');
           done();
         });
     });
@@ -522,14 +516,12 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Invalid Access Type');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Invalid Access Type');
           done();
         });
     });
-    it('should not allow empty access type', (done) => {
+    it('should not allow an empty access type', (done) => {
       request(app)
         .put('/api/v1/documents/1')
         .set('Authorization', `${superToken}`)
@@ -542,10 +534,8 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal('Access is Required');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal('Access is Required');
           done();
         });
     });
@@ -562,11 +552,9 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(400);
-            expect(response.body.message).to.equal(
-              'Your Edited Title already exists!!!');
-          }
+          expect(response.status).to.equal(400);
+          expect(response.body.message).to.equal(
+            'Your Edited Title already exists!!!');
           done();
         });
     });
@@ -583,14 +571,12 @@ describe('Documents Endpoints', () => {
           userId: '1'
         })
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal('Update Successful');
-            expect(response.body.updatedDetails.title).to.equal('SUPER3');
-            expect(response.body.updatedDetails.content).to.equal('super2');
-            expect(response.body.updatedDetails.access).to.equal('Public');
-            expect(response.body.updatedDetails.userId).to.equal(1);
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal('Update Successful');
+          expect(response.body.updatedDetails.title).to.equal('SUPER3');
+          expect(response.body.updatedDetails.content).to.equal('super2');
+          expect(response.body.updatedDetails.access).to.equal('Public');
+          expect(response.body.updatedDetails.userId).to.equal(1);
           done();
         });
     });
@@ -620,10 +606,8 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal('Document Not Found');
-          }
+          expect(response.status).to.equal(404);
+          expect(response.body.message).to.equal('Document Not Found');
           done();
         });
     });
@@ -635,11 +619,9 @@ describe('Documents Endpoints', () => {
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .end((err, response) => {
-            if (!err) {
-              expect(response.status).to.equal(403);
-              expect(response.body.message).to.equal(
-                'You cannot delete someone else\'s document');
-            }
+            expect(response.status).to.equal(403);
+            expect(response.body.message).to.equal(
+              'You cannot delete someone else\'s document');
             done();
           });
       });
@@ -650,11 +632,9 @@ describe('Documents Endpoints', () => {
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .end((err, response) => {
-          if (!err) {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal(
-              'Document successfully deleted');
-          }
+          expect(response.status).to.equal(200);
+          expect(response.body.message).to.equal(
+            'Document successfully deleted');
           done();
         });
     });

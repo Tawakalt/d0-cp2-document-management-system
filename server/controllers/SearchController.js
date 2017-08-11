@@ -38,7 +38,7 @@ export default class SearchController {
           return response.status(200).send(user);
         }
       })
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 
   /**
@@ -72,6 +72,6 @@ export default class SearchController {
           DocumentsLogic.paginate(request, response, response.document);
         }
       })
-      .catch(error => response.status(400).send(error.toString()));
+      .catch(error => response.status(500).send(error.toString()));
   }
 }
