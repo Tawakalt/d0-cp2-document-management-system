@@ -59,9 +59,6 @@ export default class DocumentsLogic {
     }
     property.limit = limit || 10;
     property.offset = offset || 0;
-    // if (request.loggedInUser.roleId === 3) {
-    //   property.where = { userId: request.loggedInUser.id };
-    // }
     response.property = property;
     return true;
   }
@@ -238,7 +235,8 @@ export default class DocumentsLogic {
     while (count < document.length) {
       const allowed = [document[count].dataValues.User.dataValues.roleId, 1, 2];
       if (!((document[count].dataValues.access === 'Private'
-      && document[count].dataValues.userId !== request.loggedInUser.id) ||
+      && document[count].dataValues.userId !== request.loggedInUser.id
+      && request.loggedInUser.roleId === 3) ||
       (document[count].dataValues.access === 'Role'
       && allowed.includes(request.loggedInUser.roleId)
       === false))) {
