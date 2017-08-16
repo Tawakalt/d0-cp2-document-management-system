@@ -74,8 +74,13 @@ export default class DocumentsController {
             return response.status(200).send({
               message: 'No Document has been created' });
           }
-          DocumentsLogic.filter(request, response, Documents);
-          DocumentsLogic.paginate(request, response, response.document);
+          if (request.loggedInUser.roleId === 3) {
+            DocumentsLogic.filter(request, response, Documents);
+            DocumentsLogic.paginate(request, response, response.document);
+          } else {
+            response.document = Documents;
+            DocumentsLogic.paginate(request, response, response.document);
+          }
         });
     }
   }
