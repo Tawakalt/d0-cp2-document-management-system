@@ -57,8 +57,10 @@ export default class DocumentsLogic {
       });
       return false;
     }
-    property.limit = limit || 10;
-    property.offset = offset || 0;
+    if (request.loggedInUser.roleId !== 3) {
+      property.limit = limit || 10;
+      property.offset = offset || 0;
+    }
     response.property = property;
     return true;
   }
@@ -249,7 +251,25 @@ export default class DocumentsLogic {
       response.status(404).send({ message: 'No Document Found' });
       return false;
     }
-    response.document = newArr;
+    const newArray = [];
+    if (newArr.length - (request.query.offset || 0) < request.query.limit) {
+      request.query.limit = newArr.length - (request.query.offset || 0);
+    }
+    if (request.query.offset) {
+      let counter = parseInt(request.query.offset);
+      while (counter <= ((parseInt(request.query.limit) +
+        (parseInt(request.query.offset) - 1)) || 10)) {
+        newArray.push(newArr[counter]);
+        counter += 1;
+      }
+    } else {
+      let counter = 0;
+      while (counter < (parseInt(request.query.limit) || 10)) {
+        newArray.push(newArr[counter]);
+        counter += 1;
+      }
+    }
+    response.document = newArray;
     return false;
   }
 
