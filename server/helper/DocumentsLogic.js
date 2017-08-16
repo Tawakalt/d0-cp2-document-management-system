@@ -264,7 +264,7 @@ export default class DocumentsLogic {
       }
     } else {
       let counter = 0;
-      while (counter < (parseInt(request.query.limit) || 10)) {
+      while (counter < (parseInt(request.query.limit) || newArr.length)) {
         newArray.push(newArr[counter]);
         counter += 1;
       }
