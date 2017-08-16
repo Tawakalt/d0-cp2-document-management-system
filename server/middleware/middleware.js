@@ -29,8 +29,8 @@ export default class Middleware {
     request.token = token;
     jwt.verify(request.token, process.env.JWT_SECRET, (error, decoded) => {
       if (error) {
-        return response
-          .send({ message: 'Error encountered while processing request' });
+        return response.status(400)
+          .send({ message: 'Invalid Token' });
       }
       request.loggedInUser = decoded;
       next();
