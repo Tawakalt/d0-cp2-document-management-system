@@ -1,0 +1,58 @@
+{
+  "name": "d0-cp2-document-management-system",
+  "version": "1.0.0",
+  "description": "A Document management System",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "gulp dev",
+    "start": "node ./build/server.js",
+    "startDev": "nodemon ./server/server.js --exec babel-node",
+    "test": "gulp dev && gulp coverage",
+    "configProdDb":"NODE_ENV=production sequelize db:migrate && NODE_ENV=production sequelize db:seed:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tawakalt/d0-cp2-document-management-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tawakalt/d0-cp2-document-management-system/issues"
+  },
+  "homepage": "https://github.com/Tawakalt/d0-cp2-document-management-system#readme",
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.3",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-exit": "0.0.2",
+    "gulp-inject-modules": "^1.0.0",
+    "gulp-istanbul": "^1.1.2",
+    "gulp-jasmine-node": "^1.0.7",
+    "gulp-nodemon": "^2.2.1",
+    "jsonwebtoken": "^7.4.1",
+    "morgan": "^1.8.2",
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.3.2",
+    "validator": "^8.0.0"
+  }
+}
+
